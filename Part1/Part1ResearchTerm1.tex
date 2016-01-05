@@ -1,0 +1,86 @@
+\documentclass[11]{article}
+%\title{The Four Constraint Theory Of Human Tool Use}
+
+\title{
+  Computational model for the Four Constraints Theory of human tool use\\  
+  \setlength{\parskip}{0.5em}  
+  \normalsize (PART 1 - Scientific Background)
+  }
+  
+\date{}
+\author{Adrian Ionita (ID: AFI904, NR: 1057404)\\
+Supervisor: Dietmar Heinke}
+
+\begin{document}
+\maketitle 	
+
+\section*{Introduction} 
+
+A hallmark of mankind is the ability to create and use tools. There is no other creatures able to demonstrate equal ability. As it prevails the daily activities of any healthy individual, the neural mechanics and cognitive enablers underlying this process have mostly eluded understanding. The four constraints theory is a framework that characterises tool use[2]. This project aims on building a computational model within its outlines. Its purpose is to provide a basis for testing the assumptions of the theory through experimentation and predictions.
+
+Our current understanding of tool use is based disorders from brain damaged patients. There is very little empirical research to characterise healthy subject behaviour. This limits our ability to analyse and quantify tool use in a compar- ative manner. A computational model allows to better characterise disorders and to investigate the use of tools within the animal kingdom. It would provide support for smarter robotics and a can lead to analysing other human cognitive abilities ( e.g. language and tool use are commonly associated[2][3]).
+
+This paper is a walk-through of the four constrain theory and its impli- cations. A computational model can not hope to capture all manner of tool use. The aim however is to satisfy a specific set of problems, such as choosing the right tools for the desired tasks and breaking higher level objectives into intermediate steps.
+
+\section*{Scientific Background}
+The four constraints theory aims to characterise healthy individual’s behaviour. Its theoretical foundations however lay mainly in experimental evidence from apraxia patients. Apraxia is a motor disorder, impairing a person’s ability to execute or plan sequences of movements. It has multiple forms and levels of severity, but it’s underlying source is physical damage to the left hemisphere of the brain[1].
+
+The Oxford dictionary defines tools as handheld devices used to carry out particular functions. The four constraints theory further narrows the definition as tools are purposely used for making changes to other objects or the environment. The theory's constrain there to help form association with wider research available on apraxia. It further reduces scope and complexity by restricting context. Although not covered by the theory, we can conceive tools as having wider far reaching definitions( e.g. mathematics as a cognitive tool). A computational model achieving enough generalisation could help hypothesise about non-handheld tools.
+
+\subsection*{Theory Description}
+\subsubsection*{The four constraints}
+The following is a summary of Osiurak's theory of human tool use (see \cite{osiurak2014}). 
+The paper outlines four constraints or dimensions within which each tool use situation is analogous to a problem solving task. The constraints are mechanics, space, time and effort. 
+Corresponding to each are processes aiding problem solving. These are technical reasoning, semantic reasoning , working memory and simulation based decision making. 
+
+The theory focuses mainly on the conceptual level of tool use. Actual execution of the tasks is handled by a production system controlling the motor system. There is little emphasis on production, with the role being mentioned for feedback into the conceptual level ( e.g. executing the task helps subjects adjust for better solutions at a conceptual level ). The theory stipulates that a conceptual level contains no sensory motor information . It however contains concepts and object representations that are fed to a production system for execution.
+
+\subsubsection*{Mechanical Constraint}
+In real world situations, the fundamental challenge is in using physical principles to transform the environment to the desired state. Aiding this process are mechanical and object based knowledge. The information can be seen as multi-dimensional properties of objects. A tool is suitable to use with an object if their properties match complementary. Technical reasoning is the cognitive enabler through which an individual is able to match tools and objects to bring the desired transformations.
+
+The paper assumes that tools and objects are stored relative to each other based on their properties. The hypothesis offers some insight in representing object knowledge. Mechanical knowledge encompasses the technique of usage (e.g. cutting, hammering). These help form representations of tool movement that the body can later execute. This is distinctive from actual body movement. 
+
+\subsubsection*{Space Constrain}
+The space constrain is better explained and understood through the process that solves it, semantic reasoning. Objects and tools are semantically related through a from of categorisation (e.g. bread and knife are both kitchen items). The space constrain in this respect optimises a search problem. Semantic reasoning helps determine and spatially locate the right tool and object based on their categorical relation (e.g. knife and bread are most likely in the kitchen ). This is in contrast to how technical reasoning associates the object and tool based on their physical properties.
+
+\subsubsection*{Time Constraint}
+The time constraint is again best defined through the process that solves it, working memory. The time constraint represents the subject's ability to hold goals into working memory. In satisfying a higher level objective, a subject would split the task into intermediate steps and objectives. Being able to achieve these concomitantly is limited by memory storage. It is however unclear why this is considered to be time dependent instead of storage capacity dependent. 
+
+\subsubsection*{Effort Constraint}
+In satisfying transformations of the environment we have to be aware of the energetic costs associated. The effort constraint covers the costs of tool use. One of the rules of survival is that actions should be less expensive than the reward gained. The cost of effort can help explore and select from the space of possible solutions. 
+
+In a situation where using hands would be optimal, subjects still show a preference for using tools\cite{osiurak2014}. This demonstrates that humans usually overestimate the benefits gained. The measurement of effort is likely to be speculative and approximate for this reason.
+
+The theory considers costs to be estimated through a process of mental simulation. However, if simulation based decision making determines effort, it must have some level of sensory motor information. This contradicts previous statement that the conceptual level has no such knowledge.
+
+\subsubsection*{Limitations}
+To summarise, the four constrain theory focuses on the conceptual components of tool use. It assumes that use cases are problem situations\cite{osiurak2014}. The four constrains and their associated processes primarily describe the major components of tool use reasoning. The theory however does not go into great detail. There is no indication of how representations for mechanical and object knowledge are formed. We can assume that these emerge from experience through learning. However, without insight into this process the conceptual components may be constrained in ways we are not aware of.
+
+Technical reasoning is explained as a tool to object relation. Although not explicitly, the theory distinguishes between tool and object. In cases when appropriate tools are not available, objects can become novel tools. The theory covers this scenario through technical reasoning, even though the distinction is not explained. It would be interesting to also consider situations where multiple objects form a tool( e.g. a board and rock to form lever mechanics ).
+
+As the details of technical reasoning and mental simulation are not fully described, a computational model will have to assume how tool technique manifests into physical principles and how effort is measured without sensory motor information. Techniques of usage usually have resulting forces or effects ( e.g. using an object as a leaver generates a force on the opposite extreme) . The theory however focuses on physical attributes of objects (e.g abrasiveness, hardness) with no account for mechanical forces.
+
+Some of the theory's limitations are born from it being strictly developed on apraxia related investigations. It would have been interesting to also consider an evolutionary basis. Animal tool use literature is ample, with experiments similar to apraxia research. Some of these experiments involve environmental obstacles, which could potentially be covered by technical reasoning. The process is however not detailed enough to explain how. 
+
+\subsection*{Computational Model Importance}
+The outlines defined by the four constrain theory are simple and intuitive. However, missing aspects emerge when considering the implementation of a computational model. Even in a symbolic approach the construction of a model will highlight where the theory can be improved. 
+
+Because technical reasoning is the most detailed part of the theory, it becomes a reasonable aspect to focus on. The model however will have to make assumptions outside of the theory in order to cover more convincing cases of tool use. 
+
+\begin{thebibliography}{9}
+\bibitem{osiurak2013}
+Osiurak, F., Jarry, C., Lesourd, M., Baumard, J., \& Le Gall, D. (2013). \emph{Mechanical problem-solving strategies in left-brain damaged patients and apraxia of tool use}. Neuropsychologia, 51(10), 1964–1972.
+doi:10.1016/j.neuropsychologia.2013.06.017
+
+\bibitem{osiurak2014}
+Osiurak, F. (2014). \emph{What Neuropsychology tells us about human tool use? The Four constraints theory (4CT): Mechanics, space, time, and effort}. Neuropsychology Review, 24(2), 115 - 88. doi:10.1007/s11065-014-9260-y
+
+
+\bibitem{fitch2010}
+Fitch, T. W. (2010). \emph{The evolution of language (4th ed.)}. Cambridge: Cambridge University Press.
+
+
+
+\end{thebibliography}
+
+\end{document}

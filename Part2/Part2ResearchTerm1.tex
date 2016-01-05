@@ -1,0 +1,93 @@
+\documentclass[11]{article}
+%\title{The Four Constraint Theory Of Human Tool Use}
+
+\title{
+  Computational model for the Four Constraint Theory of human tool use\\  
+  \setlength{\parskip}{0.5em}  
+  \normalsize (PART 2 - Main Proposal)
+  }
+  
+\date{}
+\author{Adrian Ionita\\
+Supervisor: Dietmar Heinke}
+
+
+\begin{document}
+\maketitle 	
+
+The aim of this project is to develop a computational model for the four constraints theory.
+The theory is not a complete definition of tool use, but a framework outlining boundaries and major cognitive components.   
+The computational model will follow the constraints and structure imposed by the theory. 
+It will however have to make assumptions outside the theory, in order to produce more convincing tool use. 
+
+\subsection*{A Symbolic Model}
+
+The theory does not contain strong emphasis on the neuro-basis for tool use. Its only consideration is on the physical brain areas involved in this ability. As such, a good starting point for a computational model is of a symbolic nature, instead of a neuro-feasible implementation. Below, we outline the responsibilities within the model of each of the components from the four constraints theory. However, the nature of how it all fits together will become apparent during model implementation.
+
+\subsubsection*{Technical Reasoning}
+
+There is no clear reason why tools and objects should be distinct entities. As objects can become novel tools, a better implementation would completely ignore the discrimination. As such, a tool is any object that can be handled to form an environmental transformation. 
+
+In terms of representation, objects can be seen as multidimensional entities represented through their physical properties. This is equivalent to the theory's notion of object knowledge. Such properties are length, with, hardness, abrasiveness. These dimensions are continuous in value, rather than discrete. 
+
+Mechanical knowledge will be tied to the technique of use. Poking, cutting, hitting are such techniques. In terms of representation, they can be seen as functions that would create additional dimensions on the object's representation. For example, leaver property would generate a leaver force dimension that is dependent on the object's physical properties of length , hardness, and a varying pivot location.  
+
+The above notions are sufficient to test the technical reasoning aspects of the four constrains theory. They follow closely the examples given within the theory's paper. The notions are particularly useful in tool use experiments such as tool to object matching. The type of experiments employed will be discussed later.  
+
+The disadvantage of a symbolic approach is the necessity to manually choose parameters of the objects. A more credible implementation is one which infers properties based on observation such as in \cite{zhu2015}. It is uncertain however, the complexity of use that can be learned from simple observations ( e.g. can we learn writing from just observation ).  As time allows for advancements, the model will consider training neural networks for detecting object properties.
+
+\subsubsection*{Semantic Reasoning}
+
+Semantic reasoning serves as a shortcut for selecting appropriate tools. This is distinct form technical reasoning in that objects are selected based on their categories instead of their physical properties. These categories can also bee seen as dimensions on the entities representing the objects. Their values are discrete rather than continuous. 
+
+\subsubsection*{Working Memory}
+
+The theory presents working memory in the context of tool use tasks requiring multiple steps. The author makes predictions on the effects of impairing memory with either time or storage constraints\cite{osiurak2014}. The difficult aspect however is how subjects are able to split higher level objectives into sub-goals to begin with. The paper does not elude to this process, which adds risk to a successful implementation in this area. 
+
+\subsubsection*{Mental Simulation}
+
+Simulation decision making will help select an optimal tool based on its estimated required effort of use. This will be measured based on the tool's fitness to the task, where unfit tools will be considered to require more effort than those with correct property values. Additionally we may consider the subject's experience with the technique of use, although this is not covered by the theory.
+
+\subsection*{Test Driven Approach}
+
+Test driven development is a common practice used in software development. It has a dual role of both testing the system and guiding development process. When starting with small set of tests that are subsequently satisfied, a system can incrementally grow to achieve more and more complex solutions.The tests also naturally serve as an automatic way to assert no damaging changes were introduced through the incremental process. Variants of the practice can be found in other areas such as business development( e.g. build-measure-learn in lean startup\cite{rise2011}). The development of a computational model can benefit from the same tight feedback process.
+
+A model prerequisite is therefore to determine a set of tests that will prove its validity. As the theory is based on investigations of apraxia patients, a good set of tests are such experiments. In the last 20 years, experiments have been split between pantomime of tool use, single tool use, real tool use and mechanical problem solving\cite{baumard2014}. Because of the focus on technical reasoning and mechanical knowledge, the later two are most approachable in the context of the theory. The implementation will start with the simplest tests to satisfy and move to more complex ones as it progresses.
+
+\subsubsection*{Real Tool Use Experiments}
+
+In real tool use tasks, subjects are required to select an appropriate tool to act on a given object \cite{baumard2014}. The experiments can have multiple tools or target objects serving as distractors. These tasks can grow in complexity by requiring multiple sequences of actions to satisfy the objectives. Real tool use exercises semantic reasoning more than that mechanical reasoning given that real tools are involved. Tests for this type of scenario will simply involve a categorical matching of objects. These however will work in conjunction with technical reasoning functionality.
+
+\subsubsection*{Mechanical Problem Solving}
+
+Mechanical problem solving experiments are similar to real tool use tasks. The difference is that these involve novel use of tools or objects( e.g. screwing a screw with a knife\cite{baumard2014} or using a stone as a hammer\cite{zhu2015} ). 
+
+Single  tool to object matching will prove simple when fitting is done based on the object's physical properties. The four constraints theory gives convincing examples of how this matching can work. It is however difficult to conceptualise what happens when the object's shape and contact surface are involved. When working with geometric shapes, each pixel or voxel, can be seen as a dimension in the representation of the objects. Tool to object matching may still function on such multidimensional fitting, but the scalability of the approach is uncertain. 
+
+\subsubsection*{Tests Used}
+
+Starting tests will involve tool to object associations based on simple physical properties ( e.g. bred to knife matching such as in \cite{osiurak2014} ). A second level of tests will consider choice with regards of the technique of use and forces generated( screwing, percussion , cutting ). These will follow example experiments from \cite{zhu2015}. The tests will encompass both real tools and novel tools.  
+
+Later tests can focus on geometric fitting of objects or on how higher level goals are split into sub-goals and tasks. Although geometric consideration will be more convincing, they will however not allow to test other components of the theory, such as working memory and simulation based decision making. An appropriate route to take will depend on the time that is available. 
+
+\subsection*{Neuro-Feasibility}
+It would prove interesting to see if neural networks can be trained to capture object properties. Multiple trained networks could work in conjunction to represent the multidimensional properties of tools. The way these representation can interact or if they can be trained from experience is generally unexplored. A neuro-feasible approach is however a secondary concern to this project. The approach would be tackled only if time is available and starting with capturing object physical properties. 
+
+\begin{thebibliography}{9}
+\bibitem{rise2011}
+Ries, E. (2011). \emph{The lean startup: How constant innovation creates radically successful businesses}. London: Portfolio Penguin.
+
+\bibitem{baumard2014}
+Baumard, J., Osiurak, F., Lesourd, M., \& Le Gall, D. (2014). \emph{Tool use disorders after left brain damage}. Frontiers in Psychology, 5, . doi:10.3389/fpsyg.2014.00473
+
+\bibitem{zhu2015}
+Zhu, Y., Zhao, Y., \& Zhu, S.-C. (2015). \emph{Understanding tools: Task-oriented object modeling, learning and recognition}. 2015 IEEE Conference on Computer Vision and Pattern Recognition (CVPR). doi:10.1109/cvpr.2015.7298903
+
+\bibitem{osiurak2014}
+Osiurak, F. (2014). \emph{What Neuropsychology tells us about human tool use? The Four constraints theory (4CT): Mechanics, space, time, and effort}. Neuropsychology Review, 24(2), 115 - 88. doi:10.1007/s11065-014-9260-y
+
+
+\end{thebibliography}
+
+
+\end{document}
