@@ -1,0 +1,43 @@
+PHYSICS engine
+
+First task of interest is in simulating the physical matching of tools to objects in 3D environments, as done by humans subjects.
+
+In this approach it is required to considered the mathematical formalisation of objects matching using force closure [ForceClosure]. However, a shortcut to such physical interactions is to consider using a physics engine such as in [SimulationAsEngineOfSceneUnderstanding]. To some extent, it is believed that the human brain computes approximate of Newtonian laws. Similarly, physics engines do not compute exact friction, closure or gravity laws, but provide realistic results which can be experimented on. 
+
+As suggested by [SimulationAsEngineOfSceneUnderstanding] we consider Bullet Physics for simulating the dynamics of object interaction under different forces and surface types. Other engines such as Open Dynamic Engine were considered, but have been found to be less portable or less likely to integrate with Matlab. 
+
+BULLET INSTALL
+Navigate to the engine's public source code and follow installation instructions  
+https://github.com/bulletphysics/bullet3
+Navigate to the matlab interface binding source code and follow instructions 
+https://github.com/bminortx/Buckshot
+
+FOLLOW BULLET INSTALL NOTES FROM: 
+http://bulletphysics.org/mediawiki-1.5.8/index.php/Installation
+cmake .. -G "Unix Makefiles" -DINSTALL_LIBS=ON -DBUILD_SHARED_LIBS=ON -DUSE_DOUBLE_PRECISION=ON
+
+Bullet physics has more cross platform support and there is also some matlab integration for it. Also, I've read that the engine does well in dealing with the problems Jeremy mentioned (  surface tension and wobbling ).
+
+It is worth mentioning that the engine can function with no 3D rendering ( as a standalone computation engine ). Although rendering is initially required to make sense of the code defining shapes and movements.
+
+The physics engine code itself is sound, it compiles and installs easily on a machine. The matlab integration however is completely abysmal. After 3 days of hard work I managed to get the integration code to compile and run. It runs fine with no rendering but I can also use matlab figure rendering (which is extremely slow compared to normal 3D rendering).
+
+Alternative to matlab, we would have to use C++ for writing the simulations. I would avoid it if possible.
+C++ is not an easy language, the effect is that it shifts focus from the problem you are solving to dealing with the code complexities. 
+
+There is an entire zoo of physics engines out there. The attached paper from 2007 states :
+"Of  the  open  source  engines  the  Bullet  engine  provided  the  best 
+results   overall,   outperforming   even   some   of   the   commercial engines."
+
+It is not easy to find commercial engine prices. All of them require direct contact for a quote (an angine named Havok is said to charge $50k-$60k per game title ).
+The most advanced engine for scientific simulation seems to be Vortex by CM-LABS. All other products are primarily aimed at game development. 
+
+I will take a look at matlab specific solutions for rigid body dynamics (e.g. robotics toolkit )
+
+Agreed, 2007 is a bit old. I've found another paper from 2013 (attached): [ref physics_comparison.png]
+The table/figure in this email is a summary of the tests performed and overall results.
+PhysX is a commercial game engine. I think it is worth adding that most commercial engines don't charge for non-commercial projects.
+
+You are right, the SDKs don't come with source code. But the SDK's just control the physical world dynamics, not the actions of our agent. Therefore, we should be able to use commercial engines too.
+
+The only concern is if the engine does not behave correctly in some aspect, it can not be mitigated or modified. For instance, if the friction laws used might require replacement. 
