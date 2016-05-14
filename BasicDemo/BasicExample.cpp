@@ -15,6 +15,8 @@ subject to the following restrictions:
 
 
 
+#include <BulletCollision/Gimpact/btGImpactShape.h>
+#include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h>
 #include "../Utils/b3ResourcePath.h"
 #include "Bullet3Common/b3FileUtils.h"
 #include "../Importers/ImportObjDemo/LoadMeshFromObj.h"
@@ -43,8 +45,8 @@ struct BasicExample : public CommonRigidBodyBase
 	virtual void renderScene();
 	void resetCamera()
 	{
-		float dist = 30;
-		float pitch = 52;
+		float dist = 15;
+		float pitch = 32;
 		float yaw = 35;
 		float targetPos[3]={0,0.46,0};
 		m_guiHelper->resetCamera(dist,pitch,yaw,targetPos[0],targetPos[1],targetPos[2]);
@@ -52,7 +54,7 @@ struct BasicExample : public CommonRigidBodyBase
 
     void createGround();
 
-    void loadMeshObject(const char *fileName, const btVector3 &scaling, const btVector3 &color, btScalar mass);
+    void loadMeshObject(const char *fileName, const btVector3 &position, const btScalar &mass, const float scaleFactor);
 };
 
 void BasicExample::initPhysics()
@@ -60,37 +62,53 @@ void BasicExample::initPhysics()
 	m_guiHelper->setUpAxis(1);
 
 	createEmptyDynamicsWorld();
-	m_dynamicsWorld->setGravity(btVector3(0,-30.,0));
+    btCollisionDispatcher * dispatcher = static_cast<btCollisionDispatcher *>(m_dynamicsWorld ->getDispatcher());
+    btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+
+    m_dynamicsWorld->setGravity(btVector3(0,-30.,0));
+
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
+    m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe+btIDebugDraw::DBG_DrawContactPoints);
 
 	///create a few basic rigid bodies
     createGround();
 
-    //load obj mesh
-	const char* fileName = "lego_tool1.obj";//sphere8.obj";//sponza_closed.obj";//sphere8.obj";
-
-    btVector3 scaling(1.,1.,1.);
-    btVector3 color(1.,0.3,0.3);
-    btScalar	mass(3.f);
-
-    loadMeshObject(fileName, scaling, color, mass);
+    //load tool and object
+    loadMeshObject("lego_tool1.obj", btVector3(5,1,0),btScalar(0.3f),1);
+    loadMeshObject("lego_obj1.obj", btVector3(-5,1,0),btScalar(0.3f),0.1);
 
     m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
 
-void BasicExample::loadMeshObject(const char *fileName, const btVector3 &scaling, const btVector3 &color,
-                                  btScalar mass) {
+void BasicExample::loadMeshObject(const char *fileName,const btVector3 &position,const btScalar &mass, const float scaleFactor) {
     GLInstanceGraphicsShape* glmesh = LoadMeshFromObj(fileName, "");
     printf("[INFO] Obj loaded: Extracted %d verticed from obj file [%s]\n", glmesh->m_numvertices, fileName);
 
-    const GLInstanceVertex& v = glmesh->m_vertices->at(0);
-    btConvexHullShape* shape = new btConvexHullShape((const btScalar*)(&(v.xyzw[0])), glmesh->m_numvertices, sizeof(GLInstanceVertex));
 
-    shape->setLocalScaling((scaling));
-    shape->optimizeConvexHull();
-    shape->initializePolyhedralFeatures();
+    b3AlignedObjectArray<btVector3> verts;
+    for (int i = 0 ; i < glmesh->m_numvertices ; i++){
+        float *cords = glmesh->m_vertices->at(i).xyzw;
+        verts.push_back(btVector3(cords[0],cords[1],cords[2]));
+    }
 
-    //shape->setMargin(0.001);
+    btTriangleMesh *vertexMesh = new btTriangleMesh();
+    for (int i =0 ; i< glmesh->m_numIndices ; i += 3){
+        int idx1 = glmesh->m_indices->at(i);
+        int idx2 = glmesh->m_indices->at(i+1);
+        int idx3 = glmesh->m_indices->at(i+2);
+
+        vertexMesh->addTriangle(verts.at(idx1),verts.at(idx2),verts.at(idx3));
+    }
+
+    btGImpactMeshShape* shape = new btGImpactMeshShape(vertexMesh);
+
+    btVector3 scaling(scaleFactor,scaleFactor,scaleFactor);
+    btVector3 color(1.,0.3,0.3);
+
+    shape->setLocalScaling(scaling);
+    shape->setMargin(0.001);
+    shape->updateBound();
+
     m_collisionShapes.push_back(shape);
 
     /// Create Dynamic Objects
@@ -104,7 +122,6 @@ void BasicExample::loadMeshObject(const char *fileName, const btVector3 &scaling
     if (isDynamic)
         shape->calculateLocalInertia(mass,localInertia);
 
-    btVector3 position(0,10,0);
     startTransform.setOrigin(position);
     btRigidBody* body = createRigidBody(mass, startTransform, shape);
 
@@ -155,6 +172,7 @@ void BasicExample::createGround() {
 void BasicExample::renderScene()
 {
 	CommonRigidBodyBase::renderScene();
+    m_dynamicsWorld->debugDrawWorld();
 	
 }
 
