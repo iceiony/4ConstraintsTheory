@@ -75,7 +75,7 @@ void BasicExample::initPhysics()
 
     //load tool and object
     loadMeshObject("lego_tool1.obj", btVector3(5,1,0),btScalar(0.3f),1);
-    loadMeshObject("lego_obj1.obj", btVector3(-5,1,0),btScalar(0.3f),0.1);
+    loadMeshObject("lego_obj1.obj", btVector3(-5,1,0),btScalar(0.3f),1);
 
     m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 }
