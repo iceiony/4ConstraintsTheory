@@ -45,5 +45,6 @@ The only concern is if the engine does not behave correctly in some aspect, it c
 
 
 BASIC EXAMPLE IMPLEMENTATION
-For testing the bullet engine we first define a simple example demo containing a basic tool and object. Figure [basic_demo_figures.png] shows the tool and objects defined. We initially use btConvexHullShape for defining the objects collision properties. Unfortunately, since bullet is primarily a game engine, the convex hull shape simply defines an approximation of the collision object, based on the object's mesh (figure [basic_demo_collision.png]).
+For testing the bullet engine we first define a simple example demo containing a basic tool and object. Figure [basic_demo_figures.png] shows the tool and objects defined. We initially use btConvexHullShape for defining the objects collision properties. Unfortunately, since bullet is primarily a game engine, the convex hull shape simply defines an approximation of the collision object, based on the object's mesh (figure [basic_demo_collision.png]). 
+A better approach is to make use of a more computational expensive construct, namely btGImpactShape. The collision shape defined by this class can take the exact form of the object's mesh as per figure [badic_demo_exactCollision.png]
 
