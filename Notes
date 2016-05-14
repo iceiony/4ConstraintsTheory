@@ -41,3 +41,9 @@ PhysX is a commercial game engine. I think it is worth adding that most commerci
 You are right, the SDKs don't come with source code. But the SDK's just control the physical world dynamics, not the actions of our agent. Therefore, we should be able to use commercial engines too.
 
 The only concern is if the engine does not behave correctly in some aspect, it can not be mitigated or modified. For instance, if the friction laws used might require replacement. 
+
+
+
+BASIC EXAMPLE IMPLEMENTATION
+For testing the bullet engine we first define a simple example demo containing a basic tool and object. Figure [basic_demo_figures.png] shows the tool and objects defined. We initially use btConvexHullShape for defining the objects collision properties. Unfortunately, since bullet is primarily a game engine, the convex hull shape simply defines an approximation of the collision object, based on the object's mesh (figure [basic_demo_collision.png]).
+
