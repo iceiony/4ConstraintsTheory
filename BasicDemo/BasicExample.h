@@ -13,10 +13,70 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef BASIC_EXAMPLE_H
-#define BASIC_EXAMPLE_H
+#include "../CommonInterfaces/CommonRigidBodyBase.h"
+
+#define angleMin -1
+#define angleMax 1
+#define angleStep 0.2
+#define yMin -0.5
+#define yMax  1
+#define yStep 0.1
+#define zMin  -1
+#define zMax  1
+#define zStep  0.1
+#define toolMass 1
+#define objMass 1
 
 class CommonExampleInterface*    BasicExampleCreateFunc(struct CommonExampleOptions& options);
 
+struct BasicExample : public CommonRigidBodyBase
+{
+private:
+    btVector3 toolDefaultLocation;
+    btVector3 objDefaultLocation;
+    btRigidBody *toolBody;
+    btRigidBody *objBody;
 
-#endif //BASIC_DEMO_PHYSICS_SETUP_H
+    btScalar zOffset;
+    btScalar yOffset;
+    btScalar angle;
+    bool finished;
+
+
+
+
+    virtual void createGround();
+    virtual btRigidBody * loadMeshObject(const char *fileName, const btVector3 &position, const btScalar &mass, const float scaleFactor);
+public:
+    BasicExample(struct GUIHelperInterface* helper)
+            :CommonRigidBodyBase(helper)
+    {
+        toolDefaultLocation = btVector3(2.2,1.25,0);
+        objDefaultLocation = btVector3(-2.2,1,0);
+    }
+    virtual ~BasicExample(){}
+    virtual void initPhysics();
+    virtual void renderScene();
+    virtual void stepSimulation(float deltaTime);
+
+    void resetCamera()
+    {
+        float dist = 15;
+        float pitch = 32;
+        float yaw = 35;
+        float targetPos[3]={0,0.46,0};
+        m_guiHelper->resetCamera(dist,pitch,yaw,targetPos[0],targetPos[1],targetPos[2]);
+    }
+
+
+    void nextScenario();
+
+    const btScalar &nextY();
+
+    const btScalar &nextZ();
+
+    btQuaternion nextRotation();
+
+    bool isFinished();
+};
+

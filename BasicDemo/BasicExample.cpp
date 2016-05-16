@@ -31,32 +31,6 @@ subject to the following restrictions:
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btAlignedObjectArray.h"
 
-#include "../CommonInterfaces/CommonRigidBodyBase.h"
-
-
-struct BasicExample : public CommonRigidBodyBase
-{
-	BasicExample(struct GUIHelperInterface* helper)
-		:CommonRigidBodyBase(helper)
-	{
-	}
-	virtual ~BasicExample(){}
-	virtual void initPhysics();
-	virtual void renderScene();
-	void resetCamera()
-	{
-		float dist = 15;
-		float pitch = 32;
-		float yaw = 35;
-		float targetPos[3]={0,0.46,0};
-		m_guiHelper->resetCamera(dist,pitch,yaw,targetPos[0],targetPos[1],targetPos[2]);
-	}
-
-    void createGround();
-
-    void loadMeshObject(const char *fileName, const btVector3 &position, const btScalar &mass, const float scaleFactor);
-};
-
 void BasicExample::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
@@ -74,16 +48,27 @@ void BasicExample::initPhysics()
     createGround();
 
     //load tool and object
-    loadMeshObject("lego_tool1.obj", btVector3(5,1,0),btScalar(0.3f),1);
-    loadMeshObject("lego_obj1.obj", btVector3(-5,1,0),btScalar(0.3f),1);
+    toolBody = loadMeshObject("lego_tool1.obj", toolDefaultLocation, toolMass, 1);
+    objBody = loadMeshObject("lego_obj1.obj", objDefaultLocation, objMass, 1);
 
     m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
+
+    //initialise tool fitting search
+    angle = angleMin;
+    yOffset = yMin;
+    zOffset = zMin;
+    finished = false;
+
+    toolBody->setGravity(btVector3(0,0,0));
+    toolBody->setCollisionFlags(toolBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+    toolBody->setActivationState(DISABLE_DEACTIVATION);
+
+//    nextScenario();
 }
 
-void BasicExample::loadMeshObject(const char *fileName,const btVector3 &position,const btScalar &mass, const float scaleFactor) {
+btRigidBody * BasicExample::loadMeshObject(const char *fileName, const btVector3 &position, const btScalar &mass, const float scaleFactor) {
     GLInstanceGraphicsShape* glmesh = LoadMeshFromObj(fileName, "");
     printf("[INFO] Obj loaded: Extracted %d verticed from obj file [%s]\n", glmesh->m_numvertices, fileName);
-
 
     b3AlignedObjectArray<btVector3> verts;
     for (int i = 0 ; i < glmesh->m_numvertices ; i++){
@@ -106,7 +91,7 @@ void BasicExample::loadMeshObject(const char *fileName,const btVector3 &position
     btVector3 color(1.,0.3,0.3);
 
     shape->setLocalScaling(scaling);
-    shape->setMargin(0.001);
+//    shape->setMargin(0.001);
     shape->updateBound();
 
     m_collisionShapes.push_back(shape);
@@ -137,6 +122,11 @@ void BasicExample::loadMeshObject(const char *fileName,const btVector3 &position
                                                                                          color, scaling);
         body->setUserIndex(renderInstance);
     }
+
+    delete(glmesh);
+    verts.clear();
+
+    return body;
 }
 
 void BasicExample::createGround() {
@@ -156,8 +146,7 @@ void BasicExample::createGround() {
         btVector3 color(1, 0.7, 0.7);
         int graphicsShapeId = groundShape->getUserIndex();
         if (graphicsShapeId >= 0) {
-            //	btAssert(graphicsShapeId >= 0);
-            //the graphics shape is already scaled
+
             btVector3 localScaling(1, 1, 1);
             int graphicsInstanceId = m_guiHelper->getRenderInterface()->registerGraphicsInstance(graphicsShapeId,
                                                                                                  groundTransform.getOrigin(),
@@ -168,6 +157,57 @@ void BasicExample::createGround() {
     }
 }
 
+void BasicExample::stepSimulation(float deltaTime){
+
+    bool isResetRequired = toolBody->getCenterOfMassPosition().getX() < -5;
+
+    if (isResetRequired) {
+        bool isSolution = objBody->getCenterOfMassPosition().getX() < -6;
+        if(isSolution) printf("[INFO] Solution Found y:%f z:%f angle:%f \n",yOffset,zOffset,angle);
+        nextScenario();
+    }
+    else {
+        btTransform transform;
+        toolBody->getMotionState()->getWorldTransform(transform);
+        transform.getOrigin() += btVector3(-0.025,0,0);
+        toolBody->getMotionState()->setWorldTransform(transform);
+    }
+
+    CommonRigidBodyBase::stepSimulation(deltaTime);
+}
+
+void BasicExample::nextScenario(){
+    objBody->setLinearVelocity(btVector3(0,0,0));
+    objBody->setAngularVelocity(btVector3(0,0,0));
+    objBody->setInterpolationAngularVelocity(btVector3(0,0,0));
+    objBody->setInterpolationLinearVelocity(btVector3(0,0,0));
+    objBody->clearForces();
+
+    //reset object position
+
+    btTransform transform = objBody->getCenterOfMassTransform();
+    transform.setOrigin(objDefaultLocation);
+    transform.setRotation(btQuaternion(0,0,0));
+    objBody->setCenterOfMassTransform(transform);
+
+    //configure new scenario
+
+    transform = toolBody->getCenterOfMassTransform();
+
+    btVector3 toolLocation(toolDefaultLocation);
+    toolLocation.setY( toolLocation.getY() + nextY() );
+    toolLocation.setZ( toolLocation.getZ() + nextZ() );
+    transform.setOrigin(toolLocation);
+
+    transform.setRotation(btQuaternion(-angle,0,0));
+
+    toolBody->setCenterOfMassTransform(transform);
+
+    transform.setRotation(nextRotation());
+    toolBody->setCenterOfMassTransform(transform);
+    toolBody->getMotionState()->setWorldTransform(transform);
+}
+
 
 void BasicExample::renderScene()
 {
@@ -176,6 +216,33 @@ void BasicExample::renderScene()
 	
 }
 
+const btScalar &BasicExample::nextZ() {
+    if (zOffset > zMax ) {
+        finished = true;
+    }
+    return zOffset;
+}
+
+const btScalar &BasicExample::nextY() {
+    if (yOffset > yMax) {
+        yOffset = yMin;
+        zOffset += zStep;
+    };
+    return yOffset;
+}
+
+btQuaternion BasicExample::nextRotation() {
+    angle += angleStep;
+    if(angle>angleMax){
+        angle = angleMin;
+        yOffset += yStep;
+    }
+    return btQuaternion(angle,0,0);
+}
+
+bool BasicExample::isFinished(){
+    return finished;
+}
 
 CommonExampleInterface*    BasicExampleCreateFunc(CommonExampleOptions& options)
 {

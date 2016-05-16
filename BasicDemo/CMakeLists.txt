@@ -82,7 +82,7 @@ INCLUDE_DIRECTORIES(
 SET(AppBasicExampleGui_SRCS
 	BasicExample.cpp
     ${BULLET_PHYSICS_SOURCE_DIR}/build3/bullet.rc
-    ../StandaloneMain/main_opengl_single_example.cpp
+    main_opengl_single_example.cpp
     ../ExampleBrowser/OpenGLGuiHelper.cpp
     ../ExampleBrowser/GL_ShapeDrawer.cpp
 )
