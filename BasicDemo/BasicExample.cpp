@@ -39,7 +39,7 @@ void BasicExample::initPhysics()
     btCollisionDispatcher * dispatcher = static_cast<btCollisionDispatcher *>(m_dynamicsWorld ->getDispatcher());
     btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
 
-    m_dynamicsWorld->setGravity(btVector3(0,-30.,0));
+    m_dynamicsWorld->setGravity(btVector3(0,-20.,0));
 
 	m_guiHelper->createPhysicsDebugDrawer(m_dynamicsWorld);
     m_dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe+btIDebugDraw::DBG_DrawContactPoints);
@@ -48,8 +48,8 @@ void BasicExample::initPhysics()
     createGround();
 
     //load tool and object
-    toolBody = loadMeshObject("lego_tool1.obj", toolDefaultLocation, toolMass, 1);
-    objBody = loadMeshObject("lego_obj1.obj", objDefaultLocation, objMass, 1);
+    toolBody = loadMeshObject("obj52.obj", toolDefaultLocation, toolMass, 3);
+    objBody = loadMeshObject("obj51.obj", objDefaultLocation, objMass, 2.92);
 
     m_guiHelper->autogenerateGraphicsObjects(m_dynamicsWorld);
 
@@ -63,7 +63,16 @@ void BasicExample::initPhysics()
     toolBody->setCollisionFlags(toolBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     toolBody->setActivationState(DISABLE_DEACTIVATION);
 
-//    nextScenario();
+//    toolBody->setDamping();
+
+//    toolBody->setDamping(toolBody->getLinearDamping()+5, toolBody->getAngularDamping()+5);
+//    objBody->setDamping(objBody->getLinearDamping()+5, objBody->getAngularDamping()+5);
+//    toolBody->setFriction(toolBody->getFriction()*5);
+//    objBody->setFriction(objBody->getFriction()*5);
+    printf("Friction : %f\n",toolBody->getFriction());
+    printf("Linear Damping : %f\n",toolBody->getLinearDamping());
+    printf("Angular Damping : %f\n",toolBody->getAngularDamping());
+    nextScenario();
 }
 
 btRigidBody * BasicExample::loadMeshObject(const char *fileName, const btVector3 &position, const btScalar &mass, const float scaleFactor) {
@@ -91,7 +100,7 @@ btRigidBody * BasicExample::loadMeshObject(const char *fileName, const btVector3
     btVector3 color(1.,0.3,0.3);
 
     shape->setLocalScaling(scaling);
-//    shape->setMargin(0.001);
+//    shape->setMargin(-0.0001);
     shape->updateBound();
 
     m_collisionShapes.push_back(shape);
@@ -159,17 +168,18 @@ void BasicExample::createGround() {
 
 void BasicExample::stepSimulation(float deltaTime){
 
-    bool isResetRequired = toolBody->getCenterOfMassPosition().getX() < -5;
+    bool isResetRequired = toolBody->getCenterOfMassPosition().getY() > 10;
 
     if (isResetRequired) {
-        bool isSolution = objBody->getCenterOfMassPosition().getX() < -6;
+        bool isSolution = objBody->getCenterOfMassPosition().getY() > 10;
         if(isSolution) printf("[INFO] Solution Found y:%f z:%f angle:%f \n",yOffset,zOffset,angle);
         nextScenario();
     }
     else {
         btTransform transform;
         toolBody->getMotionState()->getWorldTransform(transform);
-        transform.getOrigin() += btVector3(-0.025,0,0);
+        if( transform.getOrigin().getX() > -0.8 ) transform.getOrigin() += btVector3(-0.015,0,0);
+        else transform.getOrigin() += btVector3(0,0.015,0);
         toolBody->getMotionState()->setWorldTransform(transform);
     }
 
@@ -187,7 +197,7 @@ void BasicExample::nextScenario(){
 
     btTransform transform = objBody->getCenterOfMassTransform();
     transform.setOrigin(objDefaultLocation);
-    transform.setRotation(btQuaternion(0,0,0));
+    transform.setRotation(btQuaternion(3.1416,0,0));
     objBody->setCenterOfMassTransform(transform);
 
     //configure new scenario
@@ -195,8 +205,8 @@ void BasicExample::nextScenario(){
     transform = toolBody->getCenterOfMassTransform();
 
     btVector3 toolLocation(toolDefaultLocation);
-    toolLocation.setY( toolLocation.getY() + nextY() );
-    toolLocation.setZ( toolLocation.getZ() + nextZ() );
+//    toolLocation.setY( toolLocation.getY() + nextY() );
+//    toolLocation.setZ( toolLocation.getZ() + nextZ() );
     transform.setOrigin(toolLocation);
 
     transform.setRotation(btQuaternion(-angle,0,0));
@@ -213,7 +223,7 @@ void BasicExample::renderScene()
 {
 	CommonRigidBodyBase::renderScene();
     m_dynamicsWorld->debugDrawWorld();
-	
+
 }
 
 const btScalar &BasicExample::nextZ() {
@@ -237,7 +247,7 @@ btQuaternion BasicExample::nextRotation() {
         angle = angleMin;
         yOffset += yStep;
     }
-    return btQuaternion(angle,0,0);
+    return btQuaternion(0,0,3.1416);
 }
 
 bool BasicExample::isFinished(){

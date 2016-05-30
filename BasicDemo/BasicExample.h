@@ -25,15 +25,15 @@ subject to the following restrictions:
 #define zMax  1
 #define zStep  0.1
 #define toolMass 1
-#define objMass 1
+#define objMass 0.1
+#define toolDefaultLocation btVector3(4.5,3.6,-0.005)
+#define objDefaultLocation btVector3(0,1.2,0)
 
 class CommonExampleInterface*    BasicExampleCreateFunc(struct CommonExampleOptions& options);
 
 struct BasicExample : public CommonRigidBodyBase
 {
 private:
-    btVector3 toolDefaultLocation;
-    btVector3 objDefaultLocation;
     btRigidBody *toolBody;
     btRigidBody *objBody;
 
@@ -43,16 +43,12 @@ private:
     bool finished;
 
 
-
-
     virtual void createGround();
     virtual btRigidBody * loadMeshObject(const char *fileName, const btVector3 &position, const btScalar &mass, const float scaleFactor);
 public:
     BasicExample(struct GUIHelperInterface* helper)
             :CommonRigidBodyBase(helper)
     {
-        toolDefaultLocation = btVector3(2.2,1.25,0);
-        objDefaultLocation = btVector3(-2.2,1,0);
     }
     virtual ~BasicExample(){}
     virtual void initPhysics();
@@ -61,9 +57,9 @@ public:
 
     void resetCamera()
     {
-        float dist = 15;
-        float pitch = 32;
-        float yaw = 35;
+        float dist = 7;
+        float pitch = 90;
+        float yaw = 30;
         float targetPos[3]={0,0.46,0};
         m_guiHelper->resetCamera(dist,pitch,yaw,targetPos[0],targetPos[1],targetPos[2]);
     }

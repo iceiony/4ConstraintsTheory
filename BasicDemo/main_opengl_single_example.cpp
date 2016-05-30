@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
         app->m_instancingRenderer->updateCamera(app->getUpAxis());
 
 		example->stepSimulation(1./60.);
-	  	
+
 		example->renderScene();
  	
 		DrawGridData dg;

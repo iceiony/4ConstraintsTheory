@@ -34,8 +34,8 @@ ADD_LIBRARY(BulletDemoLib ${BulletDemo_SRC} )
 SET_TARGET_PROPERTIES(BulletDemoLib PROPERTIES VERSION ${BULLET_VERSION})
 SET_TARGET_PROPERTIES(BulletDemoLib PROPERTIES SOVERSION ${BULLET_VERSION})
 
-file(COPY "lego_tool1.obj" DESTINATION "./")
-file(COPY "lego_obj1.obj" DESTINATION "./")
+file(COPY "obj51.obj" DESTINATION "./")
+file(COPY "obj52.obj" DESTINATION "./")
 
 LINK_LIBRARIES(
  BulletDemoLib BulletDynamics BulletCollision LinearMath Bullet3Common
