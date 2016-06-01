@@ -29,6 +29,10 @@ There is an entire zoo of physics engines out there. The attached paper from 200
 "Of  the  open  source  engines  the  Bullet  engine  provided  the  best 
 results   overall,   outperforming   even   some   of   the   commercial engines."
 
+Other papers from 2012 and 2013 ( EvaluatingPhysicsEngines2 and EvaluatingPhisicsEginesForRobotics ) continue to show bullet as having best rigid body collision detection. Newton Game Physics is remarked as having better precision in the 2012 paper but at a performance cost. The precision measure however contradicts the 2007 review. In the 2013 paper Bullet is also mentioned as having poor collision detection for small and medium sized objects. In which case, scaling objects to higher dimensions may greatly improve detection although may expand our search space ( as there are larger value ranges to search in for our exhaustive solution ). 
+
+Another review paper from 2015 mentions a new engine (MuJoCo) as having the highest precision in every aspect of simulation. The paper itself was however written by the engine developers. The engine is targeted at research instead of game development so is intended for higher fidelity. Most physics engine review articles fail to specify the version of the engines they use. With the engine's being under active development evaluation is transient, therefore it is important to know product versions.  ODE should not be considered as an option as it is no longer under active development. 
+
 It is not easy to find commercial engine prices. All of them require direct contact for a quote (an angine named Havok is said to charge $50k-$60k per game title ).
 The most advanced engine for scientific simulation seems to be Vortex by CM-LABS. All other products are primarily aimed at game development. 
 
@@ -66,7 +70,6 @@ The effect is a limitation of simulation engines and can be observed as a violen
 1. Reducing the mass of the target object in order to reduce the amplitude of collision forces. In bullet, collision forces strongly depends on the mass of objects.
 2. Scaling the size of both tool and object so that contact regions are better detected.
 3. Reducing the scale of the target object in respect to it's tool by a small factor to allow for larger gaps in the fitting space. 
-
 
 
 
