@@ -33,6 +33,11 @@ Other papers from 2012 and 2013 ( EvaluatingPhysicsEngines2 and EvaluatingPhisic
 
 Another review paper from 2015 mentions a new engine (MuJoCo) as having the highest precision in every aspect of simulation. The paper itself was however written by the engine developers. The engine is targeted at research instead of game development so is intended for higher fidelity. Most physics engine review articles fail to specify the version of the engines they use. With the engine's being under active development evaluation is transient, therefore it is important to know product versions.  ODE should not be considered as an option as it is no longer under active development. 
 
+Higher precision : it more faithfully simulates physical interaction ( e.g. time wise integration of movement, collision, energy transfer, friction etc. )
+Lower Performance : computational cost of execution is higher and would therefore take more time to execute. 
+
+Newton Physics was quoted to use a deterministic solver instead of numerical methods for integrating movement and forces over time. This can lead to higher simulation precision. We therefore attempt to use both bullet and newton for our simulation.
+
 It is not easy to find commercial engine prices. All of them require direct contact for a quote (an angine named Havok is said to charge $50k-$60k per game title ).
 The most advanced engine for scientific simulation seems to be Vortex by CM-LABS. All other products are primarily aimed at game development. 
 
@@ -49,6 +54,7 @@ The only concern is if the engine does not behave correctly in some aspect, it c
 
 
 BASIC EXAMPLE IMPLEMENTATION
+Bullet Physics 
 For testing the bullet engine we first define a simple example demo containing a basic tool and object. Figure [basic_demo_figures.png] shows the tool and objects defined. We initially use btConvexHullShape for defining the objects collision properties. Unfortunately, since bullet is primarily a game engine, the convex hull shape simply defines an approximation of the collision object, based on the object's mesh (figure [basic_demo_collision.png]). 
 A better approach is to make use of a more computational expensive construct, namely btGImpactShape. The collision shape defined by this class can take the exact form of the object's mesh as per figure [badic_demo_exactCollision.png]
 
@@ -71,5 +77,13 @@ The effect is a limitation of simulation engines and can be observed as a violen
 2. Scaling the size of both tool and object so that contact regions are better detected.
 3. Reducing the scale of the target object in respect to it's tool by a small factor to allow for larger gaps in the fitting space. 
 
+Newton Dynamics 
+From the following video you can see that the objects behave correctly, with no shaking occurring (https://www.dropbox.com/s/0fn88erpnbeu8bq/NewtonPhysicsNoShake.mp4?dl=0). There was no need to modify object sizes or worry about the exact fitting margins of shapes. The default settings work very well.
 
+
+The engine was however hard to use, primarily due to the lack of documentation and community support ( information available on forums ). There are thousands of lines of demo code, and finding how to do exactly what you intend is difficult. There were also a hand full of compilation errors of the engine for MacOS. Windows and Linux would however not suffer from those. 
+
+I believe the engine is going to do a good job simulating physical properties. The API syntax is a bit strange in it's behaviour, but such strangeness can be wrapped by cleaner code. There is no python wrapper for the engine, although there certainly was at as some point. We will still have to integrate our code for Matlab or Python. 
+
+Additionally , code has to be written for more common file formats storing the 3D models. Engine demo code is not compatible with any commonly used format. Models had to be converted from .3ds to .off using a special blender plugin. 
 
