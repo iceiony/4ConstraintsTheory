@@ -3,3 +3,10 @@
 *.log
 *.aux
 .DS_Store
+Makefile
+CMakeCash.txt
+cmake_install.cmake
+CMakeFiles
+NewtonSDK*
+.idea
+CMakeCache.txt
