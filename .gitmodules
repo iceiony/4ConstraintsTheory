@@ -1,0 +1,3 @@
+[submodule "MatlabNewtonDynamics/newton-dynamics"]
+	path = MatlabNewtonDynamics/newton-dynamics
+	url = git@github.com:MADEAPPS/newton-dynamics.git
