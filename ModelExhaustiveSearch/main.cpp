@@ -1,20 +1,20 @@
 #include <iostream>
-//#include <Newton.h>
-//#include <dVector.h>
-//#include <dMatrix.h>
+#include "Util.h"
+#include "DemoEntityManager.h"
 #include <GLFW/glfw3.h>
 
-using namespace std;
+void SimpleConvexApproximation(DemoEntityManager* const scene);
 
+using namespace std;
 int main() {
 
+    //init graphics
     if(!glfwInit()){
         cerr << "Could not init GLFW \n";
         return -1;
     };
 
-
-    GLFWwindow *window = glfwCreateWindow(600,480,"Simulation",NULL,NULL);
+    GLFWwindow *window = glfwCreateWindow(800,600,"Simulation",NULL,NULL);
 
     if(!window){
         cerr << "Could not open OpenGL window \n";
@@ -25,12 +25,18 @@ int main() {
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    // init rendering entities
+    DemoEntityManager *scene = new DemoEntityManager();
+    SimpleConvexApproximation(scene);
+
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-
+                                                   
+        scene->RenderFrame();
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
@@ -42,3 +48,4 @@ int main() {
     glfwTerminate();
     return 0;
 }
+
