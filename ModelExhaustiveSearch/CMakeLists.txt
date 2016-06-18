@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(MatlabNewtonDynamics)
 
-file(COPY "obj51.off" DESTINATION "./")
-file(COPY "obj52.off" DESTINATION "./")
+file(COPY "obj51.3ds" DESTINATION "./")
+file(COPY "obj52.3ds" DESTINATION "./")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
@@ -40,6 +40,9 @@ endif()
 
 include_directories("./")
 include_directories("./toolBox")
+include_directories("lib3ds")
+
+FILE(GLOB LIB3DS "lib3ds/*.c")
 
 set(SOURCE_FILES
         main.cpp
@@ -54,6 +57,7 @@ set(SOURCE_FILES
         toolBox/dHighResolutionTimer.cpp
         toolBox/DebugDisplay.cpp
         toolBox/PhysicsUtils.cpp
+        ${LIB3DS}
         )
 add_executable(MatlabNewtonDynamics ${SOURCE_FILES})
 target_link_libraries(MatlabNewtonDynamics dMath dScene dCustomJoints dContainers dAnimation )

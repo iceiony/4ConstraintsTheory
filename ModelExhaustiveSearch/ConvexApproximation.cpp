@@ -9,8 +9,11 @@
 * freely
 */
 
-
+#include <iostream>
 #include <Util.h>
+#include <lib3ds/file.h>
+#include <lib3ds/mesh.h>
+#include <lib3ds/vector.h>
 #include "DemoMesh.h"
 #include "DemoEntityManager.h"
 #include "DemoCamera.h"
@@ -107,17 +110,13 @@ static NewtonBody* CreateFloor (DemoEntityManager* const scene)
 	};
 	// we can reuse the same same UV input for the second channel, if they have different UV then it will be code the exact same way as UV0
 
-
-
 	// now we create and empty mesh
 	NewtonMesh* const newtonMesh = NewtonMeshCreate (scene->GetNewton());
-
 
 	dVector array[8] ;
 	for (int i = 0; i < 8; i ++) {
 		array[i] = scale.CompProduct(dVector (&BoxPoints[i * 4]));
 	}
-
 
 	// build the mesh from an index list vertex list, alternatively we can also build the mesh by parring one face at at time
 	NewtonMeshBuildFromVertexListIndexList(newtonMesh,
@@ -126,8 +125,6 @@ static NewtonBody* CreateFloor (DemoEntityManager* const scene)
 										   Normal, 3 * sizeof (dFloat), faceNormalIndex,
 										   uv0, 2 * sizeof (dFloat), uv0_indexList,
 										   uv0, 2 * sizeof (dFloat), uv0_indexList);
-
-
 
 	// now we can use this mesh for lot of stuff, we can apply UV, we can decompose into convex,
 	NewtonCollision* const collision = NewtonCreateConvexHullFromMesh(scene->GetNewton(), newtonMesh, 0.001f, 0);
@@ -147,13 +144,60 @@ static NewtonBody* CreateFloor (DemoEntityManager* const scene)
 	return body;
 }
 
+static NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const fileName, const dFloat const scale){
+	NewtonMesh* meshNewton = NewtonMeshCreate(world);
+
+	Lib3dsFile* modelFile = lib3ds_file_load(fileName);
+	if(!modelFile){
+		std::cerr << "Failed to load file ( not 3DS format ? ) : " << fileName;
+		return meshNewton;
+	}
+
+	NewtonMeshBeginFace(meshNewton);
+
+	Lib3dsMesh* mesh;
+	for(mesh = modelFile->meshes; mesh != 0 ;mesh = mesh->next)
+	{
+		unsigned p;
+		for(p = 0; p < mesh->faces ;p++ ){
+			Lib3dsFace* face = &mesh->faceL[p];
+			Lib3dsWord idx1 = face->points[0];
+			Lib3dsWord idx2 = face->points[1];
+			Lib3dsWord idx3 = face->points[2];
+
+			const dFloat vertices[] = {
+					mesh->pointL[idx1].pos[0] * scale,
+					mesh->pointL[idx1].pos[1] * scale,
+					mesh->pointL[idx1].pos[2] * scale,
+
+					mesh->pointL[idx2].pos[0] * scale,
+					mesh->pointL[idx2].pos[1] * scale,
+					mesh->pointL[idx2].pos[2] * scale,
+
+					mesh->pointL[idx3].pos[0] * scale,
+					mesh->pointL[idx3].pos[1] * scale,
+					mesh->pointL[idx3].pos[2] * scale
+			};
+
+			NewtonMeshAddFace(meshNewton,3,vertices,sizeof(dFloat)*3,0);
+		}
+	}
+
+	NewtonMeshEndFace(meshNewton);
+
+	dMatrix rotate (dPitchMatrix(-90.0f * 3.1416f / 180.0f));
+	NewtonMeshApplyTransform(meshNewton,&rotate[0][0]);
+
+
+
+
+ 	return meshNewton;
+}
+
 static NewtonBody* CreateConvexApproximation (const char* const fileName, DemoEntityManager* const scene, const dVector& origin ,dFloat mass)
 {
 	NewtonWorld* const world = scene->GetNewton();
-	NewtonMesh* const mesh = NewtonMeshLoadOFF(world, fileName);
-
-	dMatrix rotate (dPitchMatrix(-90.0f * 3.1416f / 180.0f));
-	NewtonMeshApplyTransform(mesh,&rotate[0][0]);
+	NewtonMesh* const mesh = LoadMeshFrom3DS(world, fileName, 0.008);
 
 	//NewtonMesh* const newtonMesh = NewtonMeshSimplify(mesh, 500, ReportProgress);
 
@@ -210,8 +254,8 @@ void SimpleConvexApproximation (DemoEntityManager* const scene)
 
 	// convex approximate some file meshes 
 
-	NewtonBody* objBody = CreateConvexApproximation ("obj51.off", scene, location, 10.0f);
-	NewtonBody* toolBody = CreateConvexApproximation ("obj52.off", scene, location + dVector(-3,0.2f,0.02f), 10.0f);
+	NewtonBody* objBody = CreateConvexApproximation ("obj51.3ds", scene, location, 10.0f);
+	NewtonBody* toolBody = CreateConvexApproximation ("obj52.3ds", scene, location + dVector(-3,0.2f,0.02f), 10.0f);
 
 
     //rotate tool body in proper position
