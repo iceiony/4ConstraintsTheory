@@ -31,8 +31,8 @@ DemoCameraListener::DemoCameraListener(DemoEntityManager* const scene)
 	,m_mousePosY(0)
 	,m_yaw (m_camera->GetYawAngle())
 	,m_pitch (m_camera->GetPichAngle())
-	,m_yawRate (0.01f)
-	,m_pitchRate (0.01f)
+	,m_yawRate (0.03f)
+	,m_pitchRate (0.03f)
 	,m_frontSpeed(15.0f)
 	,m_sidewaysSpeed(10.0f)
 	,m_pickedBodyParam(0.0f)
@@ -53,70 +53,71 @@ DemoCameraListener::~DemoCameraListener()
 
 void DemoCameraListener::PreUpdate (const NewtonWorld* const world, dFloat timestep)
 {
-//	// update the camera;
-//	DemoEntityManager* const scene = (DemoEntityManager*) NewtonWorldGetUserData(world);
-//
-//	NewtonDemos* const mainWin = scene->GetRootWindow();
-//
-//	dMatrix targetMatrix (m_camera->GetNextMatrix());
-//
-//	int mouseX;
-//	int mouseY;
-//	mainWin->GetMousePosition (mouseX, mouseY);
-//
-//	// slow down the Camera if we have a Body
-//	dFloat slowDownFactor = mainWin->IsShiftKeyDown() ? 0.5f/10.0f : 0.5f;
-//
-//	// do camera translation
-//	if (mainWin->GetKeyState ('W')) {
-//		targetMatrix.m_posit += targetMatrix.m_front.Scale(m_frontSpeed * timestep * slowDownFactor);
-//	}
-//	if (mainWin->GetKeyState ('S')) {
-//		targetMatrix.m_posit -= targetMatrix.m_front.Scale(m_frontSpeed * timestep * slowDownFactor);
-//	}
-//	if (mainWin->GetKeyState ('A')) {
-//		targetMatrix.m_posit -= targetMatrix.m_right.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
-//	}
-//	if (mainWin->GetKeyState ('D')) {
-//		targetMatrix.m_posit += targetMatrix.m_right.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
-//	}
-//
-//	if (mainWin->GetKeyState ('Q')) {
-//		targetMatrix.m_posit -= targetMatrix.m_up.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
-//	}
-//
-//	if (mainWin->GetKeyState ('E')) {
-//		targetMatrix.m_posit += targetMatrix.m_up.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
-//	}
-//
-//	// do camera rotation, only if we do not have anything picked
-//	bool buttonState = m_mouseLockState || mainWin->GetMouseKeyState(0);
-//	if (!m_targetPicked && buttonState) {
-//		int mouseSpeedX = mouseX - m_mousePosX;
-//		int mouseSpeedY = mouseY - m_mousePosY;
-//
-//		if (mouseSpeedX > 0) {
-//			m_yaw = dMod(m_yaw + m_yawRate, 2.0f * 3.1416f);
-//		} else if (mouseSpeedX < 0){
-//			m_yaw = dMod(m_yaw - m_yawRate, 2.0f * 3.1416f);
-//		}
-//
-//		if (mouseSpeedY > 0) {
-//			m_pitch += m_pitchRate;
-//		} else if (mouseSpeedY < 0){
-//			m_pitch -= m_pitchRate;
-//		}
-//		m_pitch = dClamp(m_pitch, dFloat (-80.0f * 3.1416f / 180.0f), dFloat (80.0f * 3.1416f / 180.0f));
-//	}
-//
-//	m_mousePosX = mouseX;
-//	m_mousePosY = mouseY;
-//
-//	dMatrix matrix (dRollMatrix(m_pitch) * dYawMatrix(m_yaw));
-//	dQuaternion rot (matrix);
-//	m_camera->SetMatrix (*scene, rot, targetMatrix.m_posit);
-//
-//	UpdatePickBody(scene, timestep);
+	// update the camera;
+	DemoEntityManager* const scene = (DemoEntityManager*) NewtonWorldGetUserData(world);
+
+	GLFWwindow * const mainWin = scene->GetRootWindow();
+
+	dMatrix targetMatrix (m_camera->GetNextMatrix());
+
+	double mouseX,mouseY;
+	glfwGetCursorPos(mainWin, &mouseX, &mouseY);
+
+	// slow down the Camera if we have a Body
+	int state = glfwGetKey(mainWin, GLFW_KEY_LEFT_SHIFT );
+	dFloat slowDownFactor = state == GLFW_PRESS ? 0.5f/2.0f : 0.5f;
+
+	// do camera translation
+	if (GetKeyState (mainWin,'W')) {
+		targetMatrix.m_posit += targetMatrix.m_front.Scale(m_frontSpeed * timestep * slowDownFactor);
+	}
+	if (GetKeyState (mainWin,'S')) {
+		targetMatrix.m_posit -= targetMatrix.m_front.Scale(m_frontSpeed * timestep * slowDownFactor);
+	}
+	if (GetKeyState (mainWin,'A')) {
+		targetMatrix.m_posit -= targetMatrix.m_right.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
+	}
+	if (GetKeyState (mainWin,'D')) {
+		targetMatrix.m_posit += targetMatrix.m_right.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
+	}
+
+	if (GetKeyState (mainWin,'Q')) {
+		targetMatrix.m_posit -= targetMatrix.m_up.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
+	}
+
+	if (GetKeyState (mainWin,'E')) {
+		targetMatrix.m_posit += targetMatrix.m_up.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
+	}
+
+	// do camera rotation, only if we do not have anything picked
+	state = glfwGetMouseButton(mainWin, GLFW_MOUSE_BUTTON_LEFT);
+	bool buttonState = m_mouseLockState || state == GLFW_PRESS;
+	if (!m_targetPicked && buttonState) {
+        int mouseSpeedX = mouseX - m_mousePosX;
+        int mouseSpeedY = mouseY - m_mousePosY;
+
+        if (mouseSpeedX > 0) {
+            m_yaw = dMod(m_yaw + m_yawRate, 2.0f * 3.1416f);
+        } else if (mouseSpeedX < 0){
+            m_yaw = dMod(m_yaw - m_yawRate, 2.0f * 3.1416f);
+        }
+
+        if (mouseSpeedY > 0) {
+            m_pitch += m_pitchRate;
+        } else if (mouseSpeedY < 0){
+            m_pitch -= m_pitchRate;
+        }
+        m_pitch = dClamp(m_pitch, dFloat (-80.0f * 3.1416f / 180.0f), dFloat (80.0f * 3.1416f / 180.0f));
+    }
+
+	m_mousePosX = mouseX;
+	m_mousePosY = mouseY;
+
+	dMatrix matrix (dRollMatrix(m_pitch) * dYawMatrix(m_yaw));
+	dQuaternion rot (matrix);
+	m_camera->SetMatrix (*scene, rot, targetMatrix.m_posit);
+
+	UpdatePickBody(scene, timestep);
 }
 
 void DemoCameraListener::PostUpdate (const NewtonWorld* const world, dFloat timestep)
@@ -248,5 +249,12 @@ void DemoCameraListener::UpdatePickBody(DemoEntityManager* const scene, dFloat t
 //
 //	m_prevMouseState = mousePickState;
 }
+
+bool DemoCameraListener::GetKeyState(GLFWwindow *const window, char key) {
+	int state = glfwGetKey(window, key);
+	return state == GLFW_PRESS;
+}
+
+
 
 

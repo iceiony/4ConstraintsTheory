@@ -15,6 +15,7 @@
 #include "DemoMesh.h"
 #include "DemoListenerBase.h"
 #include "dHighResolutionTimer.h"
+#include <GLFW/glfw3.h>
 
 //class DemoMesh;
 class DemoEntity;
@@ -78,7 +79,7 @@ class DemoEntityManager: public dList <DemoEntity*>
 	{
 	};
 
-	DemoEntityManager();
+	DemoEntityManager(GLFWwindow * window);
 	~DemoEntityManager(void);
 
 	void InitGraphicsSystem();
@@ -107,7 +108,11 @@ class DemoEntityManager: public dList <DemoEntity*>
 	void RemoveEntity (DemoEntity* const ent);
 	void RemoveEntity (dList<DemoEntity*>::dListNode* const entNode);
 
-	private:
+	void SetWindowSize(int width, int height);
+
+	GLFWwindow *const GetRootWindow() const;
+
+private:
 
 	dFloat CalculateInterpolationParam() const;
 
@@ -124,6 +129,8 @@ class DemoEntityManager: public dList <DemoEntity*>
 	GLuint m_fontImage;
 	DemoCameraListener* m_cameraManager;
 
+	GLFWwindow *window;
+
     TransparentHeap m_tranparentHeap;
 
 	dFloat m_mainThreadGraphicsTime;
@@ -136,6 +143,9 @@ class DemoEntityManager: public dList <DemoEntity*>
 	friend class DemoEntityListener;
 	friend class DemoListenerManager;
 
+	//screen width and height required for rendring
+	int width;
+	int height;
 };
 
 // for simplicity we are not going to run the demo in a separate thread at this time
@@ -162,20 +172,12 @@ inline NewtonWorld* DemoEntityManager::GetNewton() const
 
 inline int DemoEntityManager::GetWidth() const 
 { 
-//	int width;
-//	int height;
-//	GetSize (&width, &height);
-//	return width;
-	return 800;
+	return this->width;
 }
 
 inline int DemoEntityManager::GetHeight() const 
 { 
-//	int width;
-//	int height;
-//	GetSize (&width, &height);
-//	return height;
-	return 600;
+	return this->height;
 }
 
 #endif

@@ -888,40 +888,6 @@ NewtonBody* CreateSimpleSolid (DemoEntityManager* const scene, DemoMesh* const m
 }
 
 
-
-void AddPrimitiveArray (DemoEntityManager* const scene, dFloat mass, const dVector& origin, const dVector& size, int xCount, int zCount, dFloat spacing, PrimitiveType type, int materialID, const dMatrix& shapeOffsetMatrix, dFloat startElevation)
-{
-	// create the shape and visual mesh as a common data to be re used
-	NewtonWorld* const world = scene->GetNewton();
-	NewtonCollision* const collision = CreateConvexCollision (world, shapeOffsetMatrix, size, type, materialID);
-
-	// test collision mode
-	//NewtonCollisionSetCollisonMode(collision, 0);
-
-	DemoMesh* const geometry = new DemoMesh("primitive", collision, "smilli.tga", "smilli.tga", "smilli.tga");
-
-	//dFloat startElevation = 1000.0f;
-	//dFloat startElevation = 20.0f;
-
-	dMatrix matrix (dGetIdentityMatrix());
-	for (int i = 0; i < xCount; i ++) {
-		dFloat x = origin.m_x + (i - xCount / 2) * spacing;
-		for (int j = 0; j < zCount; j ++) {
-			dFloat z = origin.m_z + (j - zCount / 2) * spacing;
-
-			matrix.m_posit.m_x = x;
-			matrix.m_posit.m_z = z;
-			dVector floor (FindFloor (world, dVector (matrix.m_posit.m_x, startElevation, matrix.m_posit.m_z, 0.0f), 2.0f * startElevation));
-			matrix.m_posit.m_y = floor.m_y + size.m_y * 0.5f;
-			CreateSimpleSolid (scene, geometry, mass, matrix, collision, materialID);
-		}
-	}
-	// do not forget to release the assets	
-	geometry->Release(); 
-	NewtonDestroyCollision (collision);
-}
-
-
 void CalculateAABB (const NewtonCollision* const collision, const dMatrix& matrix, dVector& minP, dVector& maxP)
 {
 	dFloat skinThickness = NewtonCollisionGetSkinThickness (collision) * 0.125f;

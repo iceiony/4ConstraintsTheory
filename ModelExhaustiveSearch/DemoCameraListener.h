@@ -70,6 +70,8 @@ class DemoCameraListener: public DemoListenerBase
 	NewtonBody* m_targetPicked;
 	NewtonBodyDestructor m_bodyDestructor;
 	friend class DemoCamera;
+
+	bool GetKeyState(GLFWwindow *const window, char key);
 };
 
 #endif 

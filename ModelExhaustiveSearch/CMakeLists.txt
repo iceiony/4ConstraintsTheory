@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(MatlabNewtonDynamics)
 
+
 file(COPY "obj51.3ds" DESTINATION "./")
 file(COPY "obj52.3ds" DESTINATION "./")
 
@@ -58,10 +59,12 @@ set(SOURCE_FILES
         toolBox/DebugDisplay.cpp
         toolBox/PhysicsUtils.cpp
         ${LIB3DS}
-        )
+    )
+
 add_executable(MatlabNewtonDynamics ${SOURCE_FILES})
 target_link_libraries(MatlabNewtonDynamics dMath dScene dCustomJoints dContainers dAnimation )
 
+set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
 #if (UNIX)
 #        add_definitions(-DD_JOINTLIBRARY_STATIC_LIB)
 #

@@ -22,10 +22,13 @@ DemoEntityManager::ButtonKey::ButtonKey(bool state)
 }
 
 
-DemoEntityManager::DemoEntityManager() :
+DemoEntityManager::DemoEntityManager(GLFWwindow * window) :
         dList<DemoEntity *>(), m_world(NULL), m_sky(NULL), m_microsecunds(0), m_currentListenerTimestep(0.0f),
         m_physicsUpdate(true), m_reEntrantUpdate(false), m_renderHoodContext(NULL), m_renderHood(NULL), m_font(0),
         m_fontImage(0), m_cameraManager(NULL) {
+
+    this->window = window;
+
     // initialized the physics world for the new scene
     Cleanup();
 
@@ -366,3 +369,17 @@ void DemoEntityManager::RenderFrame() {
     // draw everything and swap the display buffer
     glFlush();
 }
+
+void DemoEntityManager::SetWindowSize(int width, int height) {
+    this->width = width;
+    this->height = height;
+
+}
+
+GLFWwindow *const DemoEntityManager::GetRootWindow() const {
+    return window;
+}
+
+
+
+

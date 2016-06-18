@@ -205,6 +205,7 @@ static NewtonBody* CreateConvexApproximation (const char* const fileName, DemoEn
 //	NewtonMesh* const convexApproximation = NewtonMeshApproximateConvexDecomposition (mesh, 0.01f, 0.2f, 32, 100, ReportProgress, scene);
 //	NewtonMesh* const convexApproximation = NewtonMeshApproximateConvexDecomposition (mesh, 0.01f, 0.2f, 256, 100, ReportProgress, scene);
 	NewtonMesh* const convexApproximation = NewtonMeshApproximateConvexDecomposition (mesh, 0.00001f, 0.0f, 256, 100, ReportProgress, scene);
+//	NewtonMesh* const convexApproximation = mesh;
 
 	// create a compound collision by creation a convex hull of each segment of the source mesh
 	NewtonCollision* const compound = NewtonCreateCompoundCollisionFromMesh (world, convexApproximation, 0.001f, 0, 0);
