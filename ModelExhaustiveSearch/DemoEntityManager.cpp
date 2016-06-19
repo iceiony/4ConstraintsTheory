@@ -17,7 +17,7 @@
 #define MAX_PHYSICS_FPS                120.0f
 
 DemoEntityManager::DemoEntityManager(GLFWwindow * window) :
-        dList<DemoEntity *>(), m_world(NULL), m_sky(NULL), m_microsecunds(0), m_currentListenerTimestep(0.0f),
+        dList<DemoEntity *>(), m_world(NULL), m_sky(NULL), m_microseconds(0), m_currentListenerTimestep(0.0f),
         m_physicsUpdate(true), m_reEntrantUpdate(false), m_renderHoodContext(NULL), m_renderHood(NULL), m_font(0),
         m_fontImage(0), m_cameraManager(NULL) {
 
@@ -55,16 +55,6 @@ void DemoEntityManager::RemoveEntity (dListNode* const entNode)
     Remove(entNode);
 }
 
-void DemoEntityManager::RemoveEntity (DemoEntity* const ent)
-{
-    for (dListNode* node = dList<DemoEntity*>::GetFirst(); node; node = node->GetNext()) {
-        if (node->GetInfo() == ent) {
-            RemoveEntity (node);
-            break;
-        }
-    }
-}
-
 void DemoEntityManager::Cleanup() {
     // is we are run asynchronous we need make sure no update in on flight.
     if (m_world) {
@@ -85,51 +75,29 @@ void DemoEntityManager::Cleanup() {
         m_world = NULL;
     }
 
-    //	memset (&demo, 0, sizeof (demo));
-    // check that there are no memory leak on exit
     dAssert (NewtonGetMemoryUsed() == 0);
 
     // create the newton world
     m_world = NewtonCreate();
 
-    // link the work with this user data
-    NewtonWorldSetUserData(m_world, this);
-
     // set joint serialization call back
     CustomJoint::Initalize(m_world);
 
-    // add all physics pre and post listeners
-    //	m_preListenerManager.Append(new DemoVisualDebugerListener("visualDebuger", m_world));
-    //	m_postListenerManager.Append (new DemoAIListener("aiManager"));
-//	new DemoEntityListener (this);
     m_cameraManager = new DemoCameraListener(this);
     // set the default parameters for the newton world
     // set the simplified solver mode (faster but less accurate)
-    NewtonSetSolverModel(m_world, 4);
-
-    // newton 300 does not have world size, this is better controlled by the client application
-    //dVector minSize (-500.0f, -500.0f, -500.0f);
-    //dVector maxSize ( 500.0f,  500.0f,  500.0f);
-    //NewtonSetWorldSize (m_world, &minSize[0], &maxSize[0]);
-
-    // set the performance track function
-    //NewtonSetPerformanceClock (m_world, dRuntimeProfiler::GetTimeInMicrosenconds);
+    NewtonSetSolverModel(m_world, 0);
 
     // clean up all caches the engine have saved
     NewtonInvalidateCache(m_world);
 
     // Set the Newton world user data
     NewtonWorldSetUserData(m_world, this);
-
-
-    // we start without 2d render
-    m_renderHood = NULL;
-    m_renderHoodContext = NULL;
 }
 
 void DemoEntityManager::ResetTimer() {
     dResetTimer();
-    m_microsecunds = dGetTimeInMicrosenconds();
+    m_microseconds = dGetTimeInMicrosenconds();
 }
 
 void DemoEntityManager::PushTransparentMesh(const DemoMeshInterface *const mesh) {
@@ -145,44 +113,37 @@ void DemoEntityManager::SetCameraMatrix (const dQuaternion& rotation, const dVec
     m_cameraManager->SetCameraMatrix(this, rotation, position);
 }
 
-void DemoEntityManager::UpdatePhysics(dFloat timestep) {
+void DemoEntityManager::UpdatePhysics() {
     // update the physics
     if (m_world) {
 
-        dFloat timestepInSecunds = 1.0f / MAX_PHYSICS_FPS;
-        unsigned64 timestepMicrosecunds = unsigned64(timestepInSecunds * 1000000.0f);
+        dFloat timeStepInSeconds = 1.0f / MAX_PHYSICS_FPS;
+        unsigned64 timeStepMicroseconds = unsigned64(timeStepInSeconds * 1000000.0f);
 
         unsigned64 currentTime = dGetTimeInMicrosenconds();
-        unsigned64 nextTime = currentTime - m_microsecunds;
-        if (nextTime > timestepMicrosecunds * 2) {
-            m_microsecunds = currentTime - timestepMicrosecunds * 2;
-            nextTime = currentTime - m_microsecunds;
+        unsigned64 nextTime = currentTime - m_microseconds;
+        if (nextTime > timeStepMicroseconds * 2) {
+            m_microseconds = currentTime - timeStepMicroseconds * 2;
+            nextTime = currentTime - m_microseconds;
         }
 
-        //while (nextTime >= timestepMicrosecunds)
-        if (nextTime >= timestepMicrosecunds) {
-            unsigned64 time0 = dGetTimeInMicrosenconds();
-
+        if (nextTime >= timeStepMicroseconds) {
             dTimeTrackerEvent(__FUNCTION__);
             // run the newton update function
             if (!m_reEntrantUpdate) {
                 m_reEntrantUpdate = true;
                 if (m_physicsUpdate && m_world) {
-//					ClearDebugDisplay(m_world);
-                    NewtonUpdateAsync(m_world, timestepInSecunds);
+                    NewtonUpdateAsync(m_world, timeStepInSeconds);
                 }
                 m_reEntrantUpdate = false;
             }
-            m_microsecunds += timestepMicrosecunds;
-
-            unsigned64 time1 = dGetTimeInMicrosenconds();
-            m_mainThreadPhysicsTime = dFloat((time1 - time0) / 1000000.0f);
+            m_microseconds += timeStepMicroseconds;
         }
     }
 }
 
 dFloat DemoEntityManager::CalculateInterpolationParam() const {
-    unsigned64 timeStep = dGetTimeInMicrosenconds() - m_microsecunds;
+    unsigned64 timeStep = dGetTimeInMicrosenconds() - m_microseconds;
     dFloat param = (dFloat(timeStep) * MAX_PHYSICS_FPS) / 1.0e6f;
     dAssert (param >= 0.0f);
     if (param > 1.0f) {
@@ -194,10 +155,8 @@ dFloat DemoEntityManager::CalculateInterpolationParam() const {
 void DemoEntityManager::RenderFrame() {
     dTimeTrackerEvent(__FUNCTION__);
 
-    dFloat timestep = dGetElapsedSeconds();
-
     // update the the state of all bodies in the scene
-    UpdatePhysics(timestep);
+    UpdatePhysics();
 
     // Get the interpolated location of each body in the scene
     m_cameraManager->InterpolateMatrices(this, CalculateInterpolationParam());

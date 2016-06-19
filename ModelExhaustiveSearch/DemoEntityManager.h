@@ -67,7 +67,7 @@ class DemoEntityManager: public dList <DemoEntity*>
 
 	void ResetTimer();
 	void RenderFrame ();
-	void UpdatePhysics(dFloat timestep);
+	void UpdatePhysics();
 
 	int GetWidth() const;
 	int GetHeight() const;
@@ -82,7 +82,6 @@ class DemoEntityManager: public dList <DemoEntity*>
 	void Unlock(unsigned& atomicLock);
 
 	void Cleanup ();
-	void RemoveEntity (DemoEntity* const ent);
 	void RemoveEntity (dList<DemoEntity*>::dListNode* const entNode);
 
 	void SetWindowSize(int width, int height);
@@ -96,7 +95,7 @@ private:
 	NewtonWorld* m_world;
 
 	DemoEntity* m_sky;
-	unsigned64 m_microsecunds;
+	unsigned64 m_microseconds;
 	dFloat m_currentListenerTimestep;
 	bool m_physicsUpdate;
 	bool m_reEntrantUpdate;
@@ -109,11 +108,6 @@ private:
 	GLFWwindow *window;
 
     TransparentHeap m_tranparentHeap;
-
-	dFloat m_mainThreadGraphicsTime;
-	dFloat m_mainThreadPhysicsTime;
-
-	static int m_attributes[];
 
 	friend class NewtonDemos;
 	//friend class dRuntimeProfiler;
