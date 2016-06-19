@@ -67,8 +67,8 @@ unsigned64 dGetTimeInMicrosenconds()
 #elif defined(__APPLE__)
 	timeval tp;
     gettimeofday(&tp, NULL);
-    unsigned64 microsecunds =  unsigned64 (tp.tv_sec) * 1000000 + tp.tv_usec;
-    return microsecunds - baseCount;
+    unsigned64 microseconds =  unsigned64 (tp.tv_sec) * 1000000 + tp.tv_usec;
+    return microseconds - baseCount;
 
 #elif (defined (_POSIX_VER) || defined (_POSIX_VER_64))
 		timespec ts;
