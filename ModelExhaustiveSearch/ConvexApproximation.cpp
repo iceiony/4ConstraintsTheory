@@ -10,6 +10,7 @@
 */
 
 #include <iostream>
+#include <vector>
 #include <Util.h>
 #include <lib3ds/file.h>
 #include <lib3ds/mesh.h>
@@ -34,97 +35,54 @@ static NewtonBody* CreateFloor (DemoEntityManager* const scene)
 	// the vertex array, vertices's has for values, x, y, z, w
 	// w is use as a id to have multiple copy of the same very, like for example mesh that share more than two edges.
 	// in most case w can be set to 0.0
-	static dFloat BoxPoints[] = {
-			-1.0, -1.0, -1.0, 0.0,
-			-1.0, -1.0,  1.0, 0.0,
-			-1.0,  1.0,  1.0, 0.0,
-			-1.0,  1.0, -1.0, 0.0,
-			1.0, -1.0, -1.0, 0.0,
-			1.0, -1.0,  1.0, 0.0,
-			1.0,  1.0,  1.0, 0.0,
-			1.0,  1.0, -1.0, 0.0,
+	static dFloat points[] = {
+			-1.0, -1.0, -1.0,
+			-1.0, -1.0,  1.0,
+			-1.0,  1.0,  1.0,
+			-1.0,  1.0, -1.0,
+			1.0, -1.0, -1.0,
+			1.0, -1.0,  1.0,
+			1.0,  1.0,  1.0,
+			1.0,  1.0, -1.0,
 	};
 
 	// the vertex index list is an array of all the face, in any order, the can be convex or concave,
 	// and has and variable umber of indices
-	static int BoxIndices[] = {
-			2,3,0,1,  // this is quad
-			5,2,1,    // triangle
-			6,2,5,    // another triangle
-			5,1,0,4,  // another quad
-			2,7,3,    // and so on
-			6,7,2,
-			3,4,0,
-			7,4,3,
-			7,5,4,
-			6,5,7
-	};
-
-	// the number of index for each face is specified by an array of consecutive face index
-	static int faceIndexList [] = {4, 3, 3, 4, 3, 3, 3, 3, 3, 3};
-
-	// each face can have an arbitrary index that the application can use as a material index
-	// for example the index point to a texture, we can have the each face of the cube with a different texture
-	static int faceMateriaIndexList [] = {0, 4, 4, 2, 3, 3, 3, 3, 3, 3};
-
-
-	// the normal is specified per vertex and each vertex can have a unique normal or a duplicated
-	// for example a cube has 6 normals
-	static const dFloat Normal[] = {
-			1.0, 0.0, 0.0,
-			-1.0, 0.0, 0.0,
-			0.0, 1.0, 0.0,
-			0.0, -1.0, 0.0,
-			0.0, 0.0, 1.0,
-			0.0, 0.0, -1.0,
-	};
-
-	static int faceNormalIndex [] = {
-			0, 0, 0, 0, // first face uses the first normal of each vertex
-			3, 3, 3,    // second face uses the third normal
-			3, 3, 3,    // third face uses the fifth normal
-			1, 1, 1, 1, // third face use the second normal
-			2, 2, 2,    // and so on
-			2, 2, 2,
-			4, 2, 1,    // a face can have per vertex normals
-			4, 4, 4,
-			5, 5, 5,    // two coplanar face can even has different normals
-			3, 2, 0,
+	static std::vector<std::vector<int>> faces = {
+			{2,3,0,1},
+			{5,2,1},
+			{6,2,5},
+			{5,1,0,4},
+			{2,7,3},
+			{6,7,2},
+			{3,4,0},
+			{7,4,3},
+			{7,5,4},
+			{6,5,7}
 	};
 
 
-	// the UV are encode the same way as the vertex an the normals, a UV list and an index list
-	// since we do no have UV we can assign the all to zero
-	static const dFloat uv0[] = { 0, 0};
-	static const int uv0_indexList [] = {
-			0, 0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-			0, 0, 0,
-	};
-	// we can reuse the same same UV input for the second channel, if they have different UV then it will be code the exact same way as UV0
+	dVector scaled[8] ;
+	for (int i = 0; i < 8; i ++) {
+		scaled[i] = scale.CompProduct(dVector (&points[i * 3]));
+	}
 
 	// now we create and empty mesh
 	NewtonMesh* const newtonMesh = NewtonMeshCreate (scene->GetNewton());
 
-	dVector array[8] ;
-	for (int i = 0; i < 8; i ++) {
-		array[i] = scale.CompProduct(dVector (&BoxPoints[i * 4]));
-	}
+	NewtonMeshBeginFace(newtonMesh);
+	for(auto face = faces.begin(); face != faces.end() ; face++ ){
 
-	// build the mesh from an index list vertex list, alternatively we can also build the mesh by parring one face at at time
-	NewtonMeshBuildFromVertexListIndexList(newtonMesh,
-										   10, faceIndexList, faceMateriaIndexList,
-										   &array[0].m_x, 4 * sizeof (dFloat), BoxIndices,
-										   Normal, 3 * sizeof (dFloat), faceNormalIndex,
-										   uv0, 2 * sizeof (dFloat), uv0_indexList,
-										   uv0, 2 * sizeof (dFloat), uv0_indexList);
+		dFloat vertices[12];
+		for(int idx=0;idx<face->size();idx++){
+			vertices[3*idx]   = scaled[face->at(idx)].m_x;
+			vertices[3*idx+1] = scaled[face->at(idx)].m_y;
+			vertices[3*idx+2] = scaled[face->at(idx)].m_z;
+		}
+
+		NewtonMeshAddFace(newtonMesh,face->size(),vertices,sizeof(dFloat)*3,0);
+	}
+	NewtonMeshEndFace(newtonMesh);
 
 	// now we can use this mesh for lot of stuff, we can apply UV, we can decompose into convex,
 	NewtonCollision* const collision = NewtonCreateConvexHullFromMesh(scene->GetNewton(), newtonMesh, 0.001f, 0);
@@ -161,23 +119,13 @@ static NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const f
 		unsigned p;
 		for(p = 0; p < mesh->faces ;p++ ){
 			Lib3dsFace* face = &mesh->faceL[p];
-			Lib3dsWord idx1 = face->points[0];
-			Lib3dsWord idx2 = face->points[1];
-			Lib3dsWord idx3 = face->points[2];
 
-			const dFloat vertices[] = {
-					mesh->pointL[idx1].pos[0] * scale,
-					mesh->pointL[idx1].pos[1] * scale,
-					mesh->pointL[idx1].pos[2] * scale,
-
-					mesh->pointL[idx2].pos[0] * scale,
-					mesh->pointL[idx2].pos[1] * scale,
-					mesh->pointL[idx2].pos[2] * scale,
-
-					mesh->pointL[idx3].pos[0] * scale,
-					mesh->pointL[idx3].pos[1] * scale,
-					mesh->pointL[idx3].pos[2] * scale
-			};
+			dFloat vertices[9]; // 3 points x 3 dimensions
+			for(int idx = 0;idx < 3 ;idx++){
+				vertices[3*idx]   = mesh->pointL[face->points[idx]].pos[0] * scale;
+				vertices[3*idx+1] = mesh->pointL[face->points[idx]].pos[1] * scale;
+				vertices[3*idx+2] = mesh->pointL[face->points[idx]].pos[2] * scale;
+			}
 
 			NewtonMeshAddFace(meshNewton,3,vertices,sizeof(dFloat)*3,0);
 		}
@@ -187,9 +135,6 @@ static NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const f
 
 	dMatrix rotate (dPitchMatrix(-90.0f * 3.1416f / 180.0f));
 	NewtonMeshApplyTransform(meshNewton,&rotate[0][0]);
-
-
-
 
  	return meshNewton;
 }
