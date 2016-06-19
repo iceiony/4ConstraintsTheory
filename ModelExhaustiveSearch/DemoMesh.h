@@ -111,9 +111,6 @@ class DemoBezierCurve: public DemoMeshInterface
 	DemoBezierCurve (const dBezierSpline& curve);
 	DemoBezierCurve(const dScene* const scene, dScene::dTreeNode* const meshNode);
 
-	int GetRenderResolution () const;
-	void SetRenderResolution (int breaks);
-
 	virtual void RenderTransparency () const;
 	virtual void Render (DemoEntityManager* const scene);
 	virtual void RenderNormals ();

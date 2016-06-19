@@ -803,16 +803,6 @@ void DemoBezierCurve::RenderTransparency () const
 
 void DemoBezierCurve::RenderNormals ()
 {
-}	
-
-int DemoBezierCurve::GetRenderResolution () const
-{
-	return m_renderResolution;
-}
-
-void DemoBezierCurve::SetRenderResolution (int breaks)
-{
-	m_renderResolution = breaks;
 }
 
 

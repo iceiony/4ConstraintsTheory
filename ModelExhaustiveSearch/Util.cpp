@@ -19,43 +19,6 @@
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
 
-void *operator new (size_t size)
-{
-    void* const ptr = ::malloc (size);
-    //unsigned xxx = unsigned (ptr);
-    //xxx &= 0xffff;
-    ////dAssert (xxx != 0x2378);
-    //dAssert (!((xxx == 0x2378) && (size == 12)));
-    //dTrace (("%d %x\n", xxx, ptr))
-    return ptr;
-}
-
-void operator delete (void* ptr)
-{
-    ::free (ptr);
-}
-
-static unsigned ___dRandSeed___ = 0;
-
-void dSetRandSeed (unsigned seed)
-{
-    ___dRandSeed___	= seed;
-}
-
-unsigned dRand ()
-{
-#define RAND_MUL 31415821u
-    ___dRandSeed___ = RAND_MUL * ___dRandSeed___ + 1;
-    return ___dRandSeed___ & dRAND_MAX;
-}
-
-dFloat RandomVariable(dFloat amp)
-{
-    unsigned val;
-    val = dRand() + dRand();
-    return amp * (dFloat (val) / dFloat(dRAND_MAX) - 1.0f) * 0.5f;
-}
-
 
 // Windows user assets path
 void GetWorkingFileName (const char* const name, char* const outPathName)

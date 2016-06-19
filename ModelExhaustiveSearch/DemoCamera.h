@@ -35,9 +35,6 @@ class DemoCamera: public DemoEntity
 
 	virtual void Render(dFloat timeStep, DemoEntityManager* const scene) const;
 
-	dVector ScreenToWorld (const dVector& screenPoint) const;
-	dVector WorldToScreen (const dVector& worldPoint) const;
-	
 	private:
 	dFloat m_fov;
 	dFloat m_backPlane;

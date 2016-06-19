@@ -50,7 +50,6 @@ class DemoEntity: public dHierarchy<DemoEntity>, virtual public dClassInfo
 	void SetUserData (UserData* const data);
 
 	dBaseHierarchy* CreateClone () const;
-	void LoadNGD_mesh (const char* const fileName, NewtonWorld* const world);
 
 	const dMatrix& GetRenderMatrix () const;
 	dMatrix CalculateGlobalMatrix (const DemoEntity* const root = NULL) const;

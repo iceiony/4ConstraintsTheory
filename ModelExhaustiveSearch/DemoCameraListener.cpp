@@ -116,8 +116,6 @@ void DemoCameraListener::PreUpdate (const NewtonWorld* const world, dFloat times
 	dMatrix matrix (dRollMatrix(m_pitch) * dYawMatrix(m_yaw));
 	dQuaternion rot (matrix);
 	m_camera->SetMatrix (*scene, rot, targetMatrix.m_posit);
-
-	UpdatePickBody(scene, timestep);
 }
 
 void DemoCameraListener::PostUpdate (const NewtonWorld* const world, dFloat timestep)
@@ -128,20 +126,6 @@ void DemoCameraListener::SetCameraMouseLock (bool loockState)
 {
 	m_mouseLockState = loockState;
 }
-
-
-void DemoCameraListener::RenderPickedTarget () const
-{
-	if (m_targetPicked) {
-//		dMatrix matrix;
-//		NewtonBodyGetMatrix(m_targetPicked, &matrix[0][0]);
-//
-//		dVector p0 (matrix.TransformVector(m_pickedBodyLocalAtachmentPoint));
-//		dVector p1 (p0 + matrix.RotateVector (m_pickedBodyLocalAtachmentNormal.Scale (0.5f)));
-//		ShowMousePicking (p0, p1);
-	}
-}
-
 
 void DemoCameraListener::InterpolateMatrices (DemoEntityManager* const scene, dFloat param)
 {
@@ -164,90 +148,6 @@ void DemoCameraListener::OnBodyDestroy (NewtonBody* const body)
 	// remove the references pointer because the body is going to be destroyed
 	m_targetPicked = NULL;
 	m_bodyDestructor = NULL;
-}
-
-/*
-void DemoCameraListener::OnPickedBodyDestroyedNotify (const NewtonBody* body)
-{
-	NewtonWorld* const world =  NewtonBodyGetWorld(body);
-	dAssert (world);
-
-	void* const preListenerHandle = NewtonWorldGetPreListener (world, D_CAMERA_LISTENER_NAMNE);
-	dAssert (preListenerHandle);
-
-	DemoCameraListener* const camManager = (DemoCameraListener*) NewtonWorldGetListenerUserData (world, preListenerHandle);
-	dAssert (camManager);
-
-	if (camManager->m_bodyDestructor) {
-		camManager->m_bodyDestructor (body);
-	}
-
-	// the body was destroyed, set the pointer and call back to NULL
-	camManager->m_targetPicked = NULL;
-	camManager->m_bodyDestructor = NULL;
-}
-*/
-
-void DemoCameraListener::UpdatePickBody(DemoEntityManager* const scene, dFloat timestep) 
-{
-//	NewtonDemos* const mainWin = scene->GetRootWindow();
-//
-//	// handle pick body from the screen
-//	bool mousePickState = mainWin->GetMouseKeyState(0);
-//	if (!m_targetPicked) {
-//		if (!m_prevMouseState && mousePickState) {
-//			dFloat param;
-//			dVector posit;
-//			dVector normal;
-//
-//			dFloat x = dFloat (m_mousePosX);
-//			dFloat y = dFloat (m_mousePosY);
-//			dVector p0 (m_camera->ScreenToWorld(dVector (x, y, 0.0f, 0.0f)));
-//			dVector p1 (m_camera->ScreenToWorld(dVector (x, y, 1.0f, 0.0f)));
-//			NewtonBody* const body = MousePickByForce (scene->GetNewton(), p0, p1, param, posit, normal);
-//			if (body) {
-//				m_targetPicked = body;
-//				dMatrix matrix;
-//				NewtonBodyGetMatrix(m_targetPicked, &matrix[0][0]);
-//
-//				// save point local to the body matrix
-//				m_pickedBodyParam = param;
-//				m_pickedBodyLocalAtachmentPoint = matrix.UntransformVector (posit);
-//
-//				// convert normal to local space
-//				m_pickedBodyLocalAtachmentNormal = matrix.UnrotateVector(normal);
-//
-//				// link the a destructor callback
-//				//m_bodyDestructor = NewtonBodyGetDestructorCallback(m_targetPicked);
-//				//NewtonBodySetDestructorCallback(m_targetPicked, OnPickedBodyDestroyedNotify);
-//			}
-//		}
-//
-//	} else {
-//		if (mainWin->GetMouseKeyState(0)) {
-//			dFloat x = dFloat (m_mousePosX);
-//			dFloat y = dFloat (m_mousePosY);
-//			dVector p0 (m_camera->ScreenToWorld(dVector (x, y, 0.0f, 0.0f)));
-//			dVector p1 (m_camera->ScreenToWorld(dVector (x, y, 1.0f, 0.0f)));
-//			m_pickedBodyTargetPosition = p0 + (p1 - p0).Scale (m_pickedBodyParam);
-//
-//			dMatrix matrix;
-//			NewtonBodyGetMatrix (m_targetPicked, &matrix[0][0]);
-//			dVector point (matrix.TransformVector(m_pickedBodyLocalAtachmentPoint));
-//			CalculatePickForceAndTorque (m_targetPicked, point, m_pickedBodyTargetPosition, timestep);
-//		} else {
-//			if (m_targetPicked) {
-//				NewtonBodySetSleepState (m_targetPicked, 0);
-//			}
-//
-//			// unchain the callbacks
-//			//NewtonBodySetDestructorCallback(m_targetPicked, m_bodyDestructor);
-//			m_targetPicked = NULL;
-//			m_bodyDestructor = NULL;
-//		}
-//	}
-//
-//	m_prevMouseState = mousePickState;
 }
 
 bool DemoCameraListener::GetKeyState(GLFWwindow *const window, char key) {

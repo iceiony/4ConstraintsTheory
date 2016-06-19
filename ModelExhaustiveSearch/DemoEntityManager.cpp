@@ -318,8 +318,6 @@ void DemoEntityManager::RenderFrame() {
     }
 
 
-    m_cameraManager->RenderPickedTarget();
-
     RenderContactPoints(GetNewton());
 
     RenderCenterOfMass(GetNewton());

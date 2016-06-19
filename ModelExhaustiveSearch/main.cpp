@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Util.h"
 #include "DemoEntityManager.h"
-#include <GLFW/glfw3.h>
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
