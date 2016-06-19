@@ -31,8 +31,8 @@ DemoCameraListener::DemoCameraListener(DemoEntityManager* const scene)
 	,m_mousePosY(0)
 	,m_yaw (m_camera->GetYawAngle())
 	,m_pitch (m_camera->GetPichAngle())
-	,m_yawRate (0.03f)
-	,m_pitchRate (0.03f)
+	,m_yawRate (0.02f)
+	,m_pitchRate (0.02f)
 	,m_frontSpeed(15.0f)
 	,m_sidewaysSpeed(10.0f)
 	,m_pickedBodyParam(0.0f)
@@ -120,11 +120,6 @@ void DemoCameraListener::PreUpdate (const NewtonWorld* const world, dFloat times
 
 void DemoCameraListener::PostUpdate (const NewtonWorld* const world, dFloat timestep)
 {
-}
-
-void DemoCameraListener::SetCameraMouseLock (bool loockState)
-{
-	m_mouseLockState = loockState;
 }
 
 void DemoCameraListener::InterpolateMatrices (DemoEntityManager* const scene, dFloat param)

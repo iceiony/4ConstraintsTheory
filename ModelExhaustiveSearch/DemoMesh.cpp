@@ -16,7 +16,6 @@
 
 dInitRtti(DemoMeshInterface);
 dInitRtti(DemoMesh);
-dInitRtti(DemoBezierCurve);
 
 
 #define USING_DISPLAY_LIST
@@ -41,24 +40,6 @@ DemoMeshInterface::DemoMeshInterface()
 DemoMeshInterface::~DemoMeshInterface()
 {
 }
-
-const dString& DemoMeshInterface::GetName () const
-{
-	//	strcpy (nameOut, m_name);
-	return m_name;
-}
-
-
-bool DemoMeshInterface::GetVisible () const
-{
-	return m_isVisible;
-}
-
-void DemoMeshInterface::SetVisible (bool visibilityFlag)
-{
-	m_isVisible = visibilityFlag;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -99,29 +80,6 @@ void DemoSubMesh::Render() const
     glDisable(GL_TEXTURE_2D);
 
 	glDrawElements (GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, m_indexes);
-}
-
-void DemoSubMesh::OptimizeForRender(const DemoMesh* const mesh) const
-{
-	glMaterialParam(GL_FRONT, GL_SPECULAR, &m_specular.m_x);
-	glMaterialParam(GL_FRONT, GL_AMBIENT, &m_ambient.m_x);
-	glMaterialParam(GL_FRONT, GL_DIFFUSE, &m_diffuse.m_x);
-	glMaterialf(GL_FRONT, GL_SHININESS, m_shiness);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glDisable(GL_TEXTURE_2D);
-
-	glBegin(GL_TRIANGLES);
-	const dFloat* const uv = mesh->m_uv;
-	const dFloat* const normal = mesh->m_normal;
-	const dFloat* const vertex = mesh->m_vertex;
-	for (int i = 0; i < m_indexCount; i ++) {
-		int index = m_indexes[i];
-		glTexCoord2f(uv[index * 2 + 0], uv[index * 2 + 1]); 
-		glNormal3f (normal[index * 3 + 0], normal[index * 3 + 1], normal[index * 3 + 2]); 
-		glVertex3f(vertex[index * 3 + 0], vertex[index * 3 + 1], vertex[index * 3 + 2]);
-	}
-
-	glEnd();
 }
 
 void DemoSubMesh::AllocIndexData (int indexCount)
@@ -487,51 +445,6 @@ DemoMesh::~DemoMesh()
 	}
 }
 
-
-NewtonMesh* DemoMesh::CreateNewtonMesh(NewtonWorld* const world, const dMatrix& meshMatrix)
-{
-	NewtonMesh* const mesh = NewtonMeshCreate(world);
-
-	NewtonMeshBeginFace (mesh);
-
-	dMatrix rotation ((meshMatrix.Inverse4x4()).Transpose4X4());
-
-	dFloat point[3][12];
-	for (dListNode* node = GetFirst(); node; node = node->GetNext()) {
-		DemoSubMesh& segment = node->GetInfo();
-		for (int i = 0; i < segment.m_indexCount; i += 3) {
-			for (int j = 0; j < 3; j ++) {
-				int index = segment.m_indexes[i + j];
-
-				dVector p (meshMatrix.TransformVector(dVector (m_vertex[index * 3 + 0], m_vertex[index * 3 + 1], m_vertex[index * 3 + 2], 1.0f)));
-				point[j][0] = p.m_x;
-				point[j][1] = p.m_y;
-				point[j][2] = p.m_z;
-				point[j][3] = 0.0f;
-
-				//dgVector (m_normal[index * 3 + 0], m_normal[index * 3 + 1], m_normal[index * 3 + 2], dgFloat32 (0.0f));
-				dVector n (rotation.RotateVector(dVector (m_normal[index * 3 + 0], m_normal[index * 3 + 1], m_normal[index * 3 + 2], 0.0f)));
-				dAssert ((n % n) > 0.0f);
-				n = n.Scale (1.0f / dSqrt (n % n));
-
-				point[j][4] = n.m_x;
-				point[j][5] = n.m_y;
-				point[j][6] = n.m_z;
-
-				point[j][7] = m_uv[index * 2 + 0];
-				point[j][8] = m_uv[index * 2 + 1];
-
-				point[j][9] = 0.0f;
-				point[j][10] = 0.0f;
-			}
-			NewtonMeshAddFace(mesh, 3, &point[0][0], sizeof (point) / 3, 0);
-		}
-	}
-
-	NewtonMeshEndFace(mesh);
-	return mesh;
-}
-
 void DemoMesh::SplitSegment(dListNode *const node, int maxIndexCount)
 {
 	const DemoSubMesh& segment = node->GetInfo(); 
@@ -621,53 +534,6 @@ void  DemoMesh::OptimizeForRender()
 			SplitSegment(node, 128 * 128 * 6);
 		}
 	}
-
-#ifdef USING_DISPLAY_LIST
-	bool isOpaque = false;
-	bool hasTranparency = false;
-
-	for (dListNode* node = GetFirst(); node; node = node->GetNext()) {
-		DemoSubMesh& segment = node->GetInfo();
-		isOpaque |= segment.m_opacity > 0.999f;
-		hasTranparency |= segment.m_opacity <= 0.999f;
-	}
-
-	if (isOpaque) {
-		m_optimizedOpaqueDiplayList = glGenLists(1);
-
-		glNewList(m_optimizedOpaqueDiplayList, GL_COMPILE);
-
-		//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
-		for (dListNode* node = GetFirst(); node; node = node->GetNext()) {
-			DemoSubMesh& segment = node->GetInfo();
-			if (segment.m_opacity > 0.999f) {
-				segment.OptimizeForRender(this);
-			}
-		}
-		glEndList();
-	}
-
-	if (hasTranparency) {
-        m_optimizedTransparentDiplayList = glGenLists(1);
-
-        glNewList(m_optimizedTransparentDiplayList, GL_COMPILE);
-        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		glEnable (GL_BLEND);
-		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        for (dListNode* node = GetFirst(); node; node = node->GetNext()) {
-            DemoSubMesh& segment = node->GetInfo();
-            if (segment.m_opacity <= 0.999f) {
-                segment.OptimizeForRender(this);
-            }
-        }
-		glDisable(GL_BLEND);
-		glLoadIdentity();
-        glEndList();
-	}
-#endif
 }
 
 void  DemoMesh::ResetOptimization()
@@ -753,78 +619,4 @@ void DemoMesh::RenderTransparency () const
 	}
 }
 
-void DemoMesh::RenderNormals ()
-{
-	glDisable (GL_LIGHTING);
-	glDisable(GL_TEXTURE_2D);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	dFloat length = 0.1f;
-	glBegin(GL_LINES);
-
-	for (int i = 0; i < m_vertexCount; i ++) {
-		glVertex3f (m_vertex[i * 3 + 0], m_vertex[i * 3 + 1], m_vertex[i * 3 + 2]);
-		glVertex3f (m_vertex[i * 3 + 0] + m_normal[i * 3 + 0] * length, m_vertex[i * 3 + 1] + m_normal[i * 3 + 1] * length, m_vertex[i * 3 + 2] + m_normal[i * 3 + 2] * length);
-	}
-
-	glEnd();
-
-	glEnable (GL_LIGHTING);
-}
-
-
-DemoBezierCurve::DemoBezierCurve(const dScene* const scene, dScene::dTreeNode* const bezierNode)
-	:DemoMeshInterface()
-	,m_curve()
-	,m_renderResolution(50)
-{
-	m_isVisible = false;
-	dLineNodeInfo* const bezeriInfo = (dLineNodeInfo*)scene->GetInfoFromNode(bezierNode);
-	dAssert (bezeriInfo->IsType(dLineNodeInfo::GetRttiType()));
-	m_name = bezeriInfo->GetName();
-
-	m_curve = bezeriInfo->GetCurve();
-}
-
-
-DemoBezierCurve::DemoBezierCurve (const dBezierSpline& curve)
-	:DemoMeshInterface()
-	,m_curve(curve)
-	,m_renderResolution(50)
-{
-	m_isVisible = false;
-}
-
-
-void DemoBezierCurve::RenderTransparency () const
-{
-}
-
-void DemoBezierCurve::RenderNormals ()
-{
-}
-
-
-void DemoBezierCurve::Render (DemoEntityManager* const scene)
-{
-	if (m_isVisible) {
-		glDisable (GL_LIGHTING);
-		glDisable(GL_TEXTURE_2D);
-		glColor3f(1.0f, 1.0f, 1.0f);
-
-		dFloat64 scale = 1.0f / m_renderResolution;
-		glBegin(GL_LINES);
-		dBigVector p0 (m_curve.CurvePoint(0.0f)) ;
-		for (int i = 1; i <= m_renderResolution; i ++) {
-			dBigVector p1 (m_curve.CurvePoint(i * scale));
-			glVertex3f (p0.m_x, p0.m_y, p0.m_z);
-			glVertex3f (p1.m_x, p1.m_y, p1.m_z);
-			p0 = p1;
-		}
-		glEnd();
-
-		glEnable (GL_LIGHTING);
-	}
-}
 

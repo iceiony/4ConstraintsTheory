@@ -158,10 +158,10 @@ static NewtonBody* CreateConvexApproximation (const char* const fileName, DemoEn
 	// make a visual Mesh
 	DemoMesh* const visualMesh = new DemoMesh (mesh);
 
-	dMatrix matrix (dGetIdentityMatrix());
-	matrix.m_posit = origin;
+	dMatrix position (dGetIdentityMatrix());
+	position.m_posit = origin;
 
-	NewtonBody* body = CreateSimpleSolid (scene, visualMesh, mass, matrix, compound, 0);
+	NewtonBody* body = CreateSimpleSolid (scene, visualMesh, mass, position, compound, 0);
 
 
 	visualMesh->Release();

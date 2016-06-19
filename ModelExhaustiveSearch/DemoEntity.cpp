@@ -134,12 +134,6 @@ void DemoEntity::TransformCallback(const NewtonBody* body, const dFloat* matrix,
 	ent->SetMatrix (*scene, rot, transform.m_posit);
 }
 
-
-DemoMeshInterface* DemoEntity::GetMesh() const
-{
-	return m_mesh;
-}
-
 void DemoEntity::SetMesh(DemoMeshInterface* const mesh, const dMatrix& meshMatrix)
 {
 	m_meshMatrix = meshMatrix;
@@ -150,16 +144,6 @@ void DemoEntity::SetMesh(DemoMeshInterface* const mesh, const dMatrix& meshMatri
 	if (mesh) {
 		mesh->AddRef();
 	}
-}
-
-const dMatrix& DemoEntity::GetMeshMatrix() const
-{
-	return m_meshMatrix;
-}
-
-void DemoEntity::SetMeshMatrix(const dMatrix& matrix)
-{
-	m_meshMatrix = matrix;
 }
 
 dMatrix DemoEntity::GetCurrentMatrix () const
@@ -177,15 +161,6 @@ dMatrix DemoEntity::CalculateGlobalMatrix (const DemoEntity* const root) const
 	dMatrix matrix (dGetIdentityMatrix());
 	for (const DemoEntity* ptr = this; ptr != root; ptr = ptr->GetParent()) {
 		matrix = matrix * ptr->GetCurrentMatrix ();
-	}
-	return matrix;
-}
-
-dMatrix DemoEntity::CalculateInterpolatedGlobalMatrix (const DemoEntity* const root) const
-{
-	dMatrix matrix (dGetIdentityMatrix());
-	for (const DemoEntity* ptr = this; ptr != root; ptr = ptr->GetParent()) {
-		matrix = matrix * ptr->m_matrix;
 	}
 	return matrix;
 }
@@ -209,24 +184,6 @@ void DemoEntity::SetMatrix(DemoEntityManager& world, const dQuaternion& rotation
 	// release the critical section
 	world.Unlock(m_lock);
 }
-
-void DemoEntity::SetNextMatrix (DemoEntityManager& world, const dQuaternion& rotation, const dVector& position)
-{
-	// read the data in a critical section to prevent race condition from other thread  
-	world.Lock(m_lock);
-
-	m_nextPosition = position;
-	m_nextRotation = rotation;
-
-	dFloat angle = m_curRotation.DotProduct(m_nextRotation);
-	if (angle < 0.0f) {
-		m_curRotation.Scale(-1.0f);
-	}
-
-	// release the critical section
-	world.Unlock(m_lock);
-}
-
 
 void DemoEntity::ResetMatrix(DemoEntityManager& world, const dMatrix& matrix)
 {
@@ -258,13 +215,6 @@ void DemoEntity::InterpolateMatrix (DemoEntityManager& world, dFloat param)
 		m_userData->OnInterpolateMatrix(world, param);
 	}
 }
-
-
-const dMatrix& DemoEntity::GetRenderMatrix () const
-{
-	return m_matrix;
-}
-
 
 void DemoEntity::Render(dFloat timestep, DemoEntityManager* const scene) const
 {

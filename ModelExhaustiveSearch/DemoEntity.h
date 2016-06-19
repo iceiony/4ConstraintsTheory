@@ -40,34 +40,24 @@ class DemoEntity: public dHierarchy<DemoEntity>, virtual public dClassInfo
 	DemoEntity(DemoEntityManager& world, const dScene* const scene, dScene::dTreeNode* const rootSceneNode, dTree<DemoMeshInterface*, dScene::dTreeNode*>& meshCache, DemoEntityManager::EntityDictionary& entityDictionary, DemoEntity* const parent = NULL);
 	virtual ~DemoEntity(void);
 
-	DemoMeshInterface* GetMesh() const;
 	void SetMesh (DemoMeshInterface* const m_mesh, const dMatrix& meshMatrix);
-
-	const dMatrix& GetMeshMatrix() const;  
-	void SetMeshMatrix(const dMatrix& matrix);  
 
 	UserData* GetUserData ();
 	void SetUserData (UserData* const data);
 
 	dBaseHierarchy* CreateClone () const;
 
-	const dMatrix& GetRenderMatrix () const;
 	dMatrix CalculateGlobalMatrix (const DemoEntity* const root = NULL) const;
 
 	dMatrix GetNextMatrix () const;
 	dMatrix GetCurrentMatrix () const;
 	virtual void SetMatrix(DemoEntityManager& world, const dQuaternion& rotation, const dVector& position);
-	virtual void SetNextMatrix (DemoEntityManager& world, const dQuaternion& rotation, const dVector& position);
 
 	virtual void ResetMatrix(DemoEntityManager& world, const dMatrix& matrix);
 	virtual void InterpolateMatrix (DemoEntityManager& world, dFloat param);
-	dMatrix CalculateInterpolatedGlobalMatrix (const DemoEntity* const root = NULL) const;
 
 	virtual void Render(dFloat timeStep, DemoEntityManager* const scene) const;
-	virtual void SimulationPreListener(DemoEntityManager* const scene, DemoEntityManager::dListNode* const mynode, dFloat timeStep){};
-	virtual void SimulationPostListener(DemoEntityManager* const scene, DemoEntityManager::dListNode* const mynode, dFloat timeStep){};
 
-	virtual void MessageHandler (NewtonBody* const sender, int message, void* const data) {}
 	static void TransformCallback(const NewtonBody* body, const dFloat* matrix, int threadIndex);
 
 	protected:

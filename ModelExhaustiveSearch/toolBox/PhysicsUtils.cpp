@@ -91,7 +91,7 @@ void  PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int thr
 	NewtonBodySetForce (body, &force.m_x);
 }
 
-NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dFloat mass, const dMatrix& matrix, NewtonCollision* const collision, int materialId)
+NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dFloat mass, const dMatrix& position, NewtonCollision* const collision, int materialId)
 {
 
 	// calculate the moment of inertia and the relative center of mass of the solid
@@ -103,7 +103,7 @@ NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dF
 	//	dFloat Izz = mass * inertia[2];
 
 	//create the rigid body
-	NewtonBody* const rigidBody = NewtonCreateDynamicBody (world, collision, &matrix[0][0]);
+	NewtonBody* const rigidBody = NewtonCreateDynamicBody (world, collision, &position[0][0]);
 
 	// set the correct center of gravity for this body (these function are for legacy)
 	//	NewtonBodySetCentreOfMass (rigidBody, &origin[0]);
@@ -139,17 +139,17 @@ NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dF
 	return rigidBody;
 }
 
-NewtonBody* CreateSimpleSolid (DemoEntityManager* const scene, DemoMesh* const mesh, dFloat mass, const dMatrix& matrix, NewtonCollision* const collision, int materialId)
+NewtonBody* CreateSimpleSolid (DemoEntityManager* const scene, DemoMesh* const mesh, dFloat mass, const dMatrix& position, NewtonCollision* const collision, int materialId)
 {
 	dAssert (collision);
 
 	// add an new entity to the world
-	DemoEntity* const entity = new DemoEntity(matrix, NULL);
+	DemoEntity* const entity = new DemoEntity(position, NULL);
 	scene->Append (entity);
 	if (mesh) {
 		entity->SetMesh(mesh, dGetIdentityMatrix());
 	}
-	return CreateSimpleBody (scene->GetNewton(), entity, mass, matrix, collision, materialId);
+	return CreateSimpleBody (scene->GetNewton(), entity, mass, position, collision, materialId);
 }
 
 

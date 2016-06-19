@@ -20,10 +20,6 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-#define MOUSE_PICK_DAMP			 10.0f
-#define MOUSE_PICK_STIFFNESS	 100.0f
-
-
 DemoCamera::DemoCamera()
 	:DemoEntity (dGetIdentityMatrix(), NULL) 
 	,m_fov (60.0f * 3.1416f / 180.0f)

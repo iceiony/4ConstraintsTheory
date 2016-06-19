@@ -58,23 +58,6 @@ class DemoEntityManager: public dList <DemoEntity*>
         }
     };
 
-	class ButtonKey
-	{
-		public:
-		ButtonKey (bool initialState);
-
-		bool GetPushButtonState() const { return m_state;}
-
-
-//		bool IsMouseKeyDown (const NewtonDemos* const mainWin, int key);
-//		bool IsKeyDown (const NewtonDemos* const mainWin, int key);
-
-		private:
-		bool m_state;
-		bool m_memory0;
-		bool m_memory1;
-	};
-
 	class EntityDictionary: public dTree<DemoEntity*, dScene::dTreeNode*>
 	{
 	};
@@ -82,21 +65,15 @@ class DemoEntityManager: public dList <DemoEntity*>
 	DemoEntityManager(GLFWwindow * window);
 	~DemoEntityManager(void);
 
-	void InitGraphicsSystem();
-
 	void ResetTimer();
 	void RenderFrame ();
 	void UpdatePhysics(dFloat timestep);
-
-	dFloat GetPhysicsTime();
 
 	int GetWidth() const;
 	int GetHeight() const;
 
 	NewtonWorld* GetNewton() const;
 
-	DemoCamera* GetCamera() const;
-	void SetCameraMouseLock (bool state);
 	void SetCameraMatrix (const dQuaternion& rotation, const dVector& position);
 
     void PushTransparentMesh (const DemoMeshInterface* const mesh); 

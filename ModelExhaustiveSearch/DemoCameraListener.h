@@ -39,8 +39,6 @@ class DemoCameraListener: public DemoListenerBase
 		m_pitch = m_camera->GetPichAngle();
 	}
 
-	void SetCameraMouseLock (bool loockState);
-
 	void InterpolateMatrices (DemoEntityManager* const scene, dFloat timeStepFraction);
 
 	private:

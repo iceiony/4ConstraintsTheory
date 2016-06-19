@@ -24,14 +24,9 @@ class DemoMeshInterface: public dClassInfo
 	public:
 	DemoMeshInterface();
 	~DemoMeshInterface();
-	const dString& GetName () const;
-
-	bool GetVisible () const;
-	void SetVisible (bool visibilityFlag);
 
 	virtual void RenderTransparency () const = 0;
 	virtual void Render (DemoEntityManager* const scene) = 0;
-	virtual void RenderNormals () = 0;
 
 	dAddRtti(dClassInfo,DOMMY_API);
 
@@ -47,8 +42,7 @@ class DemoSubMesh
 
 	void Render() const;
 	void AllocIndexData (int indexCount);
-	void OptimizeForRender(const DemoMesh* const mesh) const;
-	
+
 	void SetOpacity(dFloat opacity);
 
 	int m_indexCount;
@@ -80,10 +74,8 @@ class DemoMesh: public DemoMeshInterface, public dList<DemoSubMesh>
 
     virtual void RenderTransparency () const;
 	virtual void Render (DemoEntityManager* const scene);
-	virtual void RenderNormals ();
 
 	void OptimizeForRender();
-	NewtonMesh* CreateNewtonMesh(NewtonWorld* const workd, const dMatrix& meshMatrix);
 
 	protected:
 	virtual ~DemoMesh();
@@ -102,25 +94,6 @@ class DemoMesh: public DemoMeshInterface, public dList<DemoSubMesh>
 	unsigned m_optimizedOpaqueDiplayList;
 	unsigned m_optimizedTransparentDiplayList;		
 };
-
-
-
-class DemoBezierCurve: public DemoMeshInterface
-{
-	public:
-	DemoBezierCurve (const dBezierSpline& curve);
-	DemoBezierCurve(const dScene* const scene, dScene::dTreeNode* const meshNode);
-
-	virtual void RenderTransparency () const;
-	virtual void Render (DemoEntityManager* const scene);
-	virtual void RenderNormals ();
-
-	dBezierSpline m_curve;
-	int m_renderResolution;
-
-	dAddRtti (DemoMeshInterface, DOMMY_API);
-};
-
 
 #endif 
 

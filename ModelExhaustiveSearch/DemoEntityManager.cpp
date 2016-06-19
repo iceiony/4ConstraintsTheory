@@ -16,12 +16,6 @@
 
 #define MAX_PHYSICS_FPS                120.0f
 
-
-DemoEntityManager::ButtonKey::ButtonKey(bool state)
-        : m_state(state), m_memory0(false), m_memory1(false) {
-}
-
-
 DemoEntityManager::DemoEntityManager(GLFWwindow * window) :
         dList<DemoEntity *>(), m_world(NULL), m_sky(NULL), m_microsecunds(0), m_currentListenerTimestep(0.0f),
         m_physicsUpdate(true), m_reEntrantUpdate(false), m_renderHoodContext(NULL), m_renderHood(NULL), m_font(0),
@@ -146,34 +140,9 @@ void DemoEntityManager::PushTransparentMesh(const DemoMeshInterface *const mesh)
 }
 
 
-DemoCamera* DemoEntityManager::GetCamera() const
-{
-    return m_cameraManager->GetCamera();
-}
-
-void DemoEntityManager::SetCameraMouseLock (bool state)
-{
-    m_cameraManager->SetCameraMouseLock(state);
-}
-
 void DemoEntityManager::SetCameraMatrix (const dQuaternion& rotation, const dVector& position)
 {
     m_cameraManager->SetCameraMatrix(this, rotation, position);
-}
-
-void DemoEntityManager::InitGraphicsSystem() {
-    GLenum err = glewInit();
-
-    // if Glew doesn't initialize correctly.
-
-    if (err != GLEW_OK) {
-        printf("Failed to init glew");
-    }
-
-}
-
-dFloat DemoEntityManager::GetPhysicsTime() {
-    return m_mainThreadPhysicsTime;
 }
 
 void DemoEntityManager::UpdatePhysics(dFloat timestep) {
