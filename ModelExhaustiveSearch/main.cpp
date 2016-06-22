@@ -92,10 +92,7 @@ int main() {
         // update the the state of all bodies in the scene
         sim.UpdatePhysics();
 
-        graphicsManager.UpdateGraphics(sim.GetSimulationTime());//RenderFrame();
+        graphicsManager.UpdateGraphics(sim.GetSimulationTime());
     }
-//    Simulation sim;
-//    sim.RunSimulation();
-//    return 0;
 }
 
