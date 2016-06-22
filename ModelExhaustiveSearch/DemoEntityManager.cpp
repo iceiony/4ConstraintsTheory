@@ -13,91 +13,33 @@
 #include "DebugDisplay.h"
 #include "DemoCameraListener.h"
 
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
-#define MAX_PHYSICS_FPS                120.0f
+DemoEntityManager::DemoEntityManager(NewtonWorld *world) :
+        dList<DemoEntity *>(), m_world(world), m_renderHoodContext(NULL),
+        m_renderHood(NULL), m_cameraManager(new DemoCameraListener(this)) {
 
-DemoEntityManager::DemoEntityManager(GLFWwindow * window) :
-        dList<DemoEntity *>(), m_world(NULL), m_sky(NULL), m_microseconds(0), m_currentListenerTimestep(0.0f),
-        m_physicsUpdate(true), m_reEntrantUpdate(false), m_renderHoodContext(NULL), m_renderHood(NULL), m_font(0),
-        m_fontImage(0), m_cameraManager(NULL) {
+    InitialiseGraphics();
 
-    this->window = window;
+    NewtonWorldSetUserData(m_world, this);
 
-    // initialized the physics world for the new scene
-    Cleanup();
-
-    ResetTimer();
-
-    dTimeTrackerSetThreadName ("mainThread");;
 }
 
 
 DemoEntityManager::~DemoEntityManager(void) {
-    // is we are run asynchronous we need make sure no update in on flight.
-    if (m_world) {
-        NewtonWaitForUpdateToFinish(m_world);
-    }
-
-    Cleanup();
-
-    // destroy the empty world
-    if (m_world) {
-        NewtonDestroy(m_world);
-        m_world = NULL;
-    }
-    dAssert (NewtonGetMemoryUsed() == 0);
-}
-
-void DemoEntityManager::RemoveEntity (dListNode* const entNode)
-{
-    DemoEntity* const entity = entNode->GetInfo();
-    entity->Release();
-    Remove(entNode);
-}
-
-void DemoEntityManager::Cleanup() {
-    // is we are run asynchronous we need make sure no update in on flight.
-    if (m_world) {
-        NewtonWaitForUpdateToFinish(m_world);
-    }
+    glfwTerminate();
 
     // destroy all remaining visual objects
     while (dList<DemoEntity *>::GetFirst()) {
         RemoveEntity(dList<DemoEntity *>::GetFirst());
     }
-
-    m_sky = NULL;
-
-    // destroy the Newton world
-    if (m_world) {
-        // get serialization call back before destroying the world
-        NewtonDestroy(m_world);
-        m_world = NULL;
-    }
-
-    dAssert (NewtonGetMemoryUsed() == 0);
-
-    // create the newton world
-    m_world = NewtonCreate();
-
-    // set joint serialization call back
-    CustomJoint::Initalize(m_world);
-
-    m_cameraManager = new DemoCameraListener(this);
-    // set the default parameters for the newton world
-    // set the simplified solver mode (faster but less accurate)
-    NewtonSetSolverModel(m_world, 0);
-
-    // clean up all caches the engine have saved
-    NewtonInvalidateCache(m_world);
-
-    // Set the Newton world user data
-    NewtonWorldSetUserData(m_world, this);
 }
 
-void DemoEntityManager::ResetTimer() {
-    dResetTimer();
-    m_microseconds = dGetTimeInMicrosenconds();
+void DemoEntityManager::RemoveEntity(dListNode *const entNode) {
+    DemoEntity *const entity = entNode->GetInfo();
+    entity->Release();
+    Remove(entNode);
 }
 
 void DemoEntityManager::PushTransparentMesh(const DemoMeshInterface *const mesh) {
@@ -108,43 +50,12 @@ void DemoEntityManager::PushTransparentMesh(const DemoMeshInterface *const mesh)
 }
 
 
-void DemoEntityManager::SetCameraMatrix (const dQuaternion& rotation, const dVector& position)
-{
+void DemoEntityManager::SetCameraMatrix(const dQuaternion &rotation, const dVector &position) {
     m_cameraManager->SetCameraMatrix(this, rotation, position);
 }
 
-void DemoEntityManager::UpdatePhysics() {
-    // update the physics
-    if (m_world) {
-
-        dFloat timeStepInSeconds = 1.0f / MAX_PHYSICS_FPS;
-        unsigned64 timeStepMicroseconds = unsigned64(timeStepInSeconds * 1000000.0f);
-
-        unsigned64 currentTime = dGetTimeInMicrosenconds();
-        unsigned64 nextTime = currentTime - m_microseconds;
-        if (nextTime > timeStepMicroseconds * 2) {
-            m_microseconds = currentTime - timeStepMicroseconds * 2;
-            nextTime = currentTime - m_microseconds;
-        }
-
-        if (nextTime >= timeStepMicroseconds) {
-            dTimeTrackerEvent(__FUNCTION__);
-            // run the newton update function
-            if (!m_reEntrantUpdate) {
-                m_reEntrantUpdate = true;
-                if (m_physicsUpdate && m_world) {
-                    NewtonUpdateAsync(m_world, timeStepInSeconds);
-                }
-                m_reEntrantUpdate = false;
-            }
-            m_microseconds += timeStepMicroseconds;
-        }
-    }
-}
-
-dFloat DemoEntityManager::CalculateInterpolationParam() const {
-    unsigned64 timeStep = dGetTimeInMicrosenconds() - m_microseconds;
-    dFloat param = (dFloat(timeStep) * MAX_PHYSICS_FPS) / 1.0e6f;
+dFloat DemoEntityManager::CalculateInterpolationParam(dFloat timeStep) const {
+    dFloat param = (timeStep * MAX_PHYSICS_FPS) / 1.0e6f;
     dAssert (param >= 0.0f);
     if (param > 1.0f) {
         param = 1.0f;
@@ -152,14 +63,23 @@ dFloat DemoEntityManager::CalculateInterpolationParam() const {
     return param;
 }
 
-void DemoEntityManager::RenderFrame() {
+void DemoEntityManager::UpdateGraphics(unsigned64 simulationTime) {
+    dFloat timeStep(dGetTimeInMicrosenconds() - simulationTime);
+
+    RenderFrame(timeStep);
+
+    glfwSwapBuffers(window);
+
+    glfwPollEvents();
+}
+
+void DemoEntityManager::RenderFrame(dFloat timeStep) {
     dTimeTrackerEvent(__FUNCTION__);
 
-    // update the the state of all bodies in the scene
-    UpdatePhysics();
-
     // Get the interpolated location of each body in the scene
-    m_cameraManager->InterpolateMatrices(this, CalculateInterpolationParam());
+    m_cameraManager->InterpolateMatrices(this, CalculateInterpolationParam(timeStep));
+
+    glClear(GL_COLOR_BUFFER_BIT);
 
     // Our shading model--Goraud (smooth).
     glShadeModel(GL_SMOOTH);
@@ -228,7 +148,7 @@ void DemoEntityManager::RenderFrame() {
     for (dListNode *node = dList<DemoEntity *>::GetFirst(); node; node = node->GetNext()) {
         DemoEntity *const entity = node->GetInfo();
         glPushMatrix();
-        entity->Render(timestep, this);
+        entity->Render(timeStep, this);
         glPopMatrix();
     }
 
@@ -305,6 +225,37 @@ void DemoEntityManager::SetWindowSize(int width, int height) {
 GLFWwindow *const DemoEntityManager::GetRootWindow() const {
     return window;
 }
+
+void DemoEntityManager::InitialiseGraphics() {
+    if (!glfwInit()) {
+        throw "Could not init GLFW \n";
+
+    };
+
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Simulation", NULL, NULL);
+
+    if (!window) {
+        throw "Could not open OpenGL window \n";
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+
+    SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    glfwSetWindowSizeCallback(window, WindowResizeCallback);
+}
+
+DemoEntityManager *DemoEntityManager::instance;
+
+void DemoEntityManager::WindowResizeCallback(GLFWwindow *window, int width, int height) {
+    instance->SetWindowSize(width, height);
+}
+
+bool DemoEntityManager::IsWindowClosed() {
+    return glfwWindowShouldClose(window) == 1;
+}
+
+
 
 
 

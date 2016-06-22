@@ -62,12 +62,10 @@ class DemoEntityManager: public dList <DemoEntity*>
 	{
 	};
 
-	DemoEntityManager(GLFWwindow * window);
+	DemoEntityManager(NewtonWorld * world);
 	~DemoEntityManager(void);
 
-	void ResetTimer();
-	void RenderFrame ();
-	void UpdatePhysics();
+	void RenderFrame(dFloat timeStep);
 
 	int GetWidth() const;
 	int GetHeight() const;
@@ -81,28 +79,27 @@ class DemoEntityManager: public dList <DemoEntity*>
 	void Lock(unsigned& atomicLock);
 	void Unlock(unsigned& atomicLock);
 
-	void Cleanup ();
 	void RemoveEntity (dList<DemoEntity*>::dListNode* const entNode);
+	static void WindowResizeCallback(GLFWwindow *window, int width, int height);
 
 	void SetWindowSize(int width, int height);
 
 	GLFWwindow *const GetRootWindow() const;
 
+	bool IsWindowClosed();
+
+	void UpdateGraphics(unsigned64 i);
+
 private:
 
-	dFloat CalculateInterpolationParam() const;
+
+	dFloat CalculateInterpolationParam(dFloat simulationTime) const;
 
 	NewtonWorld* m_world;
 
-	DemoEntity* m_sky;
-	unsigned64 m_microseconds;
-	dFloat m_currentListenerTimestep;
-	bool m_physicsUpdate;
-	bool m_reEntrantUpdate;
+	static DemoEntityManager *instance;
 	void* m_renderHoodContext;
 	RenderHoodCallback m_renderHood;
-	GLuint m_font;
-	GLuint m_fontImage;
 	DemoCameraListener* m_cameraManager;
 
 	GLFWwindow *window;
@@ -117,6 +114,8 @@ private:
 	//screen width and height required for rendring
 	int width;
 	int height;
+
+	void InitialiseGraphics();
 };
 
 // for simplicity we are not going to run the demo in a separate thread at this time

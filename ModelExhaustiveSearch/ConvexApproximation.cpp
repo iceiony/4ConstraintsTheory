@@ -183,7 +183,7 @@ void SimpleConvexApproximation (DemoEntityManager* const scene)
 	NewtonBodyGetMatrix(floor, &originMatrix[0][0]);
 
 
-	dMatrix camMatrix (dRollMatrix(0.0f * 3.1416f /180.0f) * dYawMatrix(-90.0f * 3.1416f /180.0f));
+	dMatrix camMatrix (dRollMatrix(0.0f * 3.1416f /180.0f) * dYawMatrix(0.0f * 3.1416f /180.0f));
 	dQuaternion rot (camMatrix);
 	dVector origin (originMatrix.m_posit);
 	dFloat hight = 0.0f;
@@ -201,7 +201,7 @@ void SimpleConvexApproximation (DemoEntityManager* const scene)
 	// convex approximate some file meshes 
 
 	NewtonBody* objBody = CreateConvexApproximation ("obj51.3ds", scene, location, 10.0f);
-	NewtonBody* toolBody = CreateConvexApproximation ("obj52.3ds", scene, location + dVector(-3,0.2f,0.02f), 10.0f);
+	NewtonBody* toolBody = CreateConvexApproximation ("obj52.3ds", scene, location + dVector(-3,0.15f,0.326f), 10.0f);
 
 
     //rotate tool body in proper position
@@ -221,7 +221,8 @@ void SimpleConvexApproximation (DemoEntityManager* const scene)
 	
 
 	origin.m_y += 1.0f;
-	scene->SetCameraMatrix(rot, origin-dVector(0,0,5));
+	scene->SetCameraMatrix(rot, origin-dVector(5,0,0));
+
 }
 
 
