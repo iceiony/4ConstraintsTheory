@@ -36,14 +36,14 @@ static NewtonBody* CreateFloor (DemoEntityManager* const scene)
 	// w is use as a id to have multiple copy of the same very, like for example mesh that share more than two edges.
 	// in most case w can be set to 0.0
 	static dFloat points[] = {
-			-1.0, -1.0, -1.0,
-			-1.0, -1.0,  1.0,
-			-1.0,  1.0,  1.0,
-			-1.0,  1.0, -1.0,
-			1.0, -1.0, -1.0,
-			1.0, -1.0,  1.0,
-			1.0,  1.0,  1.0,
-			1.0,  1.0, -1.0,
+			-1.0f, -1.0f, -1.0f,
+			-1.0f, -1.0f,  1.0f,
+			-1.0f,  1.0f,  1.0f,
+			-1.0f,  1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f, -1.0f,
 	};
 
 	// the vertex index list is an array of all the face, in any order, the can be convex or concave,
@@ -74,7 +74,7 @@ static NewtonBody* CreateFloor (DemoEntityManager* const scene)
 	for(auto face = faces.begin(); face != faces.end() ; face++ ){
 
 		dFloat vertices[12];
-		for(int idx=0;idx<face->size();idx++){
+		for(unsigned idx=0;idx<face->size();idx++){
 			vertices[3*idx]   = scaled[face->at(idx)].m_x;
 			vertices[3*idx+1] = scaled[face->at(idx)].m_y;
 			vertices[3*idx+2] = scaled[face->at(idx)].m_z;
@@ -163,11 +163,11 @@ static NewtonBody* CreateConvexApproximation (const char* const fileName, DemoEn
 
 	NewtonBody* body = CreateSimpleSolid (scene, visualMesh, mass, position, compound, 0);
 
-
 	visualMesh->Release();
 
 	NewtonDestroyCollision(compound);
-	NewtonMeshDestroy (convexApproximation);
+	NewtonMeshDestroy(convexApproximation);
+	NewtonMeshDestroy(mesh);
 
 	return body;
 }
@@ -181,7 +181,6 @@ void SimpleConvexApproximation (DemoEntityManager* const scene)
 
 	dMatrix originMatrix;
 	NewtonBodyGetMatrix(floor, &originMatrix[0][0]);
-
 
 	dMatrix camMatrix (dRollMatrix(0.0f * 3.1416f /180.0f) * dYawMatrix(0.0f * 3.1416f /180.0f));
 	dQuaternion rot (camMatrix);
@@ -197,9 +196,7 @@ void SimpleConvexApproximation (DemoEntityManager* const scene)
 
 	int defaultMaterialID = NewtonMaterialGetDefaultGroupID (scene->GetNewton());
 
-
 	// convex approximate some file meshes 
-
 	NewtonBody* objBody = CreateConvexApproximation ("obj51.3ds", scene, location, 10.0f);
 	NewtonBody* toolBody = CreateConvexApproximation ("obj52.3ds", scene, location + dVector(-3,0.15f,0.326f), 10.0f);
 

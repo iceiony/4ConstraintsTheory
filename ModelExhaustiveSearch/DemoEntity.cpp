@@ -124,7 +124,7 @@ void DemoEntity::SetUserData (UserData* const data)
 	m_userData = data;
 }
 
-void DemoEntity::TransformCallback(const NewtonBody* body, const dFloat* matrix, int threadIndex)
+void DemoEntity::TransformCallback(const NewtonBody* const body, const dFloat* const matrix, int threadIndex)
 {
 	DemoEntity* const ent = (DemoEntity*) NewtonBodyGetUserData(body);
 	

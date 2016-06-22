@@ -58,7 +58,7 @@ class DemoEntity: public dHierarchy<DemoEntity>, virtual public dClassInfo
 
 	virtual void Render(dFloat timeStep, DemoEntityManager* const scene) const;
 
-	static void TransformCallback(const NewtonBody* body, const dFloat* matrix, int threadIndex);
+	static void TransformCallback(const NewtonBody* const body, const dFloat* const matrix, int threadIndex);
 
 	protected:
 

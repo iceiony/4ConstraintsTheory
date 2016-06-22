@@ -77,7 +77,7 @@ void   MoveTool (const NewtonBody* body, dFloat time, int threadIndex){
 }
 
 // add force and torque to rigid body
-void  PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int threadIndex)
+void  PhysicsApplyGravityForce (const NewtonBody* const body, dFloat timestep, int threadIndex)
 {
 	dFloat Ixx;
 	dFloat Iyy;
@@ -85,7 +85,6 @@ void  PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int thr
 	dFloat mass;
 
 	NewtonBodyGetMass (body, &mass, &Ixx, &Iyy, &Izz);
-//mass*= 0.0f;
 
 	dVector force (dVector (0.0f, 1.0f, 0.0f).Scale (mass * DEMO_GRAVITY));
 	NewtonBodySetForce (body, &force.m_x);
@@ -94,20 +93,8 @@ void  PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int thr
 NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dFloat mass, const dMatrix& position, NewtonCollision* const collision, int materialId)
 {
 
-	// calculate the moment of inertia and the relative center of mass of the solid
-	//	dVector origin;
-	//	dVector inertia;
-	//	NewtonConvexCollisionCalculateInertialMatrix (collision, &inertia[0], &origin[0]);	
-	//	dFloat Ixx = mass * inertia[0];
-	//	dFloat Iyy = mass * inertia[1];
-	//	dFloat Izz = mass * inertia[2];
-
 	//create the rigid body
 	NewtonBody* const rigidBody = NewtonCreateDynamicBody (world, collision, &position[0][0]);
-
-	// set the correct center of gravity for this body (these function are for legacy)
-	//	NewtonBodySetCentreOfMass (rigidBody, &origin[0]);
-	//	NewtonBodySetMassMatrix (rigidBody, mass, Ixx, Iyy, Izz);
 
 	// use a more convenient function for setting mass and inertia matrix
 	NewtonBodySetMassProperties (rigidBody, mass, collision);
@@ -118,24 +105,12 @@ NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dF
 	// assign the wood id
 	NewtonBodySetMaterialGroupID (rigidBody, materialId);
 
-	//  set continuous collision mode
-	//	NewtonBodySetContinuousCollisionMode (rigidBody, continueCollisionMode);
-
 	// set the transform call back function
 	NewtonBodySetTransformCallback (rigidBody, DemoEntity::TransformCallback);
 
 	// set the force and torque call back function
 	NewtonBodySetForceAndTorqueCallback (rigidBody, PhysicsApplyGravityForce);
 
-	// set the matrix for both the rigid body and the graphic body
-	//NewtonBodySetMatrix (rigidBody, &matrix[0][0]);
-	//PhysicsSetTransform (rigidBody, &matrix[0][0], 0);
-
-	//dVector xxx (0, -9.8f * mass, 0.0f, 0.0f);
-	//NewtonBodySetForce (rigidBody, &xxx[0]);
-
-	// force the body to be active of inactive
-	//	NewtonBodySetAutoSleep (rigidBody, sleepMode);
 	return rigidBody;
 }
 
