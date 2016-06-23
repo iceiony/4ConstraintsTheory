@@ -17,8 +17,7 @@
 #define WINDOW_HEIGHT 600
 
 GraphicsManager::GraphicsManager(NewtonWorld *world) :
-        dList<GraphicsEntity *>(), m_world(world), m_renderHoodContext(NULL),
-        m_renderHood(NULL), m_cameraManager(new CameraListener(this)) {
+        dList<GraphicsEntity *>(), m_world(world), m_cameraManager(new CameraListener(this)) {
 
     InitialiseGraphics();
 
@@ -98,10 +97,8 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
 
-    glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
-    //glClear( GL_COLOR_BUFFER_BIT );
+    glClearColor(0.86f, 0.96f, 1.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
     // set default lightning
     //	glDisable(GL_BLEND);
@@ -174,44 +171,6 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
 
     int lineNumber = 130 + 22;
 
-    if (m_renderHood) {
-
-        // set display for 2d render mode
-
-        dFloat width = GetWidth();
-        dFloat height = GetHeight();
-
-        glColor3f(1.0, 1.0, 1.0);
-
-        glPushMatrix();
-        glMatrixMode(GL_PROJECTION);
-
-        glLoadIdentity();
-        gluOrtho2D(0, width, 0, height);
-
-        glPushMatrix();
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
-        glDisable(GL_LIGHTING);
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_TEXTURE_2D);
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-        // render 2d display
-        m_renderHood(this, m_renderHoodContext, lineNumber);
-
-        // restore display mode
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
-
-
-        glMatrixMode(GL_MODELVIEW);
-        glPopMatrix();
-    }
-
-
     // draw everything and swap the display buffer
     glFlush();
 }
@@ -255,7 +214,7 @@ bool GraphicsManager::IsWindowClosed() {
     return glfwWindowShouldClose(window) == 1;
 }
 
-void GraphicsManager::Register(NewtonBody * body) {
+void GraphicsManager::Register(NewtonBody * body,dVector color = GRAY) {
     NewtonCollision * collision = NewtonBodyGetCollision(body);
     NewtonMesh * mesh = NewtonMeshCreateFromCollision(collision);
 
@@ -263,7 +222,7 @@ void GraphicsManager::Register(NewtonBody * body) {
     NewtonBodyGetMatrix(body,&position[0][0]);
 
     //Visual mesh rendering was taken from Newton demo code
-    GraphicsMesh* const visualMesh = new GraphicsMesh (mesh);
+    GraphicsMesh* const visualMesh = new GraphicsMesh(mesh,color);
     GraphicsEntity *const entity = new GraphicsEntity(position, NULL);
     Append(entity);
     if (mesh) {

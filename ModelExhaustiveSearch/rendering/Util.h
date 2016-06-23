@@ -212,22 +212,6 @@ inline char *_strlwr_ (char *a)
 #endif
 #endif
 
-
-
-#define dRAND_MAX		0x0fffffff
-
-unsigned dRand ();
-void dSetRandSeed (unsigned seed);
-dFloat RandomVariable(dFloat amp);
-
-inline int TwosPower (int x)
-{
-    int rval=1;
-    for (; rval < x; rval *= 2);
-    return rval;
-}
-
-
 // for some reason specifying a relative does not seem to work in Linus
 // and i have to specify a absolute path
 // #define ASSETS_PATH "."

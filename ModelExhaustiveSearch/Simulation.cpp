@@ -37,7 +37,7 @@ NewtonBody* Simulation::CreateFloor ()
     // now we can use this mesh for lot of stuff, we can apply UV, we can decompose into convex,
     NewtonCollision* const collision = NewtonCreateConvexHullFromMesh(m_world, newtonMesh, 0.001f, 0);
 
-    NewtonBody* const floorBody = CreateSimpleBody(m_world, NULL, mass, origin, collision, 0);
+    floorBody = CreateSimpleBody(m_world, NULL, mass, origin, collision, 0);
 
     NewtonDestroyCollision(collision);
     NewtonMeshDestroy (newtonMesh);
@@ -74,3 +74,8 @@ NewtonBody * Simulation::LoadTool(const char *fileName) {
     objBody = LoadModel(fileName);
     return objBody;
 }
+
+NewtonBody *Simulation::GetFloor() {
+    return floorBody;
+}
+

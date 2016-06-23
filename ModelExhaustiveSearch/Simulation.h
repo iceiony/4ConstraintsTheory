@@ -14,6 +14,7 @@ private:
     NewtonWorld *m_world;
     NewtonBody *toolBody;
     NewtonBody *objBody;
+    NewtonBody *floorBody;
 
     unsigned64 m_microseconds;
 
@@ -65,6 +66,8 @@ public:
 
     NewtonBody * LoadObject(const char *fileName);
     NewtonBody * LoadTool(const char *fileName);
+
+    NewtonBody *GetFloor();
 
 };
 #endif

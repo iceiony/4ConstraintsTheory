@@ -44,7 +44,7 @@ GraphicsMeshInterface::~GraphicsMeshInterface()
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-DemoSubMesh::DemoSubMesh ()
+GraphicsSubMesh::GraphicsSubMesh ()
 	:m_indexCount(0)
 	,m_indexes(NULL)
 	,m_shiness(80.0f)
@@ -55,14 +55,14 @@ DemoSubMesh::DemoSubMesh ()
 {
 }
 
-DemoSubMesh::~DemoSubMesh ()
+GraphicsSubMesh::~GraphicsSubMesh ()
 {
 	if (m_indexes) {
 		delete[] m_indexes;
 	}
 }
 
-void DemoSubMesh::SetOpacity(dFloat opacity)
+void GraphicsSubMesh::SetOpacity(dFloat opacity)
 {
 	m_opacity = opacity;
 	m_ambient.m_w = opacity;
@@ -70,7 +70,7 @@ void DemoSubMesh::SetOpacity(dFloat opacity)
 	m_specular.m_w = opacity;
 }
 
-void DemoSubMesh::Render() const
+void GraphicsSubMesh::Render() const
 {
 	glMaterialParam(GL_FRONT, GL_SPECULAR, &m_specular.m_x);
 	glMaterialParam(GL_FRONT, GL_AMBIENT, &m_ambient.m_x);
@@ -82,7 +82,7 @@ void DemoSubMesh::Render() const
 	glDrawElements (GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, m_indexes);
 }
 
-void DemoSubMesh::AllocIndexData (int indexCount)
+void GraphicsSubMesh::AllocIndexData (int indexCount)
 {
 	m_indexCount = indexCount;
 	if (m_indexes) {
@@ -95,7 +95,7 @@ void DemoSubMesh::AllocIndexData (int indexCount)
 
 GraphicsMesh::GraphicsMesh(const char* const name)
 	:GraphicsMeshInterface()
-	,dList<DemoSubMesh>()
+	,dList<GraphicsSubMesh>()
 	,m_vertexCount(0)
 	,m_uv (NULL)
 	,m_vertex(NULL)
@@ -107,7 +107,7 @@ GraphicsMesh::GraphicsMesh(const char* const name)
 
 GraphicsMesh::GraphicsMesh(const dScene* const scene, dScene::dTreeNode* const meshNode)
 	:GraphicsMeshInterface()
-	,dList<DemoSubMesh>()
+	,dList<GraphicsSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
 	,m_normal(NULL)
@@ -152,7 +152,7 @@ GraphicsMesh::GraphicsMesh(const dScene* const scene, dScene::dTreeNode* const m
 	for (int handle = NewtonMeshFirstMaterial (mesh, meshCookie); handle != -1; handle = NewtonMeshNextMaterial (mesh, meshCookie, handle)) {
 		int materialIndex = NewtonMeshMaterialGetMaterial (mesh, meshCookie, handle); 
 		int indexCount = NewtonMeshMaterialGetIndexCount (mesh, meshCookie, handle); 
-		DemoSubMesh* const segment = AddSubMesh();
+		GraphicsSubMesh* const segment = AddSubMesh();
 
 		dTree<dScene::dTreeNode*, dCRCTYPE>::dTreeNode* matNodeCache = materialMap.Find(materialIndex);
 		if (matNodeCache) {
@@ -185,7 +185,7 @@ GraphicsMesh::GraphicsMesh(const dScene* const scene, dScene::dTreeNode* const m
 	}
 }
 
-GraphicsMesh::GraphicsMesh(NewtonMesh* const mesh)
+GraphicsMesh::GraphicsMesh(NewtonMesh *const mesh, dVector color)
 	:GraphicsMeshInterface()
 	,m_uv(NULL)
 	,m_vertex(NULL)
@@ -200,13 +200,12 @@ GraphicsMesh::GraphicsMesh(NewtonMesh* const mesh)
 	// extract the materials index array for mesh
 	void* const meshCookie = NewtonMeshBeginHandle (mesh); 
 	for (int handle = NewtonMeshFirstMaterial (mesh, meshCookie); handle != -1; handle = NewtonMeshNextMaterial (mesh, meshCookie, handle)) {
-		int textureId = NewtonMeshMaterialGetMaterial (mesh, meshCookie, handle); 
-		int indexCount = NewtonMeshMaterialGetIndexCount (mesh, meshCookie, handle); 
-		DemoSubMesh* const segment = AddSubMesh();
+		int indexCount = NewtonMeshMaterialGetIndexCount (mesh, meshCookie, handle);
+		GraphicsSubMesh* const segment = AddSubMesh();
 
-        segment->m_shiness = 1.0f;
-        segment->m_ambient = dVector (0.8f, 0.8f, 0.8f, 1.0f);
-        segment->m_diffuse = dVector (0.8f, 0.8f, 0.8f, 1.0f);
+        segment->m_shiness = 0.0f;
+        segment->m_ambient = color;
+        segment->m_diffuse = color;
         segment->m_specular = dVector (0.0f, 0.0f, 0.0f, 1.0f);
 
 		segment->AllocIndexData (indexCount);
@@ -224,7 +223,7 @@ GraphicsMesh::GraphicsMesh(NewtonMesh* const mesh)
 
 GraphicsMesh::GraphicsMesh(const GraphicsMesh& mesh)
 	:GraphicsMeshInterface()
-	,dList<DemoSubMesh>()
+	,dList<GraphicsSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
 	,m_normal(NULL)
@@ -237,8 +236,8 @@ GraphicsMesh::GraphicsMesh(const GraphicsMesh& mesh)
 	memcpy (m_uv, mesh.m_uv, 2 * m_vertexCount * sizeof (dFloat));
 
 	for (dListNode* nodes = mesh.GetFirst(); nodes; nodes = nodes->GetNext()) {
-		DemoSubMesh* const segment = AddSubMesh();
-		DemoSubMesh& srcSegment = nodes->GetInfo();
+		GraphicsSubMesh* const segment = AddSubMesh();
+		GraphicsSubMesh& srcSegment = nodes->GetInfo();
 
 		segment->AllocIndexData (srcSegment.m_indexCount);
 		memcpy (segment->m_indexes, srcSegment.m_indexes, srcSegment.m_indexCount * sizeof (unsigned));
@@ -255,7 +254,7 @@ GraphicsMesh::GraphicsMesh(const GraphicsMesh& mesh)
 
 GraphicsMesh::GraphicsMesh(const char* const name, const NewtonCollision* const collision, const char* const texture0, const char* const texture1, const char* const texture2, dFloat opacity)
 	:GraphicsMeshInterface()
-	,dList<DemoSubMesh>()
+	,dList<GraphicsSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
 	,m_normal(NULL)
@@ -309,7 +308,7 @@ GraphicsMesh::GraphicsMesh(const char* const name, const NewtonCollision* const 
 	for (int handle = NewtonMeshFirstMaterial (mesh, geometryHandle); handle != -1; handle = NewtonMeshNextMaterial (mesh, geometryHandle, handle)) {
 		int indexCount = NewtonMeshMaterialGetIndexCount (mesh, geometryHandle, handle);
 
-		DemoSubMesh* const segment = AddSubMesh();
+		GraphicsSubMesh* const segment = AddSubMesh();
 
 		segment->SetOpacity(opacity);
 
@@ -328,7 +327,7 @@ GraphicsMesh::GraphicsMesh(const char* const name, const NewtonCollision* const 
 
 GraphicsMesh::GraphicsMesh(const char* const name, dFloat* const elevation, int size, dFloat cellSize, dFloat texelsDensity, int tileSize)
 	:GraphicsMeshInterface()
-	,dList<DemoSubMesh>()
+	,dList<GraphicsSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
 	,m_normal(NULL)
@@ -403,7 +402,7 @@ GraphicsMesh::GraphicsMesh(const char* const name, dFloat* const elevation, int 
 		for (int x0 = 0; x0 < segmentsCount; x0 ++ ) {
 			int x = x0 * tileSize;
 
-			DemoSubMesh* const tile = AddSubMesh();
+			GraphicsSubMesh* const tile = AddSubMesh();
 			tile->AllocIndexData (tileSize * tileSize * 6);
 			unsigned* const indexes = tile->m_indexes;
 
@@ -447,7 +446,7 @@ GraphicsMesh::~GraphicsMesh()
 
 void GraphicsMesh::SplitSegment(dListNode *const node, int maxIndexCount)
 {
-	const DemoSubMesh& segment = node->GetInfo(); 
+	const GraphicsSubMesh& segment = node->GetInfo();
 	if (segment.m_indexCount > maxIndexCount) {
 		dVector minBox (1.0e10f, 1.0e10f, 1.0e10f, 0.0f);
 		dVector maxBox (-1.0e10f, -1.0e10f, -1.0e10f, 0.0f);
@@ -489,8 +488,8 @@ void GraphicsMesh::SplitSegment(dListNode *const node, int maxIndexCount)
 
 		dListNode* const leftNode = Append();
 		dListNode* const rightNode = Append();
-		DemoSubMesh* const leftSubMesh = &leftNode->GetInfo();
-		DemoSubMesh* const rightSubMesh = &rightNode->GetInfo();
+		GraphicsSubMesh* const leftSubMesh = &leftNode->GetInfo();
+		GraphicsSubMesh* const rightSubMesh = &rightNode->GetInfo();
 		leftSubMesh->AllocIndexData (leftCount);
 		rightSubMesh->AllocIndexData (rightCount);
 
@@ -528,7 +527,7 @@ void  GraphicsMesh::OptimizeForRender()
 
 	dListNode* nextNode;
 	for (dListNode* node = GetFirst(); node; node = nextNode) {
-		DemoSubMesh& segment = node->GetInfo();
+		GraphicsSubMesh& segment = node->GetInfo();
 		nextNode = node->GetNext();
 		if (segment.m_indexCount > 128 * 128 * 6) {
 			SplitSegment(node, 128 * 128 * 6);
@@ -559,7 +558,7 @@ void GraphicsMesh::AllocVertexData (int vertexCount)
 	memset (m_uv, 0, 2 * m_vertexCount * sizeof (dFloat));
 }
 
-DemoSubMesh* GraphicsMesh::AddSubMesh()
+GraphicsSubMesh* GraphicsMesh::AddSubMesh()
 {
 	return &Append()->GetInfo();
 }
@@ -584,7 +583,7 @@ void GraphicsMesh::Render (GraphicsManager* const scene)
 			glTexCoordPointer (2, GL_FLOAT, 0, m_uv);
 
 			for (dListNode* nodes = GetFirst(); nodes; nodes = nodes->GetNext()) {
-				DemoSubMesh& segment = nodes->GetInfo();
+				GraphicsSubMesh& segment = nodes->GetInfo();
 				segment.Render();
 			}
 			glDisableClientState(GL_VERTEX_ARRAY);	// disable vertex arrays
@@ -609,7 +608,7 @@ void GraphicsMesh::RenderTransparency () const
 			glTexCoordPointer (2, GL_FLOAT, 0, m_uv);
 
 			for (dListNode* nodes = GetFirst(); nodes; nodes = nodes->GetNext()) {
-				DemoSubMesh& segment = nodes->GetInfo();
+				GraphicsSubMesh& segment = nodes->GetInfo();
 				segment.Render();
 			}
 			glDisableClientState(GL_VERTEX_ARRAY);	// disable vertex arrays

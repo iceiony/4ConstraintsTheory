@@ -17,6 +17,11 @@
 #include "dHighResolutionTimer.h"
 #include <GLFW/glfw3.h>
 
+#define RED   dVector(1.,.3,.3)
+#define GREEN dVector(.3,.95,.3)
+#define BLUE  dVector(.5,.5,1.)
+#define GRAY  dVector(.8,.8,.8)
+
 //class GraphicsMesh;
 class GraphicsEntity;
 class Camera;
@@ -90,7 +95,7 @@ class GraphicsManager: public dList <GraphicsEntity*>
 
 	void UpdateGraphics(unsigned64 i);
 
-	void Register(NewtonBody *body);
+	void Register(NewtonBody *body,dVector color);
 
 	void SetCamera(dVector origin, dFloat leftAngle , dFloat upAngle );
 
@@ -102,8 +107,6 @@ private:
 	NewtonWorld* m_world;
 
 	static GraphicsManager *instance;
-	void* m_renderHoodContext;
-	RenderHoodCallback m_renderHood;
 	CameraListener* m_cameraManager;
 
 	GLFWwindow *window;

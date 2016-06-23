@@ -34,11 +34,11 @@ class GraphicsMeshInterface: public dClassInfo
 	bool m_isVisible;
 };
 
-class DemoSubMesh
+class GraphicsSubMesh
 {
 	public:
-	DemoSubMesh ();
-	~DemoSubMesh ();
+	GraphicsSubMesh ();
+	~GraphicsSubMesh ();
 
 	void Render() const;
 	void AllocIndexData (int indexCount);
@@ -56,12 +56,12 @@ class DemoSubMesh
 };
 
 
-class GraphicsMesh: public GraphicsMeshInterface, public dList<DemoSubMesh>
+class GraphicsMesh: public GraphicsMeshInterface, public dList<GraphicsSubMesh>
 {
 	public:
 	GraphicsMesh(const GraphicsMesh& mesh);
 	GraphicsMesh(const char* const name);
-	GraphicsMesh(NewtonMesh* const mesh);
+	GraphicsMesh(NewtonMesh *const mesh, dVector color);
 	GraphicsMesh(const dScene* const scene, dScene::dTreeNode* const meshNode);
 	GraphicsMesh(const char* const name, const NewtonCollision* const collision, const char* const texture0, const char* const texture1, const char* const texture2, dFloat opacity = 1.0f);
 	GraphicsMesh(const char* const name, dFloat* const elevation, int size, dFloat cellSize, dFloat texelsDensity, int tileSize);
@@ -69,7 +69,7 @@ class GraphicsMesh: public GraphicsMeshInterface, public dList<DemoSubMesh>
 	using dClassInfo::operator new;
 	using dClassInfo::operator delete;
 
-	DemoSubMesh* AddSubMesh();
+	GraphicsSubMesh* AddSubMesh();
 	void AllocVertexData (int vertexCount);
 
     virtual void RenderTransparency () const;

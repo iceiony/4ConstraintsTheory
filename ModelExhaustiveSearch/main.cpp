@@ -10,8 +10,9 @@ int main() {
     NewtonBody* objBody = sim.LoadObject("obj51.3ds");
     NewtonBody* toolBody = sim.LoadTool("obj52.3ds");
 
-    graphicsManager.Register(toolBody);
-    graphicsManager.Register(objBody);
+    graphicsManager.Register(sim.GetFloor(),BLUE);
+    graphicsManager.Register(toolBody,GREEN);
+    graphicsManager.Register(objBody,GREEN);
     graphicsManager.SetCamera(dVector(-5, 2, 0), 0, 0);
 
 
