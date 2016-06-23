@@ -16,232 +16,198 @@
 dInitRtti(DemoEntity);
 
 
-DemoEntity::DemoEntity(const dMatrix& matrix, DemoEntity* const parent)
-	:dClassInfo()
-	,dHierarchy<DemoEntity>()
-	,m_matrix(matrix) 
-	,m_curPosition (matrix.m_posit)
-	,m_nextPosition (matrix.m_posit)
-	,m_curRotation (dQuaternion (matrix))
-	,m_nextRotation (dQuaternion (matrix))
-	,m_meshMatrix(dGetIdentityMatrix())
-	,m_mesh (NULL)
-	,m_userData(NULL)
-	,m_lock(0) 
-{
-	if (parent) {
-		Attach (parent);
-	}
+DemoEntity::DemoEntity(const dMatrix &matrix, DemoEntity *const parent)
+        : dClassInfo(), dHierarchy<DemoEntity>(), m_matrix(matrix), m_curPosition(matrix.m_posit),
+          m_nextPosition(matrix.m_posit), m_curRotation(dQuaternion(matrix)), m_nextRotation(dQuaternion(matrix)),
+          m_meshMatrix(dGetIdentityMatrix()), m_mesh(NULL), m_userData(NULL), m_lock(0) {
+    if (parent) {
+        Attach(parent);
+    }
 }
 
 
+DemoEntity::DemoEntity(DemoEntityManager &world, const dScene *const scene, dScene::dTreeNode *const rootSceneNode,
+                       dTree<DemoMeshInterface *, dScene::dTreeNode *> &meshCache,
+                       DemoEntityManager::EntityDictionary &entityDictionary, DemoEntity *const parent)
+        : dClassInfo(), dHierarchy<DemoEntity>(), m_matrix(dGetIdentityMatrix()), m_curPosition(0.0f, 0.0f, 0.0f, 1.0f),
+          m_nextPosition(0.0f, 0.0f, 0.0f, 1.0f), m_curRotation(1.0f, 0.0f, 0.0f, 0.0f),
+          m_nextRotation(1.0f, 0.0f, 0.0f, 0.0f), m_meshMatrix(dGetIdentityMatrix()), m_mesh(NULL), m_userData(NULL),
+          m_lock(0) {
+    // add this entity to the dictionary
+    entityDictionary.Insert(this, rootSceneNode);
 
-DemoEntity::DemoEntity(DemoEntityManager& world, const dScene* const scene, dScene::dTreeNode* const rootSceneNode, dTree<DemoMeshInterface*, dScene::dTreeNode*>& meshCache, DemoEntityManager::EntityDictionary& entityDictionary, DemoEntity* const parent)
-	:dClassInfo()
-	,dHierarchy<DemoEntity>() 
-	,m_matrix(dGetIdentityMatrix()) 
-	,m_curPosition (0.0f, 0.0f, 0.0f, 1.0f)
-	,m_nextPosition (0.0f, 0.0f, 0.0f, 1.0f)
-	,m_curRotation (1.0f, 0.0f, 0.0f, 0.0f)
-	,m_nextRotation (1.0f, 0.0f, 0.0f, 0.0f)
-	,m_meshMatrix(dGetIdentityMatrix())
-	,m_mesh (NULL)
-	,m_userData(NULL)
-	,m_lock(0) 
-{
-	// add this entity to the dictionary
-	entityDictionary.Insert(this, rootSceneNode);
+    // if this is a child mesh set it as child of the entity
+    if (parent) {
+        Attach(parent);
+        dAssert (scene->FindParentByType(rootSceneNode, dSceneNodeInfo::GetRttiType()));
+    }
 
-	// if this is a child mesh set it as child of the entity
-	if (parent) {
-		Attach (parent);
-		dAssert (scene->FindParentByType(rootSceneNode, dSceneNodeInfo::GetRttiType()));
-	}
+    dSceneNodeInfo *const sceneInfo = (dSceneNodeInfo *) scene->GetInfoFromNode(rootSceneNode);
+    dMatrix matrix(sceneInfo->GetTransform());
+    ResetMatrix(world, matrix);
+    SetNameID(sceneInfo->GetName());
 
-	dSceneNodeInfo* const sceneInfo = (dSceneNodeInfo*) scene->GetInfoFromNode (rootSceneNode);
-	dMatrix matrix (sceneInfo->GetTransform());
-	ResetMatrix (world, matrix);
-	SetNameID(sceneInfo->GetName());
+    // if this node has a mesh, find it and attach it to this entity
+    dScene::dTreeNode *const meshNode = scene->FindChildByType(rootSceneNode, dMeshNodeInfo::GetRttiType());
+    if (meshNode) {
+        DemoMeshInterface *const mesh = meshCache.Find(meshNode)->GetInfo();
+        SetMesh(mesh, sceneInfo->GetGeometryTransform());
+    }
 
-	// if this node has a mesh, find it and attach it to this entity
-	dScene::dTreeNode* const meshNode = scene->FindChildByType(rootSceneNode, dMeshNodeInfo::GetRttiType());
-	if (meshNode) {
-		DemoMeshInterface* const mesh = meshCache.Find(meshNode)->GetInfo();
-		SetMesh(mesh, sceneInfo->GetGeometryTransform());
-	}
-
-	// we now scan for all dSceneNodeInfo node with direct connection to this rootSceneNode, 
-	// and we load the as children of this entity
-	for (void* child = scene->GetFirstChildLink(rootSceneNode); child; child = scene->GetNextChildLink (rootSceneNode, child)) {
-		dScene::dTreeNode* const node = scene->GetNodeFromLink(child);
-		dNodeInfo* const info = scene->GetInfoFromNode(node);
-		if (info->IsType(dSceneNodeInfo::GetRttiType())) {
-			new DemoEntity (world, scene, node, meshCache, entityDictionary, this);
-		}
-	}
+    // we now scan for all dSceneNodeInfo node with direct connection to this rootSceneNode,
+    // and we load the as children of this entity
+    for (void *child = scene->GetFirstChildLink(rootSceneNode); child; child = scene->GetNextChildLink(rootSceneNode,
+                                                                                                       child)) {
+        dScene::dTreeNode *const node = scene->GetNodeFromLink(child);
+        dNodeInfo *const info = scene->GetInfoFromNode(node);
+        if (info->IsType(dSceneNodeInfo::GetRttiType())) {
+            new DemoEntity(world, scene, node, meshCache, entityDictionary, this);
+        }
+    }
 }
 
-DemoEntity::DemoEntity(const DemoEntity& copyFrom)
-	:dClassInfo()
-	,dHierarchy<DemoEntity>(copyFrom)
-	,m_matrix(copyFrom.m_matrix)
-	,m_curPosition(copyFrom.m_curPosition)
-	,m_nextPosition(copyFrom.m_nextPosition)
-	,m_curRotation(copyFrom.m_curRotation)
-	,m_nextRotation(copyFrom.m_nextRotation)
-	,m_meshMatrix(copyFrom.m_meshMatrix)
-	,m_mesh(copyFrom.m_mesh)
-	,m_userData(NULL)
-	,m_lock(0)
-{
-	if (m_mesh) {
-		m_mesh->AddRef();
-	}
+DemoEntity::DemoEntity(const DemoEntity &copyFrom)
+        : dClassInfo(), dHierarchy<DemoEntity>(copyFrom), m_matrix(copyFrom.m_matrix),
+          m_curPosition(copyFrom.m_curPosition), m_nextPosition(copyFrom.m_nextPosition),
+          m_curRotation(copyFrom.m_curRotation), m_nextRotation(copyFrom.m_nextRotation),
+          m_meshMatrix(copyFrom.m_meshMatrix), m_mesh(copyFrom.m_mesh), m_userData(NULL), m_lock(0) {
+    if (m_mesh) {
+        m_mesh->AddRef();
+    }
 }
 
-DemoEntity::~DemoEntity(void)
-{
-	if (m_userData) {
-		delete m_userData;
-	}
-	SetMesh(NULL, dGetIdentityMatrix());
+DemoEntity::~DemoEntity(void) {
+    if (m_userData) {
+        delete m_userData;
+    }
+    SetMesh(NULL, dGetIdentityMatrix());
 }
 
 
-dBaseHierarchy* DemoEntity::CreateClone () const
-{
-	return new DemoEntity(*this);
+dBaseHierarchy *DemoEntity::CreateClone() const {
+    return new DemoEntity(*this);
 }
 
 
-DemoEntity::UserData* DemoEntity::GetUserData ()
-{
-	return m_userData;
+DemoEntity::UserData *DemoEntity::GetUserData() {
+    return m_userData;
 }
 
-void DemoEntity::SetUserData (UserData* const data)
-{
-	m_userData = data;
+void DemoEntity::SetUserData(UserData *const data) {
+    m_userData = data;
 }
 
-void DemoEntity::TransformCallback(const NewtonBody* const body, const dFloat* const matrix, int threadIndex)
-{
-	DemoEntity* const ent = (DemoEntity*) NewtonBodyGetUserData(body);
-	
-	DemoEntityManager* const scene = (DemoEntityManager*) NewtonWorldGetUserData(NewtonBodyGetWorld(body));
-	dMatrix transform (matrix);
-	dQuaternion rot (transform);
-	ent->SetMatrix (*scene, rot, transform.m_posit);
+void DemoEntity::TransformCallback(const NewtonBody *const body, const dFloat *const matrix, int threadIndex) {
+    DemoEntity *const ent = (DemoEntity *) NewtonBodyGetUserData(body);
+
+    if (ent) {
+        DemoEntityManager *const scene = (DemoEntityManager *) NewtonWorldGetUserData(NewtonBodyGetWorld(body));
+        dMatrix transform(matrix);
+        dQuaternion rot(transform);
+        ent->SetMatrix(*scene, rot, transform.m_posit);
+    }
 }
 
-void DemoEntity::SetMesh(DemoMeshInterface* const mesh, const dMatrix& meshMatrix)
-{
-	m_meshMatrix = meshMatrix;
-	if (m_mesh) {
-		m_mesh->Release();
-	}
-	m_mesh = mesh;
-	if (mesh) {
-		mesh->AddRef();
-	}
+void DemoEntity::SetMesh(DemoMeshInterface *const mesh, const dMatrix &meshMatrix) {
+    m_meshMatrix = meshMatrix;
+    if (m_mesh) {
+        m_mesh->Release();
+    }
+    m_mesh = mesh;
+    if (mesh) {
+        mesh->AddRef();
+    }
 }
 
-dMatrix DemoEntity::GetCurrentMatrix () const
-{
-	return dMatrix (m_curRotation, m_curPosition);
+dMatrix DemoEntity::GetCurrentMatrix() const {
+    return dMatrix(m_curRotation, m_curPosition);
 }
 
-dMatrix DemoEntity::GetNextMatrix () const
-{
-	return dMatrix (m_nextRotation, m_nextPosition);
+dMatrix DemoEntity::GetNextMatrix() const {
+    return dMatrix(m_nextRotation, m_nextPosition);
 }
 
-dMatrix DemoEntity::CalculateGlobalMatrix (const DemoEntity* const root) const
-{
-	dMatrix matrix (dGetIdentityMatrix());
-	for (const DemoEntity* ptr = this; ptr != root; ptr = ptr->GetParent()) {
-		matrix = matrix * ptr->GetCurrentMatrix ();
-	}
-	return matrix;
+dMatrix DemoEntity::CalculateGlobalMatrix(const DemoEntity *const root) const {
+    dMatrix matrix(dGetIdentityMatrix());
+    for (const DemoEntity *ptr = this; ptr != root; ptr = ptr->GetParent()) {
+        matrix = matrix * ptr->GetCurrentMatrix();
+    }
+    return matrix;
 }
 
-void DemoEntity::SetMatrix(DemoEntityManager& world, const dQuaternion& rotation, const dVector& position)
-{
-	// read the data in a critical section to prevent race condition from other thread  
-	world.Lock(m_lock);
+void DemoEntity::SetMatrix(DemoEntityManager &world, const dQuaternion &rotation, const dVector &position) {
+    // read the data in a critical section to prevent race condition from other thread
+    world.Lock(m_lock);
 
-	m_curPosition = m_nextPosition;
-	m_curRotation = m_nextRotation;
+    m_curPosition = m_nextPosition;
+    m_curRotation = m_nextRotation;
 
-	m_nextPosition = position;
-	m_nextRotation = rotation;
+    m_nextPosition = position;
+    m_nextRotation = rotation;
 
-	dFloat angle = m_curRotation.DotProduct(m_nextRotation);
-	if (angle < 0.0f) {
-		m_curRotation.Scale(-1.0f);
-	}
+    dFloat angle = m_curRotation.DotProduct(m_nextRotation);
+    if (angle < 0.0f) {
+        m_curRotation.Scale(-1.0f);
+    }
 
-	// release the critical section
-	world.Unlock(m_lock);
+    // release the critical section
+    world.Unlock(m_lock);
 }
 
-void DemoEntity::ResetMatrix(DemoEntityManager& world, const dMatrix& matrix)
-{
-	dQuaternion rot (matrix);
-	SetMatrix(world, rot, matrix.m_posit);
-	SetMatrix(world, rot, matrix.m_posit);
-	InterpolateMatrix (world, 0.0f);
+void DemoEntity::ResetMatrix(DemoEntityManager &world, const dMatrix &matrix) {
+    dQuaternion rot(matrix);
+    SetMatrix(world, rot, matrix.m_posit);
+    SetMatrix(world, rot, matrix.m_posit);
+    InterpolateMatrix(world, 0.0f);
 }
 
-void DemoEntity::InterpolateMatrix (DemoEntityManager& world, dFloat param)
-{
-	// read the data in a critical section to prevent race condition from other thread  
-	world.Lock(m_lock);
+void DemoEntity::InterpolateMatrix(DemoEntityManager &world, dFloat param) {
+    // read the data in a critical section to prevent race condition from other thread
+    world.Lock(m_lock);
 
-	dVector p0(m_curPosition);
-	dVector p1(m_nextPosition);
-	dQuaternion r0 (m_curRotation);
-	dQuaternion r1 (m_nextRotation);
+    dVector p0(m_curPosition);
+    dVector p1(m_nextPosition);
+    dQuaternion r0(m_curRotation);
+    dQuaternion r1(m_nextRotation);
 
-	// release the critical section
-	world.Unlock(m_lock);
+    // release the critical section
+    world.Unlock(m_lock);
 
-	dVector posit (p0 + (p1 - p0).Scale (param));
-	dQuaternion rotation (r0.Slerp(r1, param));
+    dVector posit(p0 + (p1 - p0).Scale(param));
+    dQuaternion rotation(r0.Slerp(r1, param));
 
-	m_matrix = dMatrix (rotation, posit);
+    m_matrix = dMatrix(rotation, posit);
 
-	if (m_userData) {
-		m_userData->OnInterpolateMatrix(world, param);
-	}
+    if (m_userData) {
+        m_userData->OnInterpolateMatrix(world, param);
+    }
 }
 
-void DemoEntity::Render(dFloat timestep, DemoEntityManager* const scene) const
-{
-	// save the model matrix before changing it Matrix
-	glPushMatrix();
+void DemoEntity::Render(dFloat timestep, DemoEntityManager *const scene) const {
+    // save the model matrix before changing it Matrix
+    glPushMatrix();
 
-	// Set The matrix for this entity Node
-	glMultMatrix(&m_matrix[0][0]);
+    // Set The matrix for this entity Node
+    glMultMatrix(&m_matrix[0][0]);
 
-	// Render mesh if there is one 
-	if (m_mesh) {
-		glPushMatrix();
-		glMultMatrix(&m_meshMatrix[0][0]);
-		m_mesh->Render (scene);
+    // Render mesh if there is one
+    if (m_mesh) {
+        glPushMatrix();
+        glMultMatrix(&m_meshMatrix[0][0]);
+        m_mesh->Render(scene);
 //		m_mesh->RenderNormals ();
 
-		if (m_userData) {
-			m_userData->OnRender(timestep);
-		}
-		glPopMatrix();
-	}
+        if (m_userData) {
+            m_userData->OnRender(timestep);
+        }
+        glPopMatrix();
+    }
 
-	for (DemoEntity* child = GetChild(); child; child = child->GetSibling()) {
-		child->Render(timestep, scene);
-	}
+    for (DemoEntity *child = GetChild(); child; child = child->GetSibling()) {
+        child->Render(timestep, scene);
+    }
 
-	// restore the matrix before leaving
-	glPopMatrix();
-	
+    // restore the matrix before leaving
+    glPopMatrix();
+
 }

@@ -54,7 +54,6 @@ set(SOURCE_FILES
         DemoListenerBase.cpp
         DemoCamera.cpp
         DemoCameraListener.cpp
-        ConvexApproximation.cpp
         toolBox/dHighResolutionTimer.cpp
         toolBox/DebugDisplay.cpp
         toolBox/PhysicsUtils.cpp

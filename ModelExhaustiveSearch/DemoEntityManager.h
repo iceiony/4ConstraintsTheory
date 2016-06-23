@@ -90,6 +90,10 @@ class DemoEntityManager: public dList <DemoEntity*>
 
 	void UpdateGraphics(unsigned64 i);
 
+	void Register(NewtonBody *body);
+
+	void SetCamera(dVector origin, dFloat leftAngle , dFloat upAngle );
+
 private:
 
 

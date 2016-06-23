@@ -255,6 +255,40 @@ bool DemoEntityManager::IsWindowClosed() {
     return glfwWindowShouldClose(window) == 1;
 }
 
+void DemoEntityManager::Register(NewtonBody * body) {
+    NewtonCollision * collision = NewtonBodyGetCollision(body);
+    NewtonMesh * mesh = NewtonMeshCreateFromCollision(collision);
+
+    dMatrix position;
+    NewtonBodyGetMatrix(body,&position[0][0]);
+
+    //Visual mesh rendering was taken from Newton demo code
+    DemoMesh* const visualMesh = new DemoMesh (mesh);
+    DemoEntity *const entity = new DemoEntity(position, NULL);
+    Append(entity);
+    if (mesh) {
+        entity->SetMesh(visualMesh, dGetIdentityMatrix());
+    }
+
+    NewtonBodySetUserData(body, entity);
+
+    visualMesh->Release();
+}
+
+/**
+ * Sets the camera with given up-down, left-right angles in degrees
+ */
+void DemoEntityManager::SetCamera(dVector origin, dFloat upAngle = 0.0f, dFloat leftAngle = 0.0f ) {
+    dMatrix upRotation = dRollMatrix( upAngle * 3.1416f /180.0f);
+    dMatrix leftRotation = dYawMatrix( leftAngle * 3.1416f /180.0f);
+
+    SetCameraMatrix( dQuaternion(upRotation * leftRotation), origin );
+}
+
+
+
+
+
 
 
 
