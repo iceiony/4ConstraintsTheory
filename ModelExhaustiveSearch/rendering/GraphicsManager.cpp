@@ -101,7 +101,7 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // set default lightning
-    //	glDisable(GL_BLEND);
+    glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
 
     // make sure the model view matrix is set to identity before setting world space ligh sources

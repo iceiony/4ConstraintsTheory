@@ -210,10 +210,10 @@ GraphicsMesh::GraphicsMesh(NewtonMesh *const mesh, dVector color)
 
 		segment->AllocIndexData (indexCount);
 		// for 16 bit indices meshes
-		//NewtonMeshMaterialGetIndexStreamShort (mesh, meshCookie, handle, (short int*)segment->m_indexes); 
+		//NewtonMeshMaterialGetIndexStreamShort (mesh, meshCookie, handle, (short int*)segment->m_indexes);
 
 		// for 32 bit indices mesh
-		NewtonMeshMaterialGetIndexStream (mesh, meshCookie, handle, (int*)segment->m_indexes); 
+		NewtonMeshMaterialGetIndexStream (mesh, meshCookie, handle, (int*)segment->m_indexes);
 	}
 	NewtonMeshEndHandle (mesh, meshCookie); 
 

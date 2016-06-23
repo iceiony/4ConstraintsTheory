@@ -169,7 +169,7 @@ void CalculateAABB(const NewtonCollision *const collision, const dMatrix &matrix
 }
 
 NewtonMesh *CreateFloorMesh(NewtonWorld *const world) {
-    const dVector scale(10.0f, 0.01f, 10.0f);
+    const dVector scale(4.0f, 0.01f, 4.0f);
 
 // the vertex array, vertices's has for values, x, y, z, w
 // w is use as a id to have multiple copy of the same very, like for example mesh that share more than two edges.
