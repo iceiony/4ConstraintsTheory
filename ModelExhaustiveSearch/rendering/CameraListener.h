@@ -18,7 +18,7 @@
 #define __DEMO_CAMERA_LISTENER_H__
 
 #include "Util.h"
-#include "DemoEntity.h"
+#include "GraphicsEntity.h"
 
 class DemoCameraListener: public DemoListenerBase
 {

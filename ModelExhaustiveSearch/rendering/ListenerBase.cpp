@@ -10,8 +10,8 @@
 */
 
 
-#include "DemoEntityManager.h"
-#include "DemoListenerBase.h"
+#include "GraphicsManager.h"
+#include "ListenerBase.h"
 
 DemoListenerBase::DemoListenerBase(DemoEntityManager* const scene, const char* const listenerName)
 {

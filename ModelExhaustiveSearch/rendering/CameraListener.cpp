@@ -14,8 +14,8 @@
 // RenderPrimitive.cpp: implementation of the RenderPrimitive class.
 //
 //////////////////////////////////////////////////////////////////////
-#include "DemoCamera.h"
-#include "DemoCameraListener.h"
+#include "Camera.h"
+#include "CameraListener.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

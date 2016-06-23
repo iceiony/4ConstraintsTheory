@@ -40,23 +40,24 @@ if(APPLE)
 endif()
 
 include_directories("./")
-include_directories("./toolBox")
+include_directories("rendering")
 include_directories("lib3ds")
 
 FILE(GLOB LIB3DS "lib3ds/*.c")
 
 set(SOURCE_FILES
         main.cpp
-        Util.cpp
-        DemoEntityManager.cpp
-        DemoMesh.cpp
-        DemoEntity.cpp
-        DemoListenerBase.cpp
-        DemoCamera.cpp
-        DemoCameraListener.cpp
-        toolBox/dHighResolutionTimer.cpp
-        toolBox/DebugDisplay.cpp
-        toolBox/PhysicsUtils.cpp
+        Simulation.cpp
+        rendering/Util.cpp
+        rendering/GraphicsManager.cpp
+        rendering/GraphicsMesh.cpp
+        rendering/GraphicsEntity.cpp
+        rendering/ListenerBase.cpp
+        rendering/Camera.cpp
+        rendering/CameraListener.cpp
+        rendering/dHighResolutionTimer.cpp
+        rendering/DebugDisplay.cpp
+        rendering/PhysicsUtils.cpp
         ${LIB3DS}
     )
 

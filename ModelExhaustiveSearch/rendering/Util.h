@@ -70,12 +70,12 @@ typedef long long unsigned64;
 #include <CoreFoundation/CoreFoundation.h>
 #include <unistd.h>
 #include <GL/glew.h>
-#include <OpenGL/glu.h>
-#include <OpenGL/gl.h>
+#include <OpenGL/OpenGL.h>
+#include <OpenGL/OpenGL.h>
 
 // audio library support
-#include <OpenAl/al.h>
-#include <OpenAl/alc.h>
+#include <OpenAL/OpenAL.h>
+#include <OpenAL/OpenAL.h>
 #elif (defined (_POSIX_VER) || defined (_POSIX_VER_64))
 #include <stdlib.h>
 	#include <unistd.h>

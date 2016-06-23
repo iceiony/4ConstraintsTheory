@@ -12,8 +12,8 @@
 #ifndef __DEMO_ENTITY_MANAGER_H__
 #define __DEMO_ENTITY_MANAGER_H__
 
-#include "DemoMesh.h"
-#include "DemoListenerBase.h"
+#include "GraphicsMesh.h"
+#include "ListenerBase.h"
 #include "dHighResolutionTimer.h"
 #include <GLFW/glfw3.h>
 

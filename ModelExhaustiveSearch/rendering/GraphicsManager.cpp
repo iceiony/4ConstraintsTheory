@@ -9,9 +9,9 @@
 * freely
 */
 #include "Util.h"
-#include "DemoCamera.h"
+#include "Camera.h"
 #include "DebugDisplay.h"
-#include "DemoCameraListener.h"
+#include "CameraListener.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600

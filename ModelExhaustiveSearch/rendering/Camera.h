@@ -18,7 +18,7 @@
 #define __DEMO_CAMERA_H__
 
 #include <GL/glew.h>
-#include "DemoEntity.h"
+#include "GraphicsEntity.h"
 
 
 class DemoCamera: public DemoEntity

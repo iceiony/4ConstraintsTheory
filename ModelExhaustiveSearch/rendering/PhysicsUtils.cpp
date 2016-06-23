@@ -10,10 +10,10 @@
 */
 
 #include <Util.h>
-#include "DemoMesh.h"
-#include "DemoEntity.h"
+#include "GraphicsMesh.h"
+#include "GraphicsEntity.h"
 #include "PhysicsUtils.h"
-#include "DemoEntityManager.h"
+#include "GraphicsManager.h"
 #include "DebugDisplay.h"
 #include <lib3ds/file.h>
 #include <lib3ds/mesh.h>

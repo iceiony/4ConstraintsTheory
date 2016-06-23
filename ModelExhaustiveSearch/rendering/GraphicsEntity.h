@@ -12,7 +12,7 @@
 #ifndef __DEMO_ENTITY_H__
 #define __DEMO_ENTITY_H__
 
-#include "DemoEntityManager.h"
+#include "GraphicsManager.h"
 class DemoMeshInterface;
 
 

@@ -10,8 +10,8 @@
 */
 
 #include "Util.h"
-#include "DemoMesh.h"
-#include "DemoEntity.h"
+#include "GraphicsMesh.h"
+#include "GraphicsEntity.h"
 
 dInitRtti(DemoEntity);
 
