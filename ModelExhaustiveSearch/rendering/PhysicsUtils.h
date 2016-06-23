@@ -15,25 +15,9 @@
 
 #define DEMO_GRAVITY  -10.0f
 
-enum PrimitiveType
-{
-	_NULL_PRIMITIVE,
-	_SPHERE_PRIMITIVE,
-	_BOX_PRIMITIVE,
-	_CAPSULE_PRIMITIVE,
-	_CYLINDER_PRIMITIVE,
-	_CONE_PRIMITIVE,
-	_CHAMFER_CYLINDER_PRIMITIVE,
-	_RANDOM_CONVEX_HULL_PRIMITIVE,
-	_REGULAR_CONVEX_HULL_PRIMITIVE,
-	_COMPOUND_CONVEX_CRUZ_PRIMITIVE,
-};
-
 class GraphicsMesh;
 class GraphicsEntity;
 class GraphicsManager;
-
-dVector FindFloor (const NewtonWorld* world, const dVector& origin, dFloat dist);
 
 void PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int threadIndex);
 void MoveTool (const NewtonBody * const body, dFloat timestep, int threadIndex);
