@@ -21,19 +21,19 @@
 #include "GraphicsEntity.h"
 
 
-class DemoCamera: public DemoEntity
+class Camera: public GraphicsEntity
 {
 	public:
-	DemoCamera();
-	~DemoCamera();
+	Camera();
+	~Camera();
 
 	dFloat GetYawAngle() const;
 	dFloat GetPichAngle() const;
 
-	void SetMatrix (DemoEntityManager& world, const dQuaternion& rotation, const dVector& position);
+	void SetMatrix (GraphicsManager& world, const dQuaternion& rotation, const dVector& position);
 	void SetViewMatrix (int width, int height);
 
-	virtual void Render(dFloat timeStep, DemoEntityManager* const scene) const;
+	virtual void Render(dFloat timeStep, GraphicsManager* const scene) const;
 
 	private:
 	dFloat m_fov;
@@ -45,7 +45,7 @@ class DemoCamera: public DemoEntity
 	int m_viewport[4]; 
 	GLdouble m_modelViewMatrix[16];
 	GLdouble m_projectionViewMatrix[16];
-	friend class DemoEntity;
+	friend class GraphicsEntity;
 };
 
 

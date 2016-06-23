@@ -15,18 +15,18 @@
 
 #include "Util.h"
 
-class DemoMesh;
-class DemoEntityManager;
+class GraphicsMesh;
+class GraphicsManager;
 
 
-class DemoMeshInterface: public dClassInfo
+class GraphicsMeshInterface: public dClassInfo
 {
 	public:
-	DemoMeshInterface();
-	~DemoMeshInterface();
+	GraphicsMeshInterface();
+	~GraphicsMeshInterface();
 
 	virtual void RenderTransparency () const = 0;
-	virtual void Render (DemoEntityManager* const scene) = 0;
+	virtual void Render (GraphicsManager* const scene) = 0;
 
 	dAddRtti(dClassInfo,DOMMY_API);
 
@@ -56,15 +56,15 @@ class DemoSubMesh
 };
 
 
-class DemoMesh: public DemoMeshInterface, public dList<DemoSubMesh>
+class GraphicsMesh: public GraphicsMeshInterface, public dList<DemoSubMesh>
 {
 	public:
-	DemoMesh(const DemoMesh& mesh);
-	DemoMesh(const char* const name);
-	DemoMesh(NewtonMesh* const mesh);
-	DemoMesh(const dScene* const scene, dScene::dTreeNode* const meshNode);
-	DemoMesh(const char* const name, const NewtonCollision* const collision, const char* const texture0, const char* const texture1, const char* const texture2, dFloat opacity = 1.0f);
-	DemoMesh(const char* const name, dFloat* const elevation, int size, dFloat cellSize, dFloat texelsDensity, int tileSize);
+	GraphicsMesh(const GraphicsMesh& mesh);
+	GraphicsMesh(const char* const name);
+	GraphicsMesh(NewtonMesh* const mesh);
+	GraphicsMesh(const dScene* const scene, dScene::dTreeNode* const meshNode);
+	GraphicsMesh(const char* const name, const NewtonCollision* const collision, const char* const texture0, const char* const texture1, const char* const texture2, dFloat opacity = 1.0f);
+	GraphicsMesh(const char* const name, dFloat* const elevation, int size, dFloat cellSize, dFloat texelsDensity, int tileSize);
 
 	using dClassInfo::operator new;
 	using dClassInfo::operator delete;
@@ -73,14 +73,14 @@ class DemoMesh: public DemoMeshInterface, public dList<DemoSubMesh>
 	void AllocVertexData (int vertexCount);
 
     virtual void RenderTransparency () const;
-	virtual void Render (DemoEntityManager* const scene);
+	virtual void Render (GraphicsManager* const scene);
 
 	void OptimizeForRender();
 
 	protected:
-	virtual ~DemoMesh();
+	virtual ~GraphicsMesh();
 
-	dAddRtti (DemoMeshInterface, DOMMY_API);
+	dAddRtti (GraphicsMeshInterface, DOMMY_API);
 	
 	void  ResetOptimization();
 	void  SplitSegment(dListNode *const node, int maxIndexCount);

@@ -29,20 +29,18 @@ enum PrimitiveType
 	_COMPOUND_CONVEX_CRUZ_PRIMITIVE,
 };
 
-class DemoMesh;
-class DemoEntity;
-class DemoEntityManager;
+class GraphicsMesh;
+class GraphicsEntity;
+class GraphicsManager;
 
 dVector FindFloor (const NewtonWorld* world, const dVector& origin, dFloat dist);
 
-void PhysicsBodyDestructor (const NewtonBody* body);
 void PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int threadIndex);
 void MoveTool (const NewtonBody * const body, dFloat timestep, int threadIndex);
 
 void CalculateAABB (const NewtonCollision* const collision, const dMatrix& matrix, dVector& minP, dVector& maxP);
 
 NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dFloat mass, const dMatrix& matrix, NewtonCollision* const collision, int materialId);
-NewtonBody* CreateSimpleSolid (DemoEntityManager* const scene, DemoMesh* const mesh, dFloat mass, const dMatrix& position, NewtonCollision* const collision, int materialId);
-NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const fileName, const dFloat const scale);
+NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const fileName, const dFloat scale);
 NewtonMesh* CreateFloorMesh(NewtonWorld* const world);
 #endif

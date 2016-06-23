@@ -13,11 +13,11 @@
 #include "GraphicsMesh.h"
 #include "GraphicsEntity.h"
 
-dInitRtti(DemoEntity);
+dInitRtti(GraphicsEntity);
 
 
-DemoEntity::DemoEntity(const dMatrix &matrix, DemoEntity *const parent)
-        : dClassInfo(), dHierarchy<DemoEntity>(), m_matrix(matrix), m_curPosition(matrix.m_posit),
+GraphicsEntity::GraphicsEntity(const dMatrix &matrix, GraphicsEntity *const parent)
+        : dClassInfo(), dHierarchy<GraphicsEntity>(), m_matrix(matrix), m_curPosition(matrix.m_posit),
           m_nextPosition(matrix.m_posit), m_curRotation(dQuaternion(matrix)), m_nextRotation(dQuaternion(matrix)),
           m_meshMatrix(dGetIdentityMatrix()), m_mesh(NULL), m_userData(NULL), m_lock(0) {
     if (parent) {
@@ -26,10 +26,10 @@ DemoEntity::DemoEntity(const dMatrix &matrix, DemoEntity *const parent)
 }
 
 
-DemoEntity::DemoEntity(DemoEntityManager &world, const dScene *const scene, dScene::dTreeNode *const rootSceneNode,
-                       dTree<DemoMeshInterface *, dScene::dTreeNode *> &meshCache,
-                       DemoEntityManager::EntityDictionary &entityDictionary, DemoEntity *const parent)
-        : dClassInfo(), dHierarchy<DemoEntity>(), m_matrix(dGetIdentityMatrix()), m_curPosition(0.0f, 0.0f, 0.0f, 1.0f),
+GraphicsEntity::GraphicsEntity(GraphicsManager &world, const dScene *const scene, dScene::dTreeNode *const rootSceneNode,
+                       dTree<GraphicsMeshInterface *, dScene::dTreeNode *> &meshCache,
+                       GraphicsManager::EntityDictionary &entityDictionary, GraphicsEntity *const parent)
+        : dClassInfo(), dHierarchy<GraphicsEntity>(), m_matrix(dGetIdentityMatrix()), m_curPosition(0.0f, 0.0f, 0.0f, 1.0f),
           m_nextPosition(0.0f, 0.0f, 0.0f, 1.0f), m_curRotation(1.0f, 0.0f, 0.0f, 0.0f),
           m_nextRotation(1.0f, 0.0f, 0.0f, 0.0f), m_meshMatrix(dGetIdentityMatrix()), m_mesh(NULL), m_userData(NULL),
           m_lock(0) {
@@ -50,7 +50,7 @@ DemoEntity::DemoEntity(DemoEntityManager &world, const dScene *const scene, dSce
     // if this node has a mesh, find it and attach it to this entity
     dScene::dTreeNode *const meshNode = scene->FindChildByType(rootSceneNode, dMeshNodeInfo::GetRttiType());
     if (meshNode) {
-        DemoMeshInterface *const mesh = meshCache.Find(meshNode)->GetInfo();
+        GraphicsMeshInterface *const mesh = meshCache.Find(meshNode)->GetInfo();
         SetMesh(mesh, sceneInfo->GetGeometryTransform());
     }
 
@@ -61,13 +61,13 @@ DemoEntity::DemoEntity(DemoEntityManager &world, const dScene *const scene, dSce
         dScene::dTreeNode *const node = scene->GetNodeFromLink(child);
         dNodeInfo *const info = scene->GetInfoFromNode(node);
         if (info->IsType(dSceneNodeInfo::GetRttiType())) {
-            new DemoEntity(world, scene, node, meshCache, entityDictionary, this);
+            new GraphicsEntity(world, scene, node, meshCache, entityDictionary, this);
         }
     }
 }
 
-DemoEntity::DemoEntity(const DemoEntity &copyFrom)
-        : dClassInfo(), dHierarchy<DemoEntity>(copyFrom), m_matrix(copyFrom.m_matrix),
+GraphicsEntity::GraphicsEntity(const GraphicsEntity &copyFrom)
+        : dClassInfo(), dHierarchy<GraphicsEntity>(copyFrom), m_matrix(copyFrom.m_matrix),
           m_curPosition(copyFrom.m_curPosition), m_nextPosition(copyFrom.m_nextPosition),
           m_curRotation(copyFrom.m_curRotation), m_nextRotation(copyFrom.m_nextRotation),
           m_meshMatrix(copyFrom.m_meshMatrix), m_mesh(copyFrom.m_mesh), m_userData(NULL), m_lock(0) {
@@ -76,7 +76,7 @@ DemoEntity::DemoEntity(const DemoEntity &copyFrom)
     }
 }
 
-DemoEntity::~DemoEntity(void) {
+GraphicsEntity::~GraphicsEntity(void) {
     if (m_userData) {
         delete m_userData;
     }
@@ -84,31 +84,31 @@ DemoEntity::~DemoEntity(void) {
 }
 
 
-dBaseHierarchy *DemoEntity::CreateClone() const {
-    return new DemoEntity(*this);
+dBaseHierarchy *GraphicsEntity::CreateClone() const {
+    return new GraphicsEntity(*this);
 }
 
 
-DemoEntity::UserData *DemoEntity::GetUserData() {
+GraphicsEntity::UserData *GraphicsEntity::GetUserData() {
     return m_userData;
 }
 
-void DemoEntity::SetUserData(UserData *const data) {
+void GraphicsEntity::SetUserData(UserData *const data) {
     m_userData = data;
 }
 
-void DemoEntity::TransformCallback(const NewtonBody *const body, const dFloat *const matrix, int threadIndex) {
-    DemoEntity *const ent = (DemoEntity *) NewtonBodyGetUserData(body);
+void GraphicsEntity::TransformCallback(const NewtonBody *const body, const dFloat *const matrix, int threadIndex) {
+    GraphicsEntity *const ent = (GraphicsEntity *) NewtonBodyGetUserData(body);
 
     if (ent) {
-        DemoEntityManager *const scene = (DemoEntityManager *) NewtonWorldGetUserData(NewtonBodyGetWorld(body));
+        GraphicsManager *const scene = (GraphicsManager *) NewtonWorldGetUserData(NewtonBodyGetWorld(body));
         dMatrix transform(matrix);
         dQuaternion rot(transform);
         ent->SetMatrix(*scene, rot, transform.m_posit);
     }
 }
 
-void DemoEntity::SetMesh(DemoMeshInterface *const mesh, const dMatrix &meshMatrix) {
+void GraphicsEntity::SetMesh(GraphicsMeshInterface *const mesh, const dMatrix &meshMatrix) {
     m_meshMatrix = meshMatrix;
     if (m_mesh) {
         m_mesh->Release();
@@ -119,23 +119,23 @@ void DemoEntity::SetMesh(DemoMeshInterface *const mesh, const dMatrix &meshMatri
     }
 }
 
-dMatrix DemoEntity::GetCurrentMatrix() const {
+dMatrix GraphicsEntity::GetCurrentMatrix() const {
     return dMatrix(m_curRotation, m_curPosition);
 }
 
-dMatrix DemoEntity::GetNextMatrix() const {
+dMatrix GraphicsEntity::GetNextMatrix() const {
     return dMatrix(m_nextRotation, m_nextPosition);
 }
 
-dMatrix DemoEntity::CalculateGlobalMatrix(const DemoEntity *const root) const {
+dMatrix GraphicsEntity::CalculateGlobalMatrix(const GraphicsEntity *const root) const {
     dMatrix matrix(dGetIdentityMatrix());
-    for (const DemoEntity *ptr = this; ptr != root; ptr = ptr->GetParent()) {
+    for (const GraphicsEntity *ptr = this; ptr != root; ptr = ptr->GetParent()) {
         matrix = matrix * ptr->GetCurrentMatrix();
     }
     return matrix;
 }
 
-void DemoEntity::SetMatrix(DemoEntityManager &world, const dQuaternion &rotation, const dVector &position) {
+void GraphicsEntity::SetMatrix(GraphicsManager &world, const dQuaternion &rotation, const dVector &position) {
     // read the data in a critical section to prevent race condition from other thread
     world.Lock(m_lock);
 
@@ -154,14 +154,14 @@ void DemoEntity::SetMatrix(DemoEntityManager &world, const dQuaternion &rotation
     world.Unlock(m_lock);
 }
 
-void DemoEntity::ResetMatrix(DemoEntityManager &world, const dMatrix &matrix) {
+void GraphicsEntity::ResetMatrix(GraphicsManager &world, const dMatrix &matrix) {
     dQuaternion rot(matrix);
     SetMatrix(world, rot, matrix.m_posit);
     SetMatrix(world, rot, matrix.m_posit);
     InterpolateMatrix(world, 0.0f);
 }
 
-void DemoEntity::InterpolateMatrix(DemoEntityManager &world, dFloat param) {
+void GraphicsEntity::InterpolateMatrix(GraphicsManager &world, dFloat param) {
     // read the data in a critical section to prevent race condition from other thread
     world.Lock(m_lock);
 
@@ -183,7 +183,7 @@ void DemoEntity::InterpolateMatrix(DemoEntityManager &world, dFloat param) {
     }
 }
 
-void DemoEntity::Render(dFloat timestep, DemoEntityManager *const scene) const {
+void GraphicsEntity::Render(dFloat timestep, GraphicsManager *const scene) const {
     // save the model matrix before changing it Matrix
     glPushMatrix();
 
@@ -203,7 +203,7 @@ void DemoEntity::Render(dFloat timestep, DemoEntityManager *const scene) const {
         glPopMatrix();
     }
 
-    for (DemoEntity *child = GetChild(); child; child = child->GetSibling()) {
+    for (GraphicsEntity *child = GetChild(); child; child = child->GetSibling()) {
         child->Render(timestep, scene);
     }
 

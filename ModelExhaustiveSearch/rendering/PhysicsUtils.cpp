@@ -10,17 +10,13 @@
 */
 
 #include <Util.h>
-#include "GraphicsMesh.h"
 #include "GraphicsEntity.h"
 #include "PhysicsUtils.h"
-#include "GraphicsManager.h"
-#include "DebugDisplay.h"
 #include <lib3ds/file.h>
 #include <lib3ds/mesh.h>
-#include <lib3ds/vector.h>
 #include <vector>
 
-NewtonMesh *LoadMeshFrom3DS(NewtonWorld *const world, const char *const fileName, const dFloat const scale) {
+NewtonMesh *LoadMeshFrom3DS(NewtonWorld *const world, const char *const fileName, const dFloat scale) {
     NewtonMesh *meshNewton = NewtonMeshCreate(world);
 
     Lib3dsFile *modelFile = lib3ds_file_load(fileName);
@@ -145,27 +141,13 @@ NewtonBody *CreateSimpleBody(NewtonWorld *const world, void *const userData, dFl
     NewtonBodySetMaterialGroupID(rigidBody, materialId);
 
     // set the transform call back function
-    NewtonBodySetTransformCallback(rigidBody, DemoEntity::TransformCallback);
+    NewtonBodySetTransformCallback(rigidBody, GraphicsEntity::TransformCallback);
 
     // set the force and torque call back function
     NewtonBodySetForceAndTorqueCallback(rigidBody, PhysicsApplyGravityForce);
 
     return rigidBody;
 }
-
-NewtonBody *CreateSimpleSolid(DemoEntityManager *const scene, DemoMesh *const mesh, dFloat mass,
-                              const dMatrix &position, NewtonCollision *const collision, int materialId) {
-    dAssert (collision);
-
-    // add an new entity to the world
-    DemoEntity *const entity = new DemoEntity(position, NULL);
-    scene->Append(entity);
-    if (mesh) {
-        entity->SetMesh(mesh, dGetIdentityMatrix());
-    }
-    return CreateSimpleBody(scene->GetNewton(), entity, mass, position, collision, materialId);
-}
-
 
 void CalculateAABB(const NewtonCollision *const collision, const dMatrix &matrix, dVector &minP, dVector &maxP) {
     dFloat skinThickness = NewtonCollisionGetSkinThickness(collision) * 0.125f;

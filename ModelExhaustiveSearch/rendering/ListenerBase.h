@@ -12,13 +12,13 @@
 #ifndef __DEMO_LISTENER_MANAGER_H__
 #define __DEMO_LISTENER_MANAGER_H__
 
-class DemoEntityManager;
+class GraphicsManager;
 
-class DemoListenerBase
+class ListenerBase
 {
 	public:
-	DemoListenerBase(DemoEntityManager* const scene, const char* const listenerName);
-	virtual ~DemoListenerBase();
+	ListenerBase(GraphicsManager* const scene, const char* const listenerName);
+	virtual ~ListenerBase();
 	
 	virtual void PreUpdate (const NewtonWorld* const world, dFloat timestep) = 0;
 	virtual void PostUpdate (const NewtonWorld* const world, dFloat timestep) = 0;

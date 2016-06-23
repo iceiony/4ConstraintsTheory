@@ -24,9 +24,9 @@
 
 #define D_CAMERA_LISTENER_NAMNE "cameraListener"
 
-DemoCameraListener::DemoCameraListener(DemoEntityManager* const scene)
-	:DemoListenerBase(scene, D_CAMERA_LISTENER_NAMNE)
-	,m_camera (new DemoCamera())
+CameraListener::CameraListener(GraphicsManager* const scene)
+	:ListenerBase(scene, D_CAMERA_LISTENER_NAMNE)
+	,m_camera (new Camera())
 	,m_mousePosX(0)
 	,m_mousePosY(0)
 	,m_yaw (m_camera->GetYawAngle())
@@ -46,15 +46,15 @@ DemoCameraListener::DemoCameraListener(DemoEntityManager* const scene)
 {
 }
 
-DemoCameraListener::~DemoCameraListener()
+CameraListener::~CameraListener()
 {
 	m_camera->Release();
 }
 
-void DemoCameraListener::PreUpdate (const NewtonWorld* const world, dFloat timestep)
+void CameraListener::PreUpdate (const NewtonWorld* const world, dFloat timestep)
 {
 	// update the camera;
-	DemoEntityManager* const scene = (DemoEntityManager*) NewtonWorldGetUserData(world);
+	GraphicsManager* const scene = (GraphicsManager*) NewtonWorldGetUserData(world);
 
 	GLFWwindow * const mainWin = scene->GetRootWindow();
 
@@ -118,11 +118,11 @@ void DemoCameraListener::PreUpdate (const NewtonWorld* const world, dFloat times
 	m_camera->SetMatrix (*scene, rot, targetMatrix.m_posit);
 }
 
-void DemoCameraListener::PostUpdate (const NewtonWorld* const world, dFloat timestep)
+void CameraListener::PostUpdate (const NewtonWorld* const world, dFloat timestep)
 {
 }
 
-void DemoCameraListener::InterpolateMatrices (DemoEntityManager* const scene, dFloat param)
+void CameraListener::InterpolateMatrices (GraphicsManager* const scene, dFloat param)
 {
 	NewtonWorld* const world = scene->GetNewton();
 
@@ -131,21 +131,21 @@ void DemoCameraListener::InterpolateMatrices (DemoEntityManager* const scene, dF
 
 	// interpolate the location of all entities in the world
 	for (NewtonBody* body = NewtonWorldGetFirstBody(world); body; body = NewtonWorldGetNextBody(world, body)) {
-		DemoEntity* const entity = (DemoEntity*)NewtonBodyGetUserData(body);
+		GraphicsEntity* const entity = (GraphicsEntity*)NewtonBodyGetUserData(body);
 		if (entity) {
 			entity->InterpolateMatrix (*scene, param);
 		}
 	}
 }
 
-void DemoCameraListener::OnBodyDestroy (NewtonBody* const body)
+void CameraListener::OnBodyDestroy (NewtonBody* const body)
 {
 	// remove the references pointer because the body is going to be destroyed
 	m_targetPicked = NULL;
 	m_bodyDestructor = NULL;
 }
 
-bool DemoCameraListener::GetKeyState(GLFWwindow *const window, char key) {
+bool CameraListener::GetKeyState(GLFWwindow *const window, char key) {
 	int state = glfwGetKey(window, key);
 	return state == GLFW_PRESS;
 }

@@ -5,7 +5,7 @@
 
 int main() {
     Simulation sim;
-    DemoEntityManager graphicsManager(sim.GetNewtonWorld());
+    GraphicsManager graphicsManager(sim.GetNewtonWorld());
 
     NewtonBody* objBody = sim.LoadObject("obj51.3ds");
     NewtonBody* toolBody = sim.LoadTool("obj52.3ds");

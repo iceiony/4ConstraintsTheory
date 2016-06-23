@@ -14,8 +14,8 @@
 #include "GraphicsManager.h"
 
 
-dInitRtti(DemoMeshInterface);
-dInitRtti(DemoMesh);
+dInitRtti(GraphicsMeshInterface);
+dInitRtti(GraphicsMesh);
 
 
 #define USING_DISPLAY_LIST
@@ -30,14 +30,14 @@ dInitRtti(DemoMesh);
 #	endif
 #endif
 
-DemoMeshInterface::DemoMeshInterface()
+GraphicsMeshInterface::GraphicsMeshInterface()
 	:dClassInfo()
 	,m_name()
 	,m_isVisible(true)
 {
 }
 
-DemoMeshInterface::~DemoMeshInterface()
+GraphicsMeshInterface::~GraphicsMeshInterface()
 {
 }
 
@@ -93,8 +93,8 @@ void DemoSubMesh::AllocIndexData (int indexCount)
 
 
 
-DemoMesh::DemoMesh(const char* const name)
-	:DemoMeshInterface()
+GraphicsMesh::GraphicsMesh(const char* const name)
+	:GraphicsMeshInterface()
 	,dList<DemoSubMesh>()
 	,m_vertexCount(0)
 	,m_uv (NULL)
@@ -105,8 +105,8 @@ DemoMesh::DemoMesh(const char* const name)
 {
 }
 
-DemoMesh::DemoMesh(const dScene* const scene, dScene::dTreeNode* const meshNode)
-	:DemoMeshInterface()
+GraphicsMesh::GraphicsMesh(const dScene* const scene, dScene::dTreeNode* const meshNode)
+	:GraphicsMeshInterface()
 	,dList<DemoSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
@@ -185,8 +185,8 @@ DemoMesh::DemoMesh(const dScene* const scene, dScene::dTreeNode* const meshNode)
 	}
 }
 
-DemoMesh::DemoMesh(NewtonMesh* const mesh)
-	:DemoMeshInterface()
+GraphicsMesh::GraphicsMesh(NewtonMesh* const mesh)
+	:GraphicsMeshInterface()
 	,m_uv(NULL)
 	,m_vertex(NULL)
 	,m_normal(NULL)
@@ -222,8 +222,8 @@ DemoMesh::DemoMesh(NewtonMesh* const mesh)
 	OptimizeForRender ();
 }
 
-DemoMesh::DemoMesh(const DemoMesh& mesh)
-	:DemoMeshInterface()
+GraphicsMesh::GraphicsMesh(const GraphicsMesh& mesh)
+	:GraphicsMeshInterface()
 	,dList<DemoSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
@@ -253,8 +253,8 @@ DemoMesh::DemoMesh(const DemoMesh& mesh)
 	OptimizeForRender ();
 }
 
-DemoMesh::DemoMesh(const char* const name, const NewtonCollision* const collision, const char* const texture0, const char* const texture1, const char* const texture2, dFloat opacity)
-	:DemoMeshInterface()
+GraphicsMesh::GraphicsMesh(const char* const name, const NewtonCollision* const collision, const char* const texture0, const char* const texture1, const char* const texture2, dFloat opacity)
+	:GraphicsMeshInterface()
 	,dList<DemoSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
@@ -326,8 +326,8 @@ DemoMesh::DemoMesh(const char* const name, const NewtonCollision* const collisio
 }
 
 
-DemoMesh::DemoMesh(const char* const name, dFloat* const elevation, int size, dFloat cellSize, dFloat texelsDensity, int tileSize)
-	:DemoMeshInterface()
+GraphicsMesh::GraphicsMesh(const char* const name, dFloat* const elevation, int size, dFloat cellSize, dFloat texelsDensity, int tileSize)
+	:GraphicsMeshInterface()
 	,dList<DemoSubMesh>()
 	,m_uv(NULL)
 	,m_vertex(NULL)
@@ -435,7 +435,7 @@ DemoMesh::DemoMesh(const char* const name, dFloat* const elevation, int size, dF
 
 
 
-DemoMesh::~DemoMesh()
+GraphicsMesh::~GraphicsMesh()
 {
 	if (m_vertex) {
 		delete[] m_vertex;
@@ -445,7 +445,7 @@ DemoMesh::~DemoMesh()
 	}
 }
 
-void DemoMesh::SplitSegment(dListNode *const node, int maxIndexCount)
+void GraphicsMesh::SplitSegment(dListNode *const node, int maxIndexCount)
 {
 	const DemoSubMesh& segment = node->GetInfo(); 
 	if (segment.m_indexCount > maxIndexCount) {
@@ -521,7 +521,7 @@ void DemoMesh::SplitSegment(dListNode *const node, int maxIndexCount)
 	}
 }
 
-void  DemoMesh::OptimizeForRender()
+void  GraphicsMesh::OptimizeForRender()
 {
 	// first make sure the previous optimization is removed
 	ResetOptimization();
@@ -536,7 +536,7 @@ void  DemoMesh::OptimizeForRender()
 	}
 }
 
-void  DemoMesh::ResetOptimization()
+void  GraphicsMesh::ResetOptimization()
 {
 	if (m_optimizedOpaqueDiplayList) {
 		glDeleteLists(m_optimizedOpaqueDiplayList, 1);
@@ -549,7 +549,7 @@ void  DemoMesh::ResetOptimization()
 	}
 }
 
-void DemoMesh::AllocVertexData (int vertexCount)
+void GraphicsMesh::AllocVertexData (int vertexCount)
 {
 	m_vertexCount = vertexCount;
 
@@ -559,13 +559,13 @@ void DemoMesh::AllocVertexData (int vertexCount)
 	memset (m_uv, 0, 2 * m_vertexCount * sizeof (dFloat));
 }
 
-DemoSubMesh* DemoMesh::AddSubMesh()
+DemoSubMesh* GraphicsMesh::AddSubMesh()
 {
 	return &Append()->GetInfo();
 }
 
 
-void DemoMesh::Render (DemoEntityManager* const scene)
+void GraphicsMesh::Render (GraphicsManager* const scene)
 {
 	if (m_isVisible) {
 		if (m_optimizedTransparentDiplayList) {
@@ -594,7 +594,7 @@ void DemoMesh::Render (DemoEntityManager* const scene)
 	}
 }
 
-void DemoMesh::RenderTransparency () const
+void GraphicsMesh::RenderTransparency () const
 {
 	if (m_isVisible) {
 		if (m_optimizedTransparentDiplayList) {

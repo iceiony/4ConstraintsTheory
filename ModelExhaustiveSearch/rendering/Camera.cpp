@@ -20,8 +20,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-DemoCamera::DemoCamera()
-	:DemoEntity (dGetIdentityMatrix(), NULL) 
+Camera::Camera()
+	:GraphicsEntity (dGetIdentityMatrix(), NULL)
 	,m_fov (60.0f * 3.1416f / 180.0f)
 	,m_backPlane(2000.0f)
 	,m_frontPlane (0.01f)
@@ -31,25 +31,25 @@ DemoCamera::DemoCamera()
 }
 
 	
-DemoCamera::~DemoCamera()
+Camera::~Camera()
 {
 }
 
-void DemoCamera::Render(dFloat timeStep, DemoEntityManager* const scene) const
+void Camera::Render(dFloat timeStep, GraphicsManager* const scene) const
 {
 }
 
-dFloat DemoCamera::GetYawAngle() const
+dFloat Camera::GetYawAngle() const
 {
 	return m_cameraYaw;
 }
 
-dFloat DemoCamera::GetPichAngle() const
+dFloat Camera::GetPichAngle() const
 {
 	return m_cameraPitch;
 }
 
-void DemoCamera::SetViewMatrix(int width, int height)
+void Camera::SetViewMatrix(int width, int height)
 {
 	// set the view port for this render section
 	glViewport(0, 0, (GLint) width, (GLint) height);
@@ -75,13 +75,13 @@ void DemoCamera::SetViewMatrix(int width, int height)
 	glGetDoublev(GL_PROJECTION_MATRIX, m_projectionViewMatrix); 
 }
 
-void DemoCamera::SetMatrix (DemoEntityManager& scene, const dQuaternion& rotation, const dVector& position)
+void Camera::SetMatrix (GraphicsManager& scene, const dQuaternion& rotation, const dVector& position)
 {
 	dMatrix matrix (rotation, position);
 	m_cameraPitch = dAsin (matrix.m_front.m_y);
 	m_cameraYaw = dAtan2 (-matrix.m_front.m_z, matrix.m_front.m_x);
 
-	DemoEntity::SetMatrix (scene, rotation, position);
+	GraphicsEntity::SetMatrix (scene, rotation, position);
 }
 
 

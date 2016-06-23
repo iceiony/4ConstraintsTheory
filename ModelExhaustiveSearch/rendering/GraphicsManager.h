@@ -17,17 +17,17 @@
 #include "dHighResolutionTimer.h"
 #include <GLFW/glfw3.h>
 
-//class DemoMesh;
-class DemoEntity;
-class DemoCamera;
+//class GraphicsMesh;
+class GraphicsEntity;
+class Camera;
 class NewtonDemos;
-class DemoEntityManager;
-class DemoCameraListener;
+class GraphicsManager;
+class CameraListener;
 
 
-typedef void (*RenderHoodCallback) (DemoEntityManager* const manager, void* const context, int lineNumber);
+typedef void (*RenderHoodCallback) (GraphicsManager* const manager, void* const context, int lineNumber);
 
-class DemoEntityManager: public dList <DemoEntity*>
+class GraphicsManager: public dList <GraphicsEntity*>
 {
 	public:
     class TransparentMesh
@@ -39,14 +39,14 @@ class DemoEntityManager: public dList <DemoEntity*>
         {
         }
 
-        TransparentMesh(const dMatrix& matrix, const DemoMesh* const mesh)
+        TransparentMesh(const dMatrix& matrix, const GraphicsMesh* const mesh)
             :m_matrix(matrix)
             ,m_mesh(mesh)
         {
         }
 
         dMatrix m_matrix;
-        const DemoMesh* m_mesh;
+        const GraphicsMesh* m_mesh;
     };
 
     class TransparentHeap: public dUpHeap <TransparentMesh, dFloat>
@@ -58,12 +58,12 @@ class DemoEntityManager: public dList <DemoEntity*>
         }
     };
 
-	class EntityDictionary: public dTree<DemoEntity*, dScene::dTreeNode*>
+	class EntityDictionary: public dTree<GraphicsEntity*, dScene::dTreeNode*>
 	{
 	};
 
-	DemoEntityManager(NewtonWorld * world);
-	~DemoEntityManager(void);
+	GraphicsManager(NewtonWorld * world);
+	~GraphicsManager(void);
 
 	void RenderFrame(dFloat timeStep);
 
@@ -74,12 +74,12 @@ class DemoEntityManager: public dList <DemoEntity*>
 
 	void SetCameraMatrix (const dQuaternion& rotation, const dVector& position);
 
-    void PushTransparentMesh (const DemoMeshInterface* const mesh); 
+    void PushTransparentMesh (const GraphicsMeshInterface* const mesh);
 
 	void Lock(unsigned& atomicLock);
 	void Unlock(unsigned& atomicLock);
 
-	void RemoveEntity (dList<DemoEntity*>::dListNode* const entNode);
+	void RemoveEntity (dList<GraphicsEntity*>::dListNode* const entNode);
 	static void WindowResizeCallback(GLFWwindow *window, int width, int height);
 
 	void SetWindowSize(int width, int height);
@@ -101,19 +101,14 @@ private:
 
 	NewtonWorld* m_world;
 
-	static DemoEntityManager *instance;
+	static GraphicsManager *instance;
 	void* m_renderHoodContext;
 	RenderHoodCallback m_renderHood;
-	DemoCameraListener* m_cameraManager;
+	CameraListener* m_cameraManager;
 
 	GLFWwindow *window;
 
     TransparentHeap m_tranparentHeap;
-
-	friend class NewtonDemos;
-	//friend class dRuntimeProfiler;
-	friend class DemoEntityListener;
-	friend class DemoListenerManager;
 
 	//screen width and height required for rendring
 	int width;
@@ -124,32 +119,32 @@ private:
 
 // for simplicity we are not going to run the demo in a separate thread at this time
 // this confuses many user int thinking it is more complex than it really is  
-inline void DemoEntityManager::Lock(unsigned& atomicLock)
+inline void GraphicsManager::Lock(unsigned& atomicLock)
 {
 	while (NewtonAtomicSwap((int*)&atomicLock, 1)) {
 		NewtonYield();
 	}
 }
 
-inline void DemoEntityManager::Unlock(unsigned& atomicLock)
+inline void GraphicsManager::Unlock(unsigned& atomicLock)
 {
 	NewtonAtomicSwap((int*)&atomicLock, 0);
 }
 
 
-inline NewtonWorld* DemoEntityManager::GetNewton() const
+inline NewtonWorld* GraphicsManager::GetNewton() const
 {
 	return m_world;
 }
 
 
 
-inline int DemoEntityManager::GetWidth() const 
+inline int GraphicsManager::GetWidth() const
 { 
 	return this->width;
 }
 
-inline int DemoEntityManager::GetHeight() const 
+inline int GraphicsManager::GetHeight() const
 { 
 	return this->height;
 }

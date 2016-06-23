@@ -13,7 +13,7 @@
 #include "GraphicsManager.h"
 #include "ListenerBase.h"
 
-DemoListenerBase::DemoListenerBase(DemoEntityManager* const scene, const char* const listenerName)
+ListenerBase::ListenerBase(GraphicsManager* const scene, const char* const listenerName)
 {
 	NewtonWorld* const world = scene->GetNewton();
 	void* const prelistener = NewtonWorldAddPreListener (world, listenerName, this, PreUpdate, NULL);
@@ -22,35 +22,35 @@ DemoListenerBase::DemoListenerBase(DemoEntityManager* const scene, const char* c
 	NewtonWorldListenerSetBodyDestroyCallback (world, prelistener, OnBodyDetroy);
 }
 
-DemoListenerBase::~DemoListenerBase()
+ListenerBase::~ListenerBase()
 {
 }
 
-void DemoListenerBase::OnBodyDestroy (NewtonBody* const body)
+void ListenerBase::OnBodyDestroy (NewtonBody* const body)
 {
 }
 
-void DemoListenerBase::PreUpdate (const NewtonWorld* const world, void* const listenerUserData, dFloat timestep)
+void ListenerBase::PreUpdate (const NewtonWorld* const world, void* const listenerUserData, dFloat timestep)
 {
-	DemoListenerBase* const me = (DemoListenerBase*) listenerUserData;
+	ListenerBase* const me = (ListenerBase*) listenerUserData;
 	me->PreUpdate(world, timestep);
 }
 
 
-void DemoListenerBase::PostUpdate (const NewtonWorld* const world, void* const listenerUserData, dFloat timestep)
+void ListenerBase::PostUpdate (const NewtonWorld* const world, void* const listenerUserData, dFloat timestep)
 {
-	DemoListenerBase* const me = (DemoListenerBase*) listenerUserData;
+	ListenerBase* const me = (ListenerBase*) listenerUserData;
 	me->PostUpdate(world, timestep);
 }
 
-void DemoListenerBase::Destroy (const NewtonWorld* const world, void* const listenerUserData)
+void ListenerBase::Destroy (const NewtonWorld* const world, void* const listenerUserData)
 {
-	DemoListenerBase* const me = (DemoListenerBase*) listenerUserData;
+	ListenerBase* const me = (ListenerBase*) listenerUserData;
 	delete me;
 }
 
-void DemoListenerBase::OnBodyDetroy (const NewtonWorld* const world, void* const listener, NewtonBody* const body)
+void ListenerBase::OnBodyDetroy (const NewtonWorld* const world, void* const listener, NewtonBody* const body)
 {
-	DemoListenerBase* const me = (DemoListenerBase*) NewtonWorldGetListenerUserData(world, listener);
+	ListenerBase* const me = (ListenerBase*) NewtonWorldGetListenerUserData(world, listener);
 	me->OnBodyDestroy(body);
 }

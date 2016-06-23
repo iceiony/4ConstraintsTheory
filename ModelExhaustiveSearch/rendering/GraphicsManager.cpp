@@ -16,9 +16,9 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-DemoEntityManager::DemoEntityManager(NewtonWorld *world) :
-        dList<DemoEntity *>(), m_world(world), m_renderHoodContext(NULL),
-        m_renderHood(NULL), m_cameraManager(new DemoCameraListener(this)) {
+GraphicsManager::GraphicsManager(NewtonWorld *world) :
+        dList<GraphicsEntity *>(), m_world(world), m_renderHoodContext(NULL),
+        m_renderHood(NULL), m_cameraManager(new CameraListener(this)) {
 
     InitialiseGraphics();
 
@@ -27,34 +27,34 @@ DemoEntityManager::DemoEntityManager(NewtonWorld *world) :
 }
 
 
-DemoEntityManager::~DemoEntityManager(void) {
+GraphicsManager::~GraphicsManager(void) {
     glfwTerminate();
 
     // destroy all remaining visual objects
-    while (dList<DemoEntity *>::GetFirst()) {
-        RemoveEntity(dList<DemoEntity *>::GetFirst());
+    while (dList<GraphicsEntity *>::GetFirst()) {
+        RemoveEntity(dList<GraphicsEntity *>::GetFirst());
     }
 }
 
-void DemoEntityManager::RemoveEntity(dListNode *const entNode) {
-    DemoEntity *const entity = entNode->GetInfo();
+void GraphicsManager::RemoveEntity(dListNode *const entNode) {
+    GraphicsEntity *const entity = entNode->GetInfo();
     entity->Release();
     Remove(entNode);
 }
 
-void DemoEntityManager::PushTransparentMesh(const DemoMeshInterface *const mesh) {
+void GraphicsManager::PushTransparentMesh(const GraphicsMeshInterface *const mesh) {
     dMatrix matrix;
     glGetFloat (GL_MODELVIEW_MATRIX, &matrix[0][0]);
-    TransparentMesh entry(matrix, (DemoMesh *) mesh);
+    TransparentMesh entry(matrix, (GraphicsMesh *) mesh);
     m_tranparentHeap.Push(entry, matrix.m_posit.m_z);
 }
 
 
-void DemoEntityManager::SetCameraMatrix(const dQuaternion &rotation, const dVector &position) {
+void GraphicsManager::SetCameraMatrix(const dQuaternion &rotation, const dVector &position) {
     m_cameraManager->SetCameraMatrix(this, rotation, position);
 }
 
-dFloat DemoEntityManager::CalculateInterpolationParam(dFloat timeStep) const {
+dFloat GraphicsManager::CalculateInterpolationParam(dFloat timeStep) const {
     dFloat param = (timeStep * MAX_PHYSICS_FPS) / 1.0e6f;
     dAssert (param >= 0.0f);
     if (param > 1.0f) {
@@ -63,7 +63,7 @@ dFloat DemoEntityManager::CalculateInterpolationParam(dFloat timeStep) const {
     return param;
 }
 
-void DemoEntityManager::UpdateGraphics(unsigned64 simulationTime) {
+void GraphicsManager::UpdateGraphics(unsigned64 simulationTime) {
     dFloat timeStep(dGetTimeInMicrosenconds() - simulationTime);
 
     RenderFrame(timeStep);
@@ -73,7 +73,7 @@ void DemoEntityManager::UpdateGraphics(unsigned64 simulationTime) {
     glfwPollEvents();
 }
 
-void DemoEntityManager::RenderFrame(dFloat timeStep) {
+void GraphicsManager::RenderFrame(dFloat timeStep) {
     dTimeTrackerEvent(__FUNCTION__);
 
     // Get the interpolated location of each body in the scene
@@ -145,8 +145,8 @@ void DemoEntityManager::RenderFrame(dFloat timeStep) {
     m_cameraManager->GetCamera()->SetViewMatrix(GetWidth(), GetHeight());
 
     // render all entities
-    for (dListNode *node = dList<DemoEntity *>::GetFirst(); node; node = node->GetNext()) {
-        DemoEntity *const entity = node->GetInfo();
+    for (dListNode *node = dList<GraphicsEntity *>::GetFirst(); node; node = node->GetNext()) {
+        GraphicsEntity *const entity = node->GetInfo();
         glPushMatrix();
         entity->Render(timeStep, this);
         glPopMatrix();
@@ -216,17 +216,17 @@ void DemoEntityManager::RenderFrame(dFloat timeStep) {
     glFlush();
 }
 
-void DemoEntityManager::SetWindowSize(int width, int height) {
+void GraphicsManager::SetWindowSize(int width, int height) {
     this->width = width;
     this->height = height;
 
 }
 
-GLFWwindow *const DemoEntityManager::GetRootWindow() const {
+GLFWwindow *const GraphicsManager::GetRootWindow() const {
     return window;
 }
 
-void DemoEntityManager::InitialiseGraphics() {
+void GraphicsManager::InitialiseGraphics() {
     if (!glfwInit()) {
         throw "Could not init GLFW \n";
 
@@ -245,17 +245,17 @@ void DemoEntityManager::InitialiseGraphics() {
     glfwSetWindowSizeCallback(window, WindowResizeCallback);
 }
 
-DemoEntityManager *DemoEntityManager::instance;
+GraphicsManager *GraphicsManager::instance;
 
-void DemoEntityManager::WindowResizeCallback(GLFWwindow *window, int width, int height) {
+void GraphicsManager::WindowResizeCallback(GLFWwindow *window, int width, int height) {
     instance->SetWindowSize(width, height);
 }
 
-bool DemoEntityManager::IsWindowClosed() {
+bool GraphicsManager::IsWindowClosed() {
     return glfwWindowShouldClose(window) == 1;
 }
 
-void DemoEntityManager::Register(NewtonBody * body) {
+void GraphicsManager::Register(NewtonBody * body) {
     NewtonCollision * collision = NewtonBodyGetCollision(body);
     NewtonMesh * mesh = NewtonMeshCreateFromCollision(collision);
 
@@ -263,8 +263,8 @@ void DemoEntityManager::Register(NewtonBody * body) {
     NewtonBodyGetMatrix(body,&position[0][0]);
 
     //Visual mesh rendering was taken from Newton demo code
-    DemoMesh* const visualMesh = new DemoMesh (mesh);
-    DemoEntity *const entity = new DemoEntity(position, NULL);
+    GraphicsMesh* const visualMesh = new GraphicsMesh (mesh);
+    GraphicsEntity *const entity = new GraphicsEntity(position, NULL);
     Append(entity);
     if (mesh) {
         entity->SetMesh(visualMesh, dGetIdentityMatrix());
@@ -278,7 +278,7 @@ void DemoEntityManager::Register(NewtonBody * body) {
 /**
  * Sets the camera with given up-down, left-right angles in degrees
  */
-void DemoEntityManager::SetCamera(dVector origin, dFloat upAngle = 0.0f, dFloat leftAngle = 0.0f ) {
+void GraphicsManager::SetCamera(dVector origin, dFloat upAngle = 0.0f, dFloat leftAngle = 0.0f ) {
     dMatrix upRotation = dRollMatrix( upAngle * 3.1416f /180.0f);
     dMatrix leftRotation = dYawMatrix( leftAngle * 3.1416f /180.0f);
 

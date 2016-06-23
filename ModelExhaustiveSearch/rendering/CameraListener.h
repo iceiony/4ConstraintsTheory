@@ -20,18 +20,18 @@
 #include "Util.h"
 #include "GraphicsEntity.h"
 
-class DemoCameraListener: public DemoListenerBase
+class CameraListener: public ListenerBase
 {
 	public:
-	DemoCameraListener(DemoEntityManager* const scene);
-	~DemoCameraListener();
+	CameraListener(GraphicsManager* const scene);
+	~CameraListener();
 
-	DemoCamera* GetCamera() const
+	Camera* GetCamera() const
 	{
 		return m_camera;
 	}
 
-	void SetCameraMatrix (DemoEntityManager* const scene, const dQuaternion& rotation, const dVector& position)
+	void SetCameraMatrix (GraphicsManager* const scene, const dQuaternion& rotation, const dVector& position)
 	{
 		m_camera->SetMatrix(*scene, rotation, position);
 		m_camera->SetMatrix(*scene, rotation, position);
@@ -39,7 +39,7 @@ class DemoCameraListener: public DemoListenerBase
 		m_pitch = m_camera->GetPichAngle();
 	}
 
-	void InterpolateMatrices (DemoEntityManager* const scene, dFloat timeStepFraction);
+	void InterpolateMatrices (GraphicsManager* const scene, dFloat timeStepFraction);
 
 	private:
 	virtual void PreUpdate (const NewtonWorld* const world, dFloat timestep);
@@ -47,7 +47,7 @@ class DemoCameraListener: public DemoListenerBase
 
 	virtual void OnBodyDestroy (NewtonBody* const body);
 
-	DemoCamera* m_camera;
+	Camera* m_camera;
 	int m_mousePosX;
 	int m_mousePosY;
 	dFloat m_yaw;
@@ -65,7 +65,7 @@ class DemoCameraListener: public DemoListenerBase
 	dVector m_pickedBodyLocalAtachmentNormal;
 	NewtonBody* m_targetPicked;
 	NewtonBodyDestructor m_bodyDestructor;
-	friend class DemoCamera;
+	friend class Camera;
 
 	bool GetKeyState(GLFWwindow *const window, char key);
 };

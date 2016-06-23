@@ -13,10 +13,10 @@
 #define __DEMO_ENTITY_H__
 
 #include "GraphicsManager.h"
-class DemoMeshInterface;
+class GraphicsMeshInterface;
 
 
-class DemoEntity: public dHierarchy<DemoEntity>, virtual public dClassInfo
+class GraphicsEntity: public dHierarchy<GraphicsEntity>, virtual public dClassInfo
 {
 	public:
 
@@ -32,31 +32,31 @@ class DemoEntity: public dHierarchy<DemoEntity>, virtual public dClassInfo
 		}
 
 		virtual void OnRender (dFloat timestep) const = 0;
-		virtual void OnInterpolateMatrix (DemoEntityManager& world, dFloat param) const = 0;
+		virtual void OnInterpolateMatrix (GraphicsManager& world, dFloat param) const = 0;
 	};
 
-	DemoEntity(const DemoEntity& copyFrom);
-	DemoEntity(const dMatrix& matrix, DemoEntity* const parent);
-	DemoEntity(DemoEntityManager& world, const dScene* const scene, dScene::dTreeNode* const rootSceneNode, dTree<DemoMeshInterface*, dScene::dTreeNode*>& meshCache, DemoEntityManager::EntityDictionary& entityDictionary, DemoEntity* const parent = NULL);
-	virtual ~DemoEntity(void);
+	GraphicsEntity(const GraphicsEntity& copyFrom);
+	GraphicsEntity(const dMatrix& matrix, GraphicsEntity* const parent);
+	GraphicsEntity(GraphicsManager& world, const dScene* const scene, dScene::dTreeNode* const rootSceneNode, dTree<GraphicsMeshInterface*, dScene::dTreeNode*>& meshCache, GraphicsManager::EntityDictionary& entityDictionary, GraphicsEntity* const parent = NULL);
+	virtual ~GraphicsEntity(void);
 
-	void SetMesh (DemoMeshInterface* const m_mesh, const dMatrix& meshMatrix);
+	void SetMesh (GraphicsMeshInterface* const m_mesh, const dMatrix& meshMatrix);
 
 	UserData* GetUserData ();
 	void SetUserData (UserData* const data);
 
 	dBaseHierarchy* CreateClone () const;
 
-	dMatrix CalculateGlobalMatrix (const DemoEntity* const root = NULL) const;
+	dMatrix CalculateGlobalMatrix (const GraphicsEntity* const root = NULL) const;
 
 	dMatrix GetNextMatrix () const;
 	dMatrix GetCurrentMatrix () const;
-	virtual void SetMatrix(DemoEntityManager& world, const dQuaternion& rotation, const dVector& position);
+	virtual void SetMatrix(GraphicsManager& world, const dQuaternion& rotation, const dVector& position);
 
-	virtual void ResetMatrix(DemoEntityManager& world, const dMatrix& matrix);
-	virtual void InterpolateMatrix (DemoEntityManager& world, dFloat param);
+	virtual void ResetMatrix(GraphicsManager& world, const dMatrix& matrix);
+	virtual void InterpolateMatrix (GraphicsManager& world, dFloat param);
 
-	virtual void Render(dFloat timeStep, DemoEntityManager* const scene) const;
+	virtual void Render(dFloat timeStep, GraphicsManager* const scene) const;
 
 	static void TransformCallback(const NewtonBody* const body, const dFloat* const matrix, int threadIndex);
 
@@ -71,13 +71,13 @@ class DemoEntity: public dHierarchy<DemoEntity>, virtual public dClassInfo
 	dQuaternion m_nextRotation;         // rotation at the current physics simulation step  
 
 	dMatrix m_meshMatrix;
-	DemoMeshInterface* m_mesh;
+	GraphicsMeshInterface* m_mesh;
 	UserData* m_userData;
 
 	unsigned m_lock;
 	dAddRtti(dClassInfo,);
 
-	friend class DemoEntityManager;
+	friend class GraphicsManager;
 };
 
 #endif
