@@ -1,9 +1,9 @@
 //
 // Created by Adrian Ionita on 23/06/2016.
 //
-#include "GraphicsManager.h"
-#include "Util.h"
 #include <iostream>
+#include "Util.h"
+#include "dHighResolutionTimer.h"
 
 #define MASS  10.0f
 #ifndef __SIMULATION__

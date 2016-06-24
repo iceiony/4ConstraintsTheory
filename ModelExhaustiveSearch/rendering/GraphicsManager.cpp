@@ -12,17 +12,21 @@
 #include "Camera.h"
 #include "DebugDisplay.h"
 #include "CameraListener.h"
+#include "dHighResolutionTimer.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
 GraphicsManager::GraphicsManager(NewtonWorld *world) :
-        dList<GraphicsEntity *>(), m_world(world), m_cameraManager(new CameraListener(this)) {
+        dList<GraphicsEntity *>(), m_world(world),
+        m_physicsPaused(true) ,m_cameraManager(new CameraListener(this)) {
 
-    InitialiseGraphics();
+    m_instance = this;
+    m_window = InitialiseGraphics();
 
     NewtonWorldSetUserData(m_world, this);
 
+    glfwSetKeyCallback(m_window,PauseKeyCallback);
 }
 
 
@@ -62,12 +66,14 @@ dFloat GraphicsManager::CalculateInterpolationParam(dFloat timeStep) const {
     return param;
 }
 
-void GraphicsManager::UpdateGraphics(unsigned64 simulationTime) {
-    dFloat timeStep(dGetTimeInMicrosenconds() - simulationTime);
+void GraphicsManager::UpdateGraphics(dFloat timeStep) {
+    if (IsPhysicsPaused()){
+        m_cameraManager->PausedStateUpdateCamera(this);
+    }
 
     RenderFrame(timeStep);
 
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(m_window);
 
     glfwPollEvents();
 }
@@ -169,49 +175,63 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
 
     DebugRenderWorldCollision(GetNewton(), m_lines);
 
-    int lineNumber = 130 + 22;
-
     // draw everything and swap the display buffer
     glFlush();
 }
 
 void GraphicsManager::SetWindowSize(int width, int height) {
-    this->width = width;
-    this->height = height;
+    this->m_width = width;
+    this->m_height = height;
 
 }
 
 GLFWwindow *const GraphicsManager::GetRootWindow() const {
-    return window;
+    return m_window;
 }
 
-void GraphicsManager::InitialiseGraphics() {
+GLFWwindow * GraphicsManager::InitialiseGraphics() {
     if (!glfwInit()) {
         throw "Could not init GLFW \n";
 
     };
 
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Simulation", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Simulation", NULL, NULL);
 
     if (!window) {
-        throw "Could not open OpenGL window \n";
+        throw "Could not open OpenGL m_window \n";
     }
 
-    /* Make the window's context current */
+    /* Make the m_window's context current */
     glfwMakeContextCurrent(window);
 
     SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetWindowSizeCallback(window, WindowResizeCallback);
+
+    return window;
 }
 
-GraphicsManager *GraphicsManager::instance;
+GraphicsManager *GraphicsManager::m_instance;
 
 void GraphicsManager::WindowResizeCallback(GLFWwindow *window, int width, int height) {
-    instance->SetWindowSize(width, height);
+    m_instance->SetWindowSize(width, height);
 }
 
+void GraphicsManager::PauseKeyCallback(GLFWwindow *window,int key,int scancode,int action,int mod){
+    if (key == GLFW_KEY_P && action == GLFW_PRESS)
+        m_instance->TogglePause();
+}
+
+void GraphicsManager::TogglePause() {
+    this->m_physicsPaused = !this->m_physicsPaused;
+}
+
+bool GraphicsManager::IsPhysicsPaused() {
+    return this->m_physicsPaused;
+}
+
+
 bool GraphicsManager::IsWindowClosed() {
-    return glfwWindowShouldClose(window) == 1;
+    return glfwWindowShouldClose(m_window) == 1;
 }
 
 void GraphicsManager::Register(NewtonBody * body,dVector color = GRAY) {

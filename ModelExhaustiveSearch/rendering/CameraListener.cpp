@@ -41,8 +41,6 @@ CameraListener::CameraListener(GraphicsManager* const scene)
 	,m_pickedBodyTargetPosition(0.0f)
 	,m_pickedBodyLocalAtachmentPoint(0.0f)
 	,m_pickedBodyLocalAtachmentNormal(0.0f)
-	,m_targetPicked(NULL)
-	,m_bodyDestructor(NULL)
 {
 }
 
@@ -55,17 +53,13 @@ void CameraListener::PreUpdate (const NewtonWorld* const world, dFloat timestep)
 {
 	// update the camera;
 	GraphicsManager* const scene = (GraphicsManager*) NewtonWorldGetUserData(world);
-
 	GLFWwindow * const mainWin = scene->GetRootWindow();
 
 	dMatrix targetMatrix (m_camera->GetNextMatrix());
 
-	double mouseX,mouseY;
-	glfwGetCursorPos(mainWin, &mouseX, &mouseY);
-
 	// slow down the Camera if we have a Body
 	int state = glfwGetKey(mainWin, GLFW_KEY_LEFT_SHIFT );
-	dFloat slowDownFactor = state == GLFW_PRESS ? 0.5f/2.0f : 0.5f;
+	dFloat slowDownFactor = state == GLFW_PRESS ? 0.15f : 0.5f;
 
 	// do camera translation
 	if (GetKeyState (mainWin,'W')) {
@@ -89,12 +83,15 @@ void CameraListener::PreUpdate (const NewtonWorld* const world, dFloat timestep)
 		targetMatrix.m_posit += targetMatrix.m_up.Scale(m_sidewaysSpeed * timestep * slowDownFactor);
 	}
 
+	double mouseX,mouseY;
+	glfwGetCursorPos(mainWin, &mouseX, &mouseY);
+
 	// do camera rotation, only if we do not have anything picked
 	state = glfwGetMouseButton(mainWin, GLFW_MOUSE_BUTTON_LEFT);
 	bool buttonState = m_mouseLockState || state == GLFW_PRESS;
-	if (!m_targetPicked && buttonState) {
-        int mouseSpeedX = mouseX - m_mousePosX;
-        int mouseSpeedY = mouseY - m_mousePosY;
+	if (buttonState) {
+        double mouseSpeedX = mouseX - m_mousePosX;
+        double mouseSpeedY = mouseY - m_mousePosY;
 
         if (mouseSpeedX > 0) {
             m_yaw = dMod(m_yaw + m_yawRate, 2.0f * 3.1416f);
@@ -140,15 +137,18 @@ void CameraListener::InterpolateMatrices (GraphicsManager* const scene, dFloat p
 
 void CameraListener::OnBodyDestroy (NewtonBody* const body)
 {
-	// remove the references pointer because the body is going to be destroyed
-	m_targetPicked = NULL;
-	m_bodyDestructor = NULL;
 }
 
 bool CameraListener::GetKeyState(GLFWwindow *const window, char key) {
 	int state = glfwGetKey(window, key);
 	return state == GLFW_PRESS;
 }
+
+void CameraListener::PausedStateUpdateCamera(GraphicsManager *scene) {
+	this->PreUpdate(scene->GetNewton(), 1.0f / MAX_PHYSICS_FPS );
+}
+
+
 
 
 

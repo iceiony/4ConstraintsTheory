@@ -14,7 +14,6 @@
 
 #include "GraphicsMesh.h"
 #include "ListenerBase.h"
-#include "dHighResolutionTimer.h"
 #include <GLFW/glfw3.h>
 
 #define RED   dVector(1.,.3,.3)
@@ -24,132 +23,130 @@
 
 //class GraphicsMesh;
 class GraphicsEntity;
+
 class Camera;
+
 class NewtonDemos;
+
 class GraphicsManager;
+
 class CameraListener;
 
-
-typedef void (*RenderHoodCallback) (GraphicsManager* const manager, void* const context, int lineNumber);
-
-class GraphicsManager: public dList <GraphicsEntity*>
-{
-	public:
-    class TransparentMesh
-    {
-        public: 
+class GraphicsManager : public dList<GraphicsEntity *> {
+public:
+    class TransparentMesh {
+    public:
         TransparentMesh()
-            :m_matrix(dGetIdentityMatrix())
-            ,m_mesh(NULL)
-        {
+                : m_matrix(dGetIdentityMatrix()), m_mesh(NULL) {
         }
 
-        TransparentMesh(const dMatrix& matrix, const GraphicsMesh* const mesh)
-            :m_matrix(matrix)
-            ,m_mesh(mesh)
-        {
+        TransparentMesh(const dMatrix &matrix, const GraphicsMesh *const mesh)
+                : m_matrix(matrix), m_mesh(mesh) {
         }
 
         dMatrix m_matrix;
-        const GraphicsMesh* m_mesh;
+        const GraphicsMesh *m_mesh;
     };
 
-    class TransparentHeap: public dUpHeap <TransparentMesh, dFloat>
-    {
-        public:
+    class TransparentHeap : public dUpHeap<TransparentMesh, dFloat> {
+    public:
         TransparentHeap()
-            :dUpHeap <TransparentMesh, dFloat>(256)
-        {
+                : dUpHeap<TransparentMesh, dFloat>(256) {
         }
     };
 
-	class EntityDictionary: public dTree<GraphicsEntity*, dScene::dTreeNode*>
-	{
-	};
+    class EntityDictionary : public dTree<GraphicsEntity *, dScene::dTreeNode *> {
+    };
 
-	GraphicsManager(NewtonWorld * world);
-	~GraphicsManager(void);
+    GraphicsManager(NewtonWorld *world);
 
-	void RenderFrame(dFloat timeStep);
+    ~GraphicsManager(void);
 
-	int GetWidth() const;
-	int GetHeight() const;
+    void RenderFrame(dFloat timeStep);
 
-	NewtonWorld* GetNewton() const;
+    int GetWidth() const;
 
-	void SetCameraMatrix (const dQuaternion& rotation, const dVector& position);
+    int GetHeight() const;
 
-    void PushTransparentMesh (const GraphicsMeshInterface* const mesh);
+    NewtonWorld *GetNewton() const;
 
-	void Lock(unsigned& atomicLock);
-	void Unlock(unsigned& atomicLock);
+    void SetCameraMatrix(const dQuaternion &rotation, const dVector &position);
 
-	void RemoveEntity (dList<GraphicsEntity*>::dListNode* const entNode);
-	static void WindowResizeCallback(GLFWwindow *window, int width, int height);
+    void PushTransparentMesh(const GraphicsMeshInterface *const mesh);
 
-	void SetWindowSize(int width, int height);
+    void Lock(unsigned &atomicLock);
 
-	GLFWwindow *const GetRootWindow() const;
+    void Unlock(unsigned &atomicLock);
 
-	bool IsWindowClosed();
+    void RemoveEntity(dList<GraphicsEntity *>::dListNode *const entNode);
 
-	void UpdateGraphics(unsigned64 i);
+    static void WindowResizeCallback(GLFWwindow *window, int width, int height);
+	static void PauseKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mod);
 
-	void Register(NewtonBody *body,dVector color);
+    void SetWindowSize(int width, int height);
 
-	void SetCamera(dVector origin, dFloat leftAngle , dFloat upAngle );
+    GLFWwindow *const GetRootWindow() const;
+
+    bool IsWindowClosed();
+
+    void UpdateGraphics(dFloat timeStep);
+
+    void Register(NewtonBody *body, dVector color);
+
+    void SetCamera(dVector origin, dFloat leftAngle, dFloat upAngle);
+
+    void TogglePause();
+
+    bool IsPhysicsPaused();
 
 private:
 
 
-	dFloat CalculateInterpolationParam(dFloat simulationTime) const;
+    dFloat CalculateInterpolationParam(dFloat simulationTime) const;
 
-	NewtonWorld* m_world;
+    NewtonWorld *m_world;
 
-	static GraphicsManager *instance;
-	CameraListener* m_cameraManager;
+    static GraphicsManager *m_instance;
+    CameraListener *m_cameraManager;
 
-	GLFWwindow *window;
+    GLFWwindow *m_window;
 
     TransparentHeap m_tranparentHeap;
 
-	//screen width and height required for rendring
-	int width;
-	int height;
+    //screen width and height required for rendring
+    int m_width;
+    int m_height;
 
-	void InitialiseGraphics();
+    GLFWwindow *InitialiseGraphics();
+
+    bool m_physicsPaused;
 };
 
 // for simplicity we are not going to run the demo in a separate thread at this time
 // this confuses many user int thinking it is more complex than it really is  
-inline void GraphicsManager::Lock(unsigned& atomicLock)
-{
-	while (NewtonAtomicSwap((int*)&atomicLock, 1)) {
-		NewtonYield();
-	}
+inline void GraphicsManager::Lock(unsigned &atomicLock) {
+    while (NewtonAtomicSwap((int *) &atomicLock, 1)) {
+        NewtonYield();
+    }
 }
 
-inline void GraphicsManager::Unlock(unsigned& atomicLock)
-{
-	NewtonAtomicSwap((int*)&atomicLock, 0);
-}
-
-
-inline NewtonWorld* GraphicsManager::GetNewton() const
-{
-	return m_world;
+inline void GraphicsManager::Unlock(unsigned &atomicLock) {
+    NewtonAtomicSwap((int *) &atomicLock, 0);
 }
 
 
-
-inline int GraphicsManager::GetWidth() const
-{ 
-	return this->width;
+inline NewtonWorld *GraphicsManager::GetNewton() const {
+    return m_world;
 }
 
-inline int GraphicsManager::GetHeight() const
-{ 
-	return this->height;
+
+inline int GraphicsManager::GetWidth() const {
+    return this->m_width;
 }
+
+inline int GraphicsManager::GetHeight() const {
+    return this->m_height;
+}
+
 
 #endif

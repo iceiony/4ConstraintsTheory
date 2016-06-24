@@ -41,15 +41,17 @@ class CameraListener: public ListenerBase
 
 	void InterpolateMatrices (GraphicsManager* const scene, dFloat timeStepFraction);
 
-	private:
+	void PausedStateUpdateCamera(GraphicsManager *scene);
+
+private:
 	virtual void PreUpdate (const NewtonWorld* const world, dFloat timestep);
 	virtual void PostUpdate (const NewtonWorld* const world, dFloat timestep);
 
 	virtual void OnBodyDestroy (NewtonBody* const body);
 
 	Camera* m_camera;
-	int m_mousePosX;
-	int m_mousePosY;
+	double m_mousePosX;
+	double m_mousePosY;
 	dFloat m_yaw;
 	dFloat m_pitch;
 	dFloat m_yawRate;
@@ -63,8 +65,6 @@ class CameraListener: public ListenerBase
 	dVector m_pickedBodyTargetPosition;
 	dVector m_pickedBodyLocalAtachmentPoint;
 	dVector m_pickedBodyLocalAtachmentNormal;
-	NewtonBody* m_targetPicked;
-	NewtonBodyDestructor m_bodyDestructor;
 	friend class Camera;
 
 	bool GetKeyState(GLFWwindow *const window, char key);
