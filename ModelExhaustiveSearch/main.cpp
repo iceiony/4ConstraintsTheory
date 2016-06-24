@@ -34,6 +34,7 @@ int main() {
 
     sim.ResetTimer();
 
+    graphicsManager.TogglePause();
     while (!graphicsManager.IsWindowClosed()) {
         dFloat timeStep;
 

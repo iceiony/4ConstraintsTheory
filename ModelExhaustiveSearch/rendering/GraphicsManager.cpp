@@ -19,7 +19,7 @@
 
 GraphicsManager::GraphicsManager(NewtonWorld *world) :
         dList<GraphicsEntity *>(), m_world(world),
-        m_physicsPaused(true) ,m_cameraManager(new CameraListener(this)) {
+        m_physicsPaused(false) ,m_cameraManager(new CameraListener(this)) {
 
     m_instance = this;
     m_window = InitialiseGraphics();
