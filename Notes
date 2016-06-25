@@ -87,3 +87,21 @@ I believe the engine is going to do a good job simulating physical properties. T
 
 Additionally , code has to be written for more common file formats storing the 3D models. Engine demo code is not compatible with any commonly used format. Models had to be converted from .3ds to .off using a special blender plugin. 
 
+Exhaustive Search
+In implementing an exhaustive fitting search, Newton Dynamics demo code was adapted. The search model would have to operate in both a graphical and non-graphical mode.
+The graphical requirement is such that a researcher can investigate the correct loading of objects and interactions in the 3D world. The non-graphical model would provide faster computation as rendering overburden is removed. 
+In a graphical mode, the simulation allows mouse and keyboard control of the camera. An user is able to pause the physical world simulation and freely move the camera to observe contact points and exact fitting of objects.
+	
+Figure [NewtonSimujlation.png] captures the rendering. Two objects are presented in a fitting position. Visual meshes are displayed in green. Collision meshes are outlining white lines. The contact points are displayed as red dots at the surface of meshes. Additionally, 3D orientation vector axis are also displayed ( red , green , blue for x , y , z respectively). 
+
+NewtonDynamics has the in built ability to optimise meshes as convex decomposition. This means, complex assemblies of triangles representing simple shapes , such as cylinders, can be optimised to simpler mesh structures representing the same shapes. A complex object would therefore be transformed to an assembly of simple shapes. 
+
+Convex decomposition greatly improves the performance of simulations. The process can be achieved at multiple levels of precision. This setting may have to be adjusted for future models. 
+
+Modifying existing demo code involved replacing 3D rendering initialisation. Code was adjusted so that physical simulation can be independently modified from rendering (i.e. the simulation code has no dependency on the existence of rendering ). The effect of this design allows for simulation code to be simple and untangled from rendering constraints. 
+
+Newton dynamics supports loading models from unusual file formats (*.ngd and *.off). The suported formats are not compatible with widely used 3D modeling software or engines (e.g. blender, ldView or lego designer). In order to avoid difficulties in converting to unpopular formats, code was written to support the widely used *.3ds format ( 3D studio ).
+
+When loading objects in the simulation world, collision points are not detected immediately. A few simulation time steps are required in order for these to be detected. 
+
+
