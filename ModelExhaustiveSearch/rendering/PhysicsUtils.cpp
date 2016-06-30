@@ -57,14 +57,13 @@ void MoveTool(const NewtonBody * const body, dFloat time, int threadIndex) {
     dMatrix position;
     NewtonBodyGetMatrix(body, &position[0][0]);
 
-    if (position.m_posit.m_x > -0.3) {
-        NewtonBodySetVelocity(body, &dVector(0, 1, 0)[0]);
-        NewtonBodySetOmega(body, &dVector(0, 0, 0.08)[0]);
-    }
-    else {
-        NewtonBodySetVelocity(body, &dVector(1, 0, 0)[0]);
-        NewtonBodySetOmega(body, &dVector(0, 0, 0)[0]);
-    }
+    NewtonBodySetVelocity(body, &dVector(0, 1, 0)[0]);
+
+    dVector omega;
+    NewtonBodyGetOmega(body,&omega[0]);
+
+    omega = dVector(0,0,0) - omega;
+    NewtonBodySetOmega(body, &omega[0]);
 }
 
 // add force and torque to rigid body
@@ -124,8 +123,17 @@ void CalculateAABB(const NewtonCollision *const collision, const dMatrix &matrix
     }
 }
 
+void CalculateAABB(const NewtonBody *body,dVector &minP ,dVector &maxP){
+    dMatrix matrix;
+
+    NewtonCollision* const collision = NewtonBodyGetCollision(body);
+    NewtonBodyGetMatrix (body, &matrix[0][0]);
+    NewtonCollisionCalculateAABB (collision, &matrix[0][0], &minP[0], &maxP[0]);
+    CalculateAABB (collision, matrix, minP, maxP);
+}
+
 NewtonMesh *CreateFloorMesh(NewtonWorld *const world) {
-    const dVector scale(4.0f, 0.01f, 4.0f);
+    const dVector scale(4.0f, 0.0001f, 4.0f);
 
 // the vertex array, vertices's has for values, x, y, z, w
 // w is use as a id to have multiple copy of the same very, like for example mesh that share more than two edges.

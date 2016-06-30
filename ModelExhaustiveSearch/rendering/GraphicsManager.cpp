@@ -121,7 +121,7 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
     // one light form the Camera eye point
-    GLfloat lightDiffuse0[] = {0.5f, 0.5f, 0.5f, 0.0};
+    GLfloat lightDiffuse0[] = {0.1f, 0.1f, 0.1f, 0.0};
     GLfloat lightAmbient0[] = {0.0f, 0.0f, 0.0f, 0.0};
     dVector camPosition(m_cameraManager->GetCamera()->m_matrix.m_posit);
     GLfloat lightPosition0[] = {camPosition.m_x, camPosition.m_y, camPosition.m_z};
@@ -134,9 +134,9 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
 
 
     // set just one directional light
-    GLfloat lightDiffuse1[] = {0.7f, 0.7f, 0.7f, 0.0};
-    GLfloat lightAmbient1[] = {0.2f, 0.2f, 0.2f, 0.0};
-    GLfloat lightPosition1[] = {-500.0f, 200.0f, 500.0f, 0.0};
+    GLfloat lightDiffuse1[] = {0.2f, 0.2f, 0.2f, 0.0};
+    GLfloat lightAmbient1[] = {0.7f, 0.7f, 0.7f, 0.0};
+    GLfloat lightPosition1[] = {.0f, 100.0f, .0f, 0.0};
 
     glLightfv(GL_LIGHT1, GL_POSITION, lightPosition1);
     glLightfv(GL_LIGHT1, GL_AMBIENT, lightAmbient1);
@@ -169,11 +169,13 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
     }
 
 
-    RenderContactPoints(GetNewton());
+    RenderContactPoints(m_world);
 
-    RenderCenterOfMass(GetNewton());
+    RenderCenterOfMass(m_world);
 
-    DebugRenderWorldCollision(GetNewton(), m_lines);
+    DebugRenderWorldCollision(m_world, m_lines);
+
+    RenderAABB(m_world);
 
     // draw everything and swap the display buffer
     glFlush();

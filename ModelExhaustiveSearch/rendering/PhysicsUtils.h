@@ -23,6 +23,7 @@ void PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int thre
 void MoveTool (const NewtonBody * const body, dFloat timestep, int threadIndex);
 
 void CalculateAABB (const NewtonCollision* const collision, const dMatrix& matrix, dVector& minP, dVector& maxP);
+void CalculateAABB(const NewtonBody *body,dVector &minP ,dVector &maxP);
 
 NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dFloat mass, const dMatrix& matrix, NewtonCollision* const collision, int materialId);
 NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const fileName, const dFloat scale);
