@@ -61,21 +61,8 @@ set(SOURCE_FILES
         ${LIB3DS}
     )
 
-add_executable(MatlabNewtonDynamics ${SOURCE_FILES})
-target_link_libraries(MatlabNewtonDynamics dMath dScene dCustomJoints dContainers dAnimation )
+add_executable(ExhaustiveSearchGUI ${SOURCE_FILES})
+target_link_libraries(ExhaustiveSearchGUI dMath dScene dCustomJoints dContainers dAnimation )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
-#if (UNIX)
-#        add_definitions(-DD_JOINTLIBRARY_STATIC_LIB)
-#
-#        if (BUILD_64)
-#                add_definitions(-D_POSIX_VER -D_POSIX_VER_64)
-#        else (BUILD_64)
-#                add_definitions(-D_POSIX_VER)
-#        endif (BUILD_64)
-#endif(UNIX)
-#
-#if (CMAKE_COMPILER_IS_GNUCC)
-#        add_definitions(-fpic -msse -msse2 -c -Wall -std=c++11)
-#endif(CMAKE_COMPILER_IS_GNUCC)
 

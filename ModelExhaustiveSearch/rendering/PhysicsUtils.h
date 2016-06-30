@@ -19,6 +19,11 @@ class GraphicsMesh;
 class GraphicsEntity;
 class GraphicsManager;
 
+NewtonJoint* CheckIfBodiesCollide (NewtonBody* const body0, NewtonBody* const body1);
+dVector ForceBetweenBodies(NewtonBody *const body0, NewtonBody *const body1);
+bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxForce);
+dFloat ForceScalar(dVector force);
+
 void PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int threadIndex);
 void MoveTool (const NewtonBody * const body, dFloat timestep, int threadIndex);
 

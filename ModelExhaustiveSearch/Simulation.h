@@ -8,59 +8,56 @@
 #define MASS  10.0f
 #ifndef __SIMULATION__
 #define __SIMULATION__
+
+#define maxIterationCount 12
+
+#define minX -1
+//#define minX 0.6
+#define maxX 1
+
+#define minY 1.1
+#define maxY 2
+
+#define minZ 0.3
+//#define minZ -.5f
+#define maxZ 1
+
+#define minYaw 0
+#define maxYaw 360
+
+#define minPitch 180
+//#define minPitch 90
+#define maxPitch 360
+
+#define minRoll 0
+#define maxRoll 360
+
 class Simulation {
 
 private:
     NewtonWorld *m_world;
-    NewtonBody *toolBody;
-    NewtonBody *objBody;
-    NewtonBody *floorBody;
+    NewtonBody *m_toolBody;
+    NewtonBody *m_objBody;
+    NewtonBody *m_floorBody;
+
+    dVector m_objInitialPos;
 
     unsigned64 m_microseconds;
+    int iterationCount;
+    bool isEquilibrium;
 
     NewtonBody *CreateFloor();
     NewtonBody *LoadModel(const char *fileName);
+    float GetMinY(NewtonBody *body);
 
 public:
-    Simulation() : m_microseconds(0),m_world(NewtonCreate()) {
+    Simulation();
 
-        //set exact solving
-        NewtonSetSolverModel(m_world, 0);
-
-        // clean up all caches the engine have saved
-        NewtonInvalidateCache(m_world);
-
-        dTimeTrackerSetThreadName ("mainThread");
-
-        CreateFloor();
-    }
-
-    ~Simulation() {
-        // is we are run asynchronous we need make sure no update in on flight.
-        if (m_world) {
-            NewtonWaitForUpdateToFinish(m_world);
-        }
-
-        // destroy the empty world
-        if (m_world) {
-            NewtonDestroy(m_world);
-            m_world = NULL;
-        }
-        dAssert (NewtonGetMemoryUsed() == 0);
-    }
-
-    void ResetTimer() {
-        dResetTimer();
-        m_microseconds = dGetTimeInMicrosenconds();
-    }
+    ~Simulation();
 
     void UpdatePhysics();
 
-
-    unsigned64 GetSimulationTime(){
-        return m_microseconds;
-    }
-
+    unsigned64 GetSimulationTime();
 
     NewtonWorld *GetNewtonWorld();
 
@@ -68,6 +65,27 @@ public:
     NewtonBody * LoadTool(const char *fileName);
 
     NewtonBody *GetFloor();
+
+    bool IsFinished();
+
+    void NextScenario();
+
+    void ResetObjPosition();
+
+    void ResetTimer();
+
+    void SetToolRotation(float yaw, float pitch, float roll,float x, float y, float z);
+
+    bool IterateScenario();
+
+    void SaveResults();
+    float offsetX = minX;
+    float offsetY = minY;
+    float offsetZ = minZ;
+
+    int offsetYaw   = minYaw;
+    int offsetPitch = minPitch;
+    int offsetRoll  = minRoll;
 
 };
 #endif

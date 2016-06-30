@@ -15,6 +15,66 @@
 #include <lib3ds/file.h>
 #include <lib3ds/mesh.h>
 #include <vector>
+#include <math.h>
+
+// return the collision joint, if the body collide
+NewtonJoint* CheckIfBodiesCollide (NewtonBody* const body0, NewtonBody* const body1)
+{
+    for (NewtonJoint* joint = NewtonBodyGetFirstContactJoint (body0); joint; joint = NewtonBodyGetNextContactJoint (body0, joint)) {
+        if ( NewtonJointIsActive(joint) && (NewtonJointGetBody0(joint) == body1 || NewtonJointGetBody1(joint) == body1)) {
+            return joint;
+        }
+    }
+    return NULL;
+}
+
+dVector ForceBetweenBodies(NewtonBody *const body0, NewtonBody *const body1)
+{
+    dVector reactionForce (0.0f, 0.0f, 0.0f, 0.0f);
+    for (NewtonJoint* joint = NewtonBodyGetFirstContactJoint(body0); joint; joint = NewtonBodyGetNextContactJoint(body0, joint)) {
+        if (NewtonJointIsActive(joint) && (NewtonJointGetBody0(joint) == body0 || NewtonJointGetBody0(joint) == body1)) {
+            for (void* contact = NewtonContactJointGetFirstContact (joint); contact; contact = NewtonContactJointGetNextContact (joint, contact)) {
+                dVector point(0.0f);
+                dVector normal(0.0f);
+                dVector contactForce(0.0f);
+                NewtonMaterial* const material = NewtonContactGetMaterial (contact);
+                NewtonMaterialGetContactPositionAndNormal (material, body0, &point.m_x, &normal.m_x);
+                NewtonMaterialGetContactForce(material, body0, &contactForce[0]);
+                //forceAcc += normal.Scale (forceMag);
+                reactionForce += contactForce;
+            }
+            break;
+        }
+    }
+    return reactionForce;
+}
+
+bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxForce){
+    for (NewtonJoint* joint = NewtonBodyGetFirstContactJoint(body0); joint; joint = NewtonBodyGetNextContactJoint(body0, joint)) {
+        if ( NewtonJointIsActive(joint) && ( NewtonJointGetBody0(joint) == body0 || NewtonJointGetBody0(joint) == body1)) {
+            for (void* contact = NewtonContactJointGetFirstContact (joint); contact; contact = NewtonContactJointGetNextContact (joint, contact)) {
+                dVector point(0.0f);
+                dVector normal(0.0f);
+                dVector contactForce(0.0f);
+                NewtonMaterial* const material = NewtonContactGetMaterial (contact);
+                NewtonMaterialGetContactPositionAndNormal (material, body0, &point.m_x, &normal.m_x);
+                NewtonMaterialGetContactForce(material, body0, &contactForce[0]);
+
+                if(ForceScalar(contactForce) >= maxForce){
+//                    printf("Individual Impact force %f ",ForceScalar(contactForce));
+                    return false;
+                }
+            }
+            break;
+        }
+    }
+
+    return true;
+}
+
+dFloat ForceScalar(dVector force){
+    return (dFloat) sqrt(pow(force.m_x, 2) + pow(force.m_y, 2) + pow(force.m_z, 2));
+}
 
 NewtonMesh *LoadMeshFrom3DS(NewtonWorld *const world, const char *const fileName, const dFloat scale) {
     NewtonMesh *meshNewton = NewtonMeshCreate(world);
@@ -54,9 +114,6 @@ NewtonMesh *LoadMeshFrom3DS(NewtonWorld *const world, const char *const fileName
 }
 
 void MoveTool(const NewtonBody * const body, dFloat time, int threadIndex) {
-    dMatrix position;
-    NewtonBodyGetMatrix(body, &position[0][0]);
-
     NewtonBodySetVelocity(body, &dVector(0, 1, 0)[0]);
 
     dVector omega;
