@@ -36,7 +36,8 @@ typedef unsigned int dUnsigned32;
 
 typedef long long unsigned64;
 
-#define MAX_PHYSICS_FPS                120.0f
+
+#define MAX_PHYSICS_FPS  120.0f
 
 #include <stddef.h>
 #include <stdarg.h>

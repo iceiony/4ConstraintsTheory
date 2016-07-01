@@ -3,7 +3,8 @@
 //
 #include <iostream>
 #include "Util.h"
-#include "dHighResolutionTimer.h"
+#include <iostream>
+#include <fstream>
 
 #define MASS  10.0f
 #ifndef __SIMULATION__
@@ -15,7 +16,7 @@
 //#define minX 0.6
 #define maxX 1
 
-#define minY 1.1
+#define minY 1.16
 #define maxY 2
 
 #define minZ 0.3
@@ -42,22 +43,20 @@ private:
 
     dVector m_objInitialPos;
 
-    unsigned64 m_microseconds;
     int iterationCount;
-    bool isEquilibrium;
+    bool isPossibleSolution;
+    std::ofstream m_output;
 
     NewtonBody *CreateFloor();
     NewtonBody *LoadModel(const char *fileName);
     float GetMinY(NewtonBody *body);
 
 public:
-    Simulation();
+    Simulation(const char * const outputFile);
 
     ~Simulation();
 
     void UpdatePhysics();
-
-    unsigned64 GetSimulationTime();
 
     NewtonWorld *GetNewtonWorld();
 
@@ -72,8 +71,6 @@ public:
 
     void ResetObjPosition();
 
-    void ResetTimer();
-
     void SetToolRotation(float yaw, float pitch, float roll,float x, float y, float z);
 
     bool IterateScenario();
@@ -87,5 +84,6 @@ public:
     int offsetPitch = minPitch;
     int offsetRoll  = minRoll;
 
+    float GetTimeStep();
 };
 #endif

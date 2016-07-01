@@ -12,7 +12,6 @@
 #include "Camera.h"
 #include "DebugDisplay.h"
 #include "CameraListener.h"
-#include "dHighResolutionTimer.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -254,6 +253,9 @@ void GraphicsManager::Register(NewtonBody * body,dVector color = GRAY) {
     NewtonBodySetUserData(body, entity);
 
     visualMesh->Release();
+
+    // set the transform call back function
+    NewtonBodySetTransformCallback(body, GraphicsEntity::TransformCallback);
 }
 
 /**

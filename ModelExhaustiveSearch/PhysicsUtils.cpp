@@ -10,7 +10,6 @@
 */
 
 #include <Util.h>
-#include "GraphicsEntity.h"
 #include "PhysicsUtils.h"
 #include <lib3ds/file.h>
 #include <lib3ds/mesh.h>
@@ -61,13 +60,17 @@ bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxFo
                 NewtonMaterialGetContactForce(material, body0, &contactForce[0]);
 
                 if(ForceScalar(contactForce) >= maxForce){
-//                    printf("Individual Impact force %f ",ForceScalar(contactForce));
+//                    std::cout << "Individual Impact force " << ForceScalar(contactForce) << ' ';
+//                    std::cout.flush();
                     return false;
                 }
+
             }
             break;
         }
     }
+
+//    std::cout << "no force";
 
     return true;
 }
@@ -151,9 +154,6 @@ NewtonBody *CreateSimpleBody(NewtonWorld *const world, void *const userData, dFl
 
     // assign the wood id
     NewtonBodySetMaterialGroupID(rigidBody, materialId);
-
-    // set the transform call back function
-    NewtonBodySetTransformCallback(rigidBody, GraphicsEntity::TransformCallback);
 
     // set the force and torque call back function
     NewtonBodySetForceAndTorqueCallback(rigidBody, PhysicsApplyGravityForce);

@@ -2,10 +2,10 @@
 // Created by Adrian Ionita on 23/06/2016.
 //
 #include "Simulation.h"
-#include "rendering/PhysicsUtils.h"
+#include "PhysicsUtils.h"
 
 
-Simulation::Simulation() : m_microseconds(0), m_world(NewtonCreate()) {
+Simulation::Simulation(const char * const outputFile) : m_world(NewtonCreate()) {
 
     NewtonSetThreadsCount(m_world,NewtonGetMaxThreadsCount(m_world));
 
@@ -21,9 +21,13 @@ Simulation::Simulation() : m_microseconds(0), m_world(NewtonCreate()) {
     dTimeTrackerSetThreadName ("mainThread");
 
     CreateFloor();
+
+    m_output.open(outputFile);
+    m_output << "x,y,z,yaw,pitch,roll\n";
 }
 
 Simulation::~Simulation() {
+
     // is we are run asynchronous we need make sure no update in on flight.
     if (m_world) {
         NewtonWaitForUpdateToFinish(m_world);
@@ -37,36 +41,10 @@ Simulation::~Simulation() {
     dAssert (NewtonGetMemoryUsed() == 0);
 }
 
-void Simulation::ResetTimer() {
-    dResetTimer();
-    m_microseconds = dGetTimeInMicrosenconds();
-}
-
-
-unsigned64 Simulation::GetSimulationTime() {
-    return m_microseconds;
-}
-
 void Simulation::UpdatePhysics() {
     // update the physics
     if (m_world) {
-
-        dFloat timeStepInSeconds = 1.0f / MAX_PHYSICS_FPS;
-        unsigned64 timeStepMicroseconds = unsigned64(timeStepInSeconds * 1000000.0f);
-
-        unsigned64 currentTime = dGetTimeInMicrosenconds();
-        unsigned64 nextTime = currentTime - m_microseconds;
-        if (nextTime > timeStepMicroseconds * 2) {
-            m_microseconds = currentTime - timeStepMicroseconds * 2;
-            nextTime = currentTime - m_microseconds;
-        }
-
-        if (nextTime >= timeStepMicroseconds) {
-            dTimeTrackerEvent(__FUNCTION__);
-            // run the newton update function
-            NewtonUpdate(m_world, timeStepInSeconds);
-            m_microseconds += timeStepMicroseconds;
-        }
+        NewtonUpdate(m_world, this->GetTimeStep());
     }
 }
 
@@ -182,10 +160,15 @@ void Simulation::NextScenario() {
 
     //add small force to invalid collisions to behave chaotically
     NewtonBodySetVelocity(m_toolBody, &dVector(.0f, .1f, .0f)[0]);
+    NewtonBodySetOmega(m_toolBody,&dVector(.0f)[0]);
+
+    NewtonBodySetVelocity(m_objBody,&dVector(0.0f)[0]);
+    NewtonBodySetOmega(m_objBody,&dVector(0.0f)[0]);
 
     //reset scenario tracking
     iterationCount = 0;
-    isEquilibrium = false;
+    isPossibleSolution = false;
+
 }
 
 void Simulation::SetToolRotation(float yaw, float pitch, float roll, float x, float y, float z) {
@@ -204,32 +187,44 @@ void Simulation::SetToolRotation(float yaw, float pitch, float roll, float x, fl
 bool Simulation::IterateScenario() {
     iterationCount++;
 
-    //collisions are detected after two physics updates
-    if (iterationCount <= 1) return true;
-
-    //if objects not touching scenario failed
-    if (CheckIfBodiesCollide(m_toolBody, m_objBody) == NULL) {
-        return false;
-    }
-
     //if individual contact points have high impact then scenario failed
-    if (!isEquilibrium && !IsSmallImpact(m_toolBody, m_objBody, 5)) {
+    if (!isPossibleSolution && !IsSmallImpact(m_toolBody, m_objBody, 100.0f)) {
+//        std::cout << "chaotic ";
         return false;
     }
 
-    //if individual contact points have achieved stability then scenario success
-    if (!isEquilibrium && !IsSmallImpact(m_toolBody, m_objBody, 0.5f)) {
-        isEquilibrium = true;
+    //if individual contact points have achieved stability then scenario may succeed
+    if (!isPossibleSolution && IsSmallImpact(m_toolBody, m_objBody, 10.0f)) {
+        isPossibleSolution = true;
         NewtonBodySetForceAndTorqueCallback(m_toolBody, MoveTool);
+        return true;
+    }
+
+    //if objects not moving after lifting then scenario failed
+    if(isPossibleSolution && iterationCount == maxIterationCount ){
+        dVector objVelocity;
+        NewtonBodyGetVelocity(m_objBody,&objVelocity[0]);
+
+        isPossibleSolution = pow(objVelocity.m_y,2) >=0.1f ;
+//        std::cout << "no contact " << pow(objVelocity.m_y,2);
+        return false;
     }
 
     return iterationCount < maxIterationCount;
 }
 
 void Simulation::SaveResults() {
-    if (isEquilibrium) {
-        printf("x:%.2f y:%.2f z:%2f yaw:%d pitch:%d roll:%d \n", offsetX, offsetY, offsetZ, offsetYaw, offsetPitch,
-               offsetRoll);
+//    if (!isPossibleSolution) exit(0);
+
+    if (isPossibleSolution) {
+        std::cout << "x:" << offsetX << " y:" << offsetY << " z:" << offsetZ;
+        std::cout << " yaw:" << offsetYaw << " pitch:" << offsetPitch << " roll:" << offsetRoll << '\n';
+        std::cout.flush();
+
+        m_output << offsetX << ',' << offsetY << ',' << offsetZ << ',';
+        m_output << offsetYaw << ',' << offsetPitch << ',' << offsetRoll << '\n';
+
+        m_output.flush();
     }
 }
 
@@ -238,6 +233,12 @@ float Simulation::GetMinY(NewtonBody *body) {
     CalculateAABB(body, minP, maxP);
     return minP.m_y;
 }
+
+float Simulation::GetTimeStep() {
+    return 1.0f / MAX_PHYSICS_FPS;
+}
+
+
 
 
 

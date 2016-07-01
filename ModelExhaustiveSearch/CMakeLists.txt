@@ -39,30 +39,34 @@ if(APPLE)
         link_Libraries(${COREVIDEO})
 endif()
 
+set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+
 include_directories("./")
 include_directories("rendering")
 include_directories("lib3ds")
 
 FILE(GLOB LIB3DS "lib3ds/*.c")
 
-set(SOURCE_FILES
-        main.cpp
-        Simulation.cpp
-        rendering/Util.cpp
+set(GRAPHICS_FILES
         rendering/GraphicsManager.cpp
         rendering/GraphicsMesh.cpp
         rendering/GraphicsEntity.cpp
         rendering/ListenerBase.cpp
         rendering/Camera.cpp
         rendering/CameraListener.cpp
-        rendering/dHighResolutionTimer.cpp
         rendering/DebugDisplay.cpp
-        rendering/PhysicsUtils.cpp
+    )
+
+set(SOURCE_FILES
+        Util.cpp
+        Simulation.cpp
+        PhysicsUtils.cpp
         ${LIB3DS}
     )
 
-add_executable(ExhaustiveSearchGUI ${SOURCE_FILES})
+
+add_executable(ExhaustiveSearchGUI mainGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
 target_link_libraries(ExhaustiveSearchGUI dMath dScene dCustomJoints dContainers dAnimation )
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
-
+add_executable(ExhaustiveSearch main.cpp ${SOURCE_FILES})
+target_link_libraries(ExhaustiveSearch dMath dScene dCustomJoints dContainers dAnimation )
