@@ -7,7 +7,7 @@ Makefile
 CMakeCash.txt
 cmake_install.cmake
 CMakeFiles
-NewtonSDK*
+newton-dynamics*
 .idea
 CMakeCache.txt
 newton-dynamics
