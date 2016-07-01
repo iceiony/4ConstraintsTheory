@@ -7,7 +7,11 @@
 
 Simulation::Simulation() : m_microseconds(0), m_world(NewtonCreate()) {
 
+    NewtonSetThreadsCount(m_world,NewtonGetMaxThreadsCount(m_world));
+
     printf("NewtonDynamicsVersion : %d\n", NewtonWorldGetVersion());
+    printf("NewtonThreadCount : %d \n", NewtonGetThreadsCount(m_world));
+
     //set exact solving
     NewtonSetSolverModel(m_world, 0);
 
@@ -60,7 +64,7 @@ void Simulation::UpdatePhysics() {
         if (nextTime >= timeStepMicroseconds) {
             dTimeTrackerEvent(__FUNCTION__);
             // run the newton update function
-            NewtonUpdateAsync(m_world, timeStepInSeconds);
+            NewtonUpdate(m_world, timeStepInSeconds);
             m_microseconds += timeStepMicroseconds;
         }
     }
