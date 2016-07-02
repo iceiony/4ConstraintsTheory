@@ -27,7 +27,6 @@ Simulation::Simulation(const char *const outputFile) : m_world(NewtonCreate()) {
 }
 
 Simulation::~Simulation() {
-
     // is we are run asynchronous we need make sure no update in on flight.
     if (m_world) {
         NewtonWaitForUpdateToFinish(m_world);
@@ -188,18 +187,25 @@ void Simulation::NextScenario() {
         offsetZ = minZ;
         offsetYaw += rotationStep;
         isRotationChanged = true;
+
+        std::cout << "Yaw increased to " << offsetYaw << '\n';
+        std::cout.flush();
     }
 
     if (offsetYaw > maxYaw) {
         offsetYaw = minYaw;
         offsetPitch += rotationStep;
         isRotationChanged = true;
+
+        std::cout << "Pitch increased to " << offsetPitch << '\n';
+        std::cout.flush();
     }
 
     if (offsetPitch > maxPitch) {
         offsetPitch = minPitch;
         offsetRoll += rotationStep;
         isRotationChanged = true;
+
         std::cout << 100 * offsetRoll / maxRoll << "%\n";
         std::cout.flush();
     }

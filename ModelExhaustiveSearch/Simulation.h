@@ -10,7 +10,7 @@
 #ifndef __SIMULATION__
 #define __SIMULATION__
 
-#define maxIterationCount 12
+#define maxIterationCount 36
 
 #define minYaw 0
 #define maxYaw 360
@@ -22,8 +22,8 @@
 #define maxRoll 360
 
 #define rotationStep 5
-#define positionStep 0.02f
-#define marginFactor 2.5f
+#define positionStep 0.015f
+#define marginFactor 5.0f
 
 class Simulation {
 
