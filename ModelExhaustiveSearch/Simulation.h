@@ -15,7 +15,7 @@
 #define minYaw 0
 #define maxYaw 360
 
-#define minPitch 180
+#define minPitch 0
 #define maxPitch 360
 
 #define minRoll 0
@@ -23,7 +23,7 @@
 
 #define rotationStep 5
 #define positionStep 0.01f
-#define marginFactor 2.5f
+#define marginFactor 5f
 
 class Simulation {
 

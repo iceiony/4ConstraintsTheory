@@ -143,13 +143,12 @@ void Simulation::ReadjustMinMaxLimits() {//set min/max values for simulation sea
     maxZ -= positionStep * marginFactor;
 
     //reset offsets
-//    offsetX = minX ;
-//    offsetY = minY ;
-//    offsetZ = minZ ;
-    offsetX = minX;
-    offsetY = 1.15f;
-    offsetZ = 0.32f;
-//    offsetPitch = 180;
+    offsetX = minX ;
+    offsetY = minY ;
+    offsetZ = minZ ;
+//    offsetX = minX;
+//    offsetY = 1.15f;
+//    offsetZ = 0.32f;
 }
 
 NewtonBody *Simulation::GetFloor() {
@@ -201,6 +200,8 @@ void Simulation::NextScenario() {
         offsetPitch = minPitch;
         offsetRoll += rotationStep;
         isRotationChanged = true;
+        std::cout << 100 * offsetRoll / maxRoll << "%\n";
+        std::cout.flush();
     }
 
     //set tool position to new coordinates
