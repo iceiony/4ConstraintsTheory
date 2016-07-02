@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     NewtonBody *objBody = sim.LoadObject("obj51.3ds");
     NewtonBody *toolBody = sim.LoadTool("obj52.3ds");
 
-    sim.NextScenario();
+    sim.Start();
 
     std::cout << "Running Simulation ( this will take a while )\n";
 

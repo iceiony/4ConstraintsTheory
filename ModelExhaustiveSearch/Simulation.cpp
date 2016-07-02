@@ -5,9 +5,9 @@
 #include "PhysicsUtils.h"
 
 
-Simulation::Simulation(const char * const outputFile) : m_world(NewtonCreate()) {
+Simulation::Simulation(const char *const outputFile) : m_world(NewtonCreate()) {
 
-    NewtonSetThreadsCount(m_world,NewtonGetMaxThreadsCount(m_world));
+    NewtonSetThreadsCount(m_world, NewtonGetMaxThreadsCount(m_world));
 
     printf("NewtonDynamicsVersion : %d\n", NewtonWorldGetVersion());
     printf("NewtonThreadCount : %d \n", NewtonGetThreadsCount(m_world));
@@ -75,9 +75,7 @@ NewtonBody *Simulation::LoadModel(const char *fileName) {
                                                                                      nullptr, nullptr);
     NewtonCollision *const compound = NewtonCreateCompoundCollisionFromMesh(m_world, convexApproximation, 0.001f, 0, 0);
 
-    dMatrix position(dGetIdentityMatrix());
-
-    NewtonBody *modelBody = CreateSimpleBody(m_world, NULL, MASS, position, compound, 0);
+    NewtonBody *modelBody = CreateSimpleBody(m_world, NULL, MASS, dGetIdentityMatrix(), compound, 0);
 
     NewtonDestroyCollision(compound);
     NewtonMeshDestroy(convexApproximation);
@@ -86,18 +84,72 @@ NewtonBody *Simulation::LoadModel(const char *fileName) {
     return modelBody;
 }
 
+NewtonBody *Simulation::LoadTool(const char *fileName) {
+    m_toolBody = this->LoadModel(fileName);
+
+    return m_toolBody;
+}
+
 NewtonBody *Simulation::LoadObject(const char *fileName) {
     m_objBody = this->LoadModel(fileName);
 
+    //position lowest point on the floor
+    dVector minP, maxP;
+    CalculateAABB(m_objBody, minP, maxP);
+
     m_objInitialPos = dVector(.0f);
-    m_objInitialPos.m_y = .0f - GetMinY(m_objBody);
+    m_objInitialPos.m_y = .0f - minP.m_y;
 
     return m_objBody;
 }
 
-NewtonBody *Simulation::LoadTool(const char *fileName) {
-    m_toolBody = this->LoadModel(fileName);
-    return m_toolBody;
+void Simulation::Start() {
+    ResetObjPosition();
+    SetToolParameters(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
+    ReadjustMinMaxLimits();
+    SetToolParameters(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
+}
+
+void Simulation::ReadjustMinMaxLimits() {//set min/max values for simulation search based on current rotation
+    //calculate new min/max for xyz coordinates
+    dVector toolMinP, toolMaxP, objMinP, objMaxP;
+    CalculateAABB(m_toolBody, toolMinP, toolMaxP);
+    CalculateAABB(m_objBody, objMinP, objMaxP);
+
+    dMatrix location;
+    NewtonBodyGetMatrix(m_objBody, &location[0][0]);
+    dVector objPosition = location.m_posit;
+
+    NewtonBodyGetMatrix(m_toolBody, &location[0][0]);
+    dVector toolPosition = location.m_posit;
+
+    minX = (objMinP.m_x - objPosition.m_x) + (toolPosition.m_x - toolMaxP.m_x);
+    maxX = (objMaxP.m_x - objPosition.m_x) + (toolPosition.m_x - toolMinP.m_x);
+
+    minY = (objMinP.m_y - objPosition.m_y) + (toolPosition.m_y - toolMaxP.m_y);
+    //set object above floor
+    minY = std::max(minY, .0f - toolMinP.m_y);
+    maxY = (objMaxP.m_y - objPosition.m_y) + (toolPosition.m_y - toolMinP.m_y);
+
+    minZ = (objMinP.m_z - objPosition.m_z) + (toolPosition.m_z - toolMaxP.m_z);
+    maxZ = (objMaxP.m_z - objPosition.m_z) + (toolPosition.m_z - toolMinP.m_z);
+
+    minX += positionStep * marginFactor;
+    maxX -= positionStep * marginFactor;
+
+    maxY -= positionStep * marginFactor;
+
+    minZ += positionStep * marginFactor;
+    maxZ -= positionStep * marginFactor;
+
+    //reset offsets
+//    offsetX = minX ;
+//    offsetY = minY ;
+//    offsetZ = minZ ;
+    offsetX = minX;
+    offsetY = 1.15f;
+    offsetZ = 0.32f;
+//    offsetPitch = 180;
 }
 
 NewtonBody *Simulation::GetFloor() {
@@ -117,40 +169,47 @@ void Simulation::ResetObjPosition() {
 void Simulation::NextScenario() {
     this->ResetObjPosition();
 
-    //set new tool coordinates
-    offsetX += 0.01;
+    //increment position values
+    offsetX += positionStep;
 
     if (offsetX > maxX) {
         offsetX = minX;
-        offsetY += 0.01;
+        offsetY += positionStep;
     }
 
     if (offsetY > maxY) {
         offsetY = minY;
-        offsetZ += 0.01;
+        offsetZ += positionStep;
     }
+
+    //increment rotation values
+    bool isRotationChanged = false;
 
     if (offsetZ > maxZ) {
         offsetZ = minZ;
-        offsetYaw += 5;
+        offsetYaw += rotationStep;
+        isRotationChanged = true;
     }
 
     if (offsetYaw > maxYaw) {
         offsetYaw = minYaw;
-        offsetPitch += 5;
+        offsetPitch += rotationStep;
+        isRotationChanged = true;
     }
 
     if (offsetPitch > maxPitch) {
         offsetPitch = minPitch;
-        offsetRoll += 5;
+        offsetRoll += rotationStep;
+        isRotationChanged = true;
     }
 
     //set tool position to new coordinates
-    this->SetToolRotation(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
+    this->SetToolParameters(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
 
-    offsetY = std::max(.0f - this->GetMinY(m_toolBody), offsetY); //object should not inside the ground
-
-    this->SetToolRotation(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
+    if (isRotationChanged) {
+        ReadjustMinMaxLimits();
+        this->SetToolParameters(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
+    }
 
     //remove newton_world state after moving the objects
     NewtonInvalidateCache(m_world);
@@ -158,12 +217,12 @@ void Simulation::NextScenario() {
     //remove continuous force application ( i.e. lift force );
     NewtonBodySetForceAndTorqueCallback(m_toolBody, NULL);
 
-    //add small force to invalid collisions to behave chaotically
+    //add small force so invalid collisions to behave chaotically
     NewtonBodySetVelocity(m_toolBody, &dVector(.0f, .1f, .0f)[0]);
-    NewtonBodySetOmega(m_toolBody,&dVector(.0f)[0]);
+    NewtonBodySetOmega(m_toolBody, &dVector(.0f)[0]);
 
-    NewtonBodySetVelocity(m_objBody,&dVector(0.0f)[0]);
-    NewtonBodySetOmega(m_objBody,&dVector(0.0f)[0]);
+    NewtonBodySetVelocity(m_objBody, &dVector(.0f,.0f,.0f)[0]);
+    NewtonBodySetOmega(m_objBody, &dVector(0.0f)[0]);
 
     //reset scenario tracking
     iterationCount = 0;
@@ -171,7 +230,7 @@ void Simulation::NextScenario() {
 
 }
 
-void Simulation::SetToolRotation(float yaw, float pitch, float roll, float x, float y, float z) {
+void Simulation::SetToolParameters(float yaw, float pitch, float roll, float x, float y, float z) {
     dMatrix objPosition;
     dMatrix rotation(dYawMatrix(yaw * 3.1416f / 180.0f) * dPitchMatrix(pitch * 3.1416f / 180.0f) *
                      dRollMatrix(roll * 3.1416f / 180.0f));
@@ -188,25 +247,40 @@ bool Simulation::IterateScenario() {
     iterationCount++;
 
     //if individual contact points have high impact then scenario failed
-    if (!isPossibleSolution && !IsSmallImpact(m_toolBody, m_objBody, 100.0f)) {
-//        std::cout << "chaotic ";
+    if (!isPossibleSolution && !IsSmallImpact(m_toolBody, m_objBody, 50.0f)) {
+        return false;
+    }
+
+    if (isPossibleSolution && !IsSmallImpact(m_toolBody,m_objBody,300)){
+        isPossibleSolution = false;
         return false;
     }
 
     //if individual contact points have achieved stability then scenario may succeed
     if (!isPossibleSolution && IsSmallImpact(m_toolBody, m_objBody, 10.0f)) {
-        isPossibleSolution = true;
-        NewtonBodySetForceAndTorqueCallback(m_toolBody, MoveTool);
-        return true;
+        if (!CheckIfBodiesCollide(m_objBody, m_toolBody)) {
+            isPossibleSolution = false;
+            return false;
+        }
+        else {
+            isPossibleSolution = true;
+            NewtonBodySetForceAndTorqueCallback(m_toolBody, MoveTool);
+            return true;
+        }
     }
 
-    //if objects not moving after lifting then scenario failed
-    if(isPossibleSolution && iterationCount == maxIterationCount ){
-        dVector objVelocity;
-        NewtonBodyGetVelocity(m_objBody,&objVelocity[0]);
+    //if object enters sleep state then scenario failed
+    if (isPossibleSolution && NewtonBodyGetSleepState(m_objBody) == 1){
+        isPossibleSolution = false;
+        return false;
+    };
 
-        isPossibleSolution = pow(objVelocity.m_y,2) >=0.1f ;
-//        std::cout << "no contact " << pow(objVelocity.m_y,2);
+    //if objects no velocity after lifting then scenario failed
+    if (isPossibleSolution && iterationCount == maxIterationCount) {
+        dVector objVelocity;
+        NewtonBodyGetVelocity(m_objBody, &objVelocity[0]);
+
+        isPossibleSolution = pow(objVelocity.m_y, 2) >= 0.1f;
         return false;
     }
 
@@ -214,8 +288,6 @@ bool Simulation::IterateScenario() {
 }
 
 void Simulation::SaveResults() {
-//    if (!isPossibleSolution) exit(0);
-
     if (isPossibleSolution) {
         std::cout << "x:" << offsetX << " y:" << offsetY << " z:" << offsetZ;
         std::cout << " yaw:" << offsetYaw << " pitch:" << offsetPitch << " roll:" << offsetRoll << '\n';
@@ -228,21 +300,7 @@ void Simulation::SaveResults() {
     }
 }
 
-float Simulation::GetMinY(NewtonBody *body) {
-    dVector minP, maxP;
-    CalculateAABB(body, minP, maxP);
-    return minP.m_y;
-}
-
 float Simulation::GetTimeStep() {
     return 1.0f / MAX_PHYSICS_FPS;
 }
-
-
-
-
-
-
-
-
 

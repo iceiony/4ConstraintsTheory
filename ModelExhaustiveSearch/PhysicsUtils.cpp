@@ -60,8 +60,6 @@ bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxFo
                 NewtonMaterialGetContactForce(material, body0, &contactForce[0]);
 
                 if(ForceScalar(contactForce) >= maxForce){
-//                    std::cout << "Individual Impact force " << ForceScalar(contactForce) << ' ';
-//                    std::cout.flush();
                     return false;
                 }
 
@@ -69,8 +67,6 @@ bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxFo
             break;
         }
     }
-
-//    std::cout << "no force";
 
     return true;
 }

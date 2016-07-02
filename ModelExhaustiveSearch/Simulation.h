@@ -10,32 +10,31 @@
 #ifndef __SIMULATION__
 #define __SIMULATION__
 
-#define maxIterationCount 12
-
-#define minX -1
-//#define minX 0.6
-#define maxX 1
-
-#define minY 1.16
-#define maxY 2
-
-#define minZ 0.3
-//#define minZ -.5f
-#define maxZ 1
+#define maxIterationCount 9
 
 #define minYaw 0
 #define maxYaw 360
 
 #define minPitch 180
-//#define minPitch 90
 #define maxPitch 360
 
 #define minRoll 0
 #define maxRoll 360
 
+#define rotationStep 5
+#define positionStep 0.01f
+#define marginFactor 2.5f
+
 class Simulation {
 
 private:
+    float minX;
+    float maxX;
+    float minY;
+    float maxY;
+    float minZ;
+    float maxZ;
+
     NewtonWorld *m_world;
     NewtonBody *m_toolBody;
     NewtonBody *m_objBody;
@@ -49,7 +48,7 @@ private:
 
     NewtonBody *CreateFloor();
     NewtonBody *LoadModel(const char *fileName);
-    float GetMinY(NewtonBody *body);
+    void ReadjustMinMaxLimits();
 
 public:
     Simulation(const char * const outputFile);
@@ -71,19 +70,23 @@ public:
 
     void ResetObjPosition();
 
-    void SetToolRotation(float yaw, float pitch, float roll,float x, float y, float z);
+    void SetToolParameters(float yaw, float pitch, float roll, float x, float y, float z);
 
     bool IterateScenario();
 
     void SaveResults();
-    float offsetX = minX;
-    float offsetY = minY;
-    float offsetZ = minZ;
+
+    float offsetX = .0f;
+    float offsetY = .0f;
+    float offsetZ = .0f;
 
     int offsetYaw   = minYaw;
     int offsetPitch = minPitch;
     int offsetRoll  = minRoll;
 
     float GetTimeStep();
+
+
+    void Start();
 };
 #endif
