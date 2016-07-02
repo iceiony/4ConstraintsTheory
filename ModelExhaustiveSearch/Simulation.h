@@ -23,7 +23,7 @@
 
 #define rotationStep 5
 #define positionStep 0.01f
-#define marginFactor 5f
+#define marginFactor 5.0f
 
 class Simulation {
 
