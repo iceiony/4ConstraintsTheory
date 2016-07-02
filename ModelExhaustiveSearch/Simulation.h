@@ -10,12 +10,12 @@
 #ifndef __SIMULATION__
 #define __SIMULATION__
 
-#define maxIterationCount 9
+#define maxIterationCount 12
 
 #define minYaw 0
 #define maxYaw 360
 
-#define minPitch 0
+#define minPitch 180
 #define maxPitch 360
 
 #define minRoll 0

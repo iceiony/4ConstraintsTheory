@@ -252,7 +252,7 @@ bool Simulation::IterateScenario() {
         return false;
     }
 
-    if (isPossibleSolution && !IsSmallImpact(m_toolBody,m_objBody,300)){
+    if (isPossibleSolution && !IsSmallImpact(m_toolBody,m_objBody,200)){
         isPossibleSolution = false;
         return false;
     }
