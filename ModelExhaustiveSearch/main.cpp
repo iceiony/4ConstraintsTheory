@@ -11,13 +11,15 @@ int main(int argc, char *argv[]) {
     std::cout << "Running Simulation ( this will take a while )\n";
 
     while (!sim.IsFinished()) {
+        // update the the state of all bodies in the scene
+        sim.UpdatePhysics();
 
-        if (!sim.IterateScenario()) {
+        //check if scenario ended
+        if(!sim.IterateScenario())
+        {
             sim.SaveResults();
             sim.NextScenario();
         }
-        // update the the state of all bodies in the scene
-        sim.UpdatePhysics();
     }
 }
 

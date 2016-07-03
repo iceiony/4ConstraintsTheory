@@ -86,11 +86,17 @@ NewtonBody *Simulation::LoadModel(const char *fileName) {
 NewtonBody *Simulation::LoadTool(const char *fileName) {
     m_toolBody = this->LoadModel(fileName);
 
+    // set the force and torque call back function
+    NewtonBodySetForceAndTorqueCallback(m_toolBody, MoveTool);
+
     return m_toolBody;
 }
 
 NewtonBody *Simulation::LoadObject(const char *fileName) {
     m_objBody = this->LoadModel(fileName);
+
+    // set the force and torque call back function
+    NewtonBodySetForceAndTorqueCallback(m_objBody, PhysicsApplyGravityForce);
 
     //position lowest point on the floor
     dVector minP, maxP;
@@ -145,8 +151,8 @@ void Simulation::ReadjustMinMaxLimits() {//set min/max values for simulation sea
     offsetX = minX ;
     offsetY = minY ;
     offsetZ = minZ ;
-//    offsetX = minX;
-//    offsetY = 1.15f;
+//    offsetX = minX + .6f;
+//    offsetY = 1.14f;
 //    offsetZ = 0.32f;
 }
 
@@ -221,14 +227,11 @@ void Simulation::NextScenario() {
     //remove newton_world state after moving the objects
     NewtonInvalidateCache(m_world);
 
-    //remove continuous force application ( i.e. lift force );
-    NewtonBodySetForceAndTorqueCallback(m_toolBody, NULL);
-
     //add small force so invalid collisions to behave chaotically
-    NewtonBodySetVelocity(m_toolBody, &dVector(.0f, .1f, .0f)[0]);
+    NewtonBodySetVelocity(m_toolBody, &dVector(.0f)[0]);
     NewtonBodySetOmega(m_toolBody, &dVector(.0f)[0]);
 
-    NewtonBodySetVelocity(m_objBody, &dVector(.0f,.0f,.0f)[0]);
+    NewtonBodySetVelocity(m_objBody, &dVector(.0f)[0]);
     NewtonBodySetOmega(m_objBody, &dVector(0.0f)[0]);
 
     //reset scenario tracking
@@ -253,44 +256,27 @@ void Simulation::SetToolParameters(float yaw, float pitch, float roll, float x, 
 bool Simulation::IterateScenario() {
     iterationCount++;
 
-    //if individual contact points have high impact then scenario failed
-    if (!isPossibleSolution && !IsSmallImpact(m_toolBody, m_objBody, 50.0f)) {
+    //check if objects do not penetrate each other
+    if(!IsSmallPenetration(m_toolBody,m_objBody,0.04f)){
         return false;
-    }
-
-    if (isPossibleSolution && !IsSmallImpact(m_toolBody,m_objBody,200)){
-        isPossibleSolution = false;
-        return false;
-    }
-
-    //if individual contact points have achieved stability then scenario may succeed
-    if (!isPossibleSolution && IsSmallImpact(m_toolBody, m_objBody, 10.0f)) {
-        if (!CheckIfBodiesCollide(m_objBody, m_toolBody)) {
-            isPossibleSolution = false;
-            return false;
-        }
-        else {
-            isPossibleSolution = true;
-            NewtonBodySetForceAndTorqueCallback(m_toolBody, MoveTool);
-            return true;
-        }
     }
 
     //if object enters sleep state then scenario failed
-    if (isPossibleSolution && NewtonBodyGetSleepState(m_objBody) == 1){
-        isPossibleSolution = false;
-        return false;
-    };
-
-    //if objects no velocity after lifting then scenario failed
-    if (isPossibleSolution && iterationCount == maxIterationCount) {
-        dVector objVelocity;
-        NewtonBodyGetVelocity(m_objBody, &objVelocity[0]);
-
-        isPossibleSolution = pow(objVelocity.m_y, 2) >= 0.1f;
+    if (NewtonBodyGetSleepState(m_objBody) == 1){
         return false;
     }
 
+    //if objects no velocity transferred whilst lifting then scenario failed
+    dVector objVelocity;
+    NewtonBodyGetVelocity(m_objBody, &objVelocity[0]);
+
+    if(objVelocity.m_y < 0.3f){
+        return false;
+    }
+
+    isPossibleSolution = true;
+
+    //allow a few more iterations for presentation
     return iterationCount < maxIterationCount;
 }
 

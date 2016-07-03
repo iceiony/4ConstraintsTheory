@@ -21,15 +21,15 @@ int main(int argc, char * argv[]) {
     while (!sim.IsFinished()) {
 
         if (!graphicsManager.IsPhysicsPaused()) {
+            // update the the state of all bodies in the scene
+            sim.UpdatePhysics();
 
+            //check if scenario ended
             if(!sim.IterateScenario())
             {
                 sim.SaveResults();
                 sim.NextScenario();
             }
-
-            // update the the state of all bodies in the scene
-            sim.UpdatePhysics();
         }
 
         if(!graphicsManager.IsWindowClosed())

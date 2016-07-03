@@ -20,7 +20,7 @@ class GraphicsEntity;
 class GraphicsManager;
 
 NewtonJoint* CheckIfBodiesCollide (NewtonBody* const body0, NewtonBody* const body1);
-dVector ForceBetweenBodies(NewtonBody *const body0, NewtonBody *const body1);
+bool IsSmallPenetration(NewtonBody *const body0, NewtonBody *const body1, float maxPenetration);
 bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxForce);
 dFloat ForceScalar(dVector force);
 

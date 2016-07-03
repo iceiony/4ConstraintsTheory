@@ -6,11 +6,12 @@
 #include <iostream>
 #include <fstream>
 
-#define MASS  10.0f
 #ifndef __SIMULATION__
 #define __SIMULATION__
 
-#define maxIterationCount 36
+#define MASS  10.0f
+
+#define maxIterationCount 1
 
 #define minYaw 0
 #define maxYaw 360

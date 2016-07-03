@@ -17,49 +17,53 @@
 #include <math.h>
 
 // return the collision joint, if the body collide
-NewtonJoint* CheckIfBodiesCollide (NewtonBody* const body0, NewtonBody* const body1)
-{
-    for (NewtonJoint* joint = NewtonBodyGetFirstContactJoint (body0); joint; joint = NewtonBodyGetNextContactJoint (body0, joint)) {
-        if ( NewtonJointIsActive(joint) && (NewtonJointGetBody0(joint) == body1 || NewtonJointGetBody1(joint) == body1)) {
+NewtonJoint *CheckIfBodiesCollide(NewtonBody *const body0, NewtonBody *const body1) {
+    for (NewtonJoint *joint = NewtonBodyGetFirstContactJoint(body0); joint; joint = NewtonBodyGetNextContactJoint(body0, joint)) {
+        if (NewtonJointIsActive(joint) && (NewtonJointGetBody0(joint) == body1 || NewtonJointGetBody1(joint) == body1)) {
             return joint;
         }
     }
     return NULL;
 }
 
-dVector ForceBetweenBodies(NewtonBody *const body0, NewtonBody *const body1)
-{
-    dVector reactionForce (0.0f, 0.0f, 0.0f, 0.0f);
-    for (NewtonJoint* joint = NewtonBodyGetFirstContactJoint(body0); joint; joint = NewtonBodyGetNextContactJoint(body0, joint)) {
-        if (NewtonJointIsActive(joint) && (NewtonJointGetBody0(joint) == body0 || NewtonJointGetBody0(joint) == body1)) {
-            for (void* contact = NewtonContactJointGetFirstContact (joint); contact; contact = NewtonContactJointGetNextContact (joint, contact)) {
-                dVector point(0.0f);
-                dVector normal(0.0f);
-                dVector contactForce(0.0f);
-                NewtonMaterial* const material = NewtonContactGetMaterial (contact);
-                NewtonMaterialGetContactPositionAndNormal (material, body0, &point.m_x, &normal.m_x);
-                NewtonMaterialGetContactForce(material, body0, &contactForce[0]);
-                //forceAcc += normal.Scale (forceMag);
-                reactionForce += contactForce;
-            }
-            break;
-        }
-    }
-    return reactionForce;
+dFloat ForceScalar(dVector force) {
+    return (dFloat) sqrt(pow(force.m_x, 2) + pow(force.m_y, 2) + pow(force.m_z, 2));
 }
 
-bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxForce){
-    for (NewtonJoint* joint = NewtonBodyGetFirstContactJoint(body0); joint; joint = NewtonBodyGetNextContactJoint(body0, joint)) {
-        if ( NewtonJointIsActive(joint) && ( NewtonJointGetBody0(joint) == body0 || NewtonJointGetBody0(joint) == body1)) {
-            for (void* contact = NewtonContactJointGetFirstContact (joint); contact; contact = NewtonContactJointGetNextContact (joint, contact)) {
+bool IsSmallPenetration(NewtonBody *const body0, NewtonBody *const body1, float maxPenetration) {
+    bool noJoint = true;
+    for (NewtonJoint *joint = NewtonBodyGetFirstContactJoint(body0); joint; joint = NewtonBodyGetNextContactJoint(body0, joint))
+    {
+        if (NewtonJointIsActive(joint) && (NewtonJointGetBody0(joint) == body1 || NewtonJointGetBody1(joint) == body1))
+        {
+            noJoint = false;
+            for (void *contact = NewtonContactJointGetFirstContact(joint); contact; contact = NewtonContactJointGetNextContact(joint, contact))
+            {
+                NewtonMaterial *const material = NewtonContactGetMaterial(contact);
+                if (NewtonMaterialGetContactPenetration(material) > maxPenetration)
+                {
+//                    std::cout << "Joint penetration :" << NewtonMaterialGetContactPenetration(material);
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+bool IsSmallImpact(NewtonBody *const body0, NewtonBody *const body1, float maxForce) {
+    for (NewtonJoint *joint = NewtonBodyGetFirstContactJoint(body0); joint; joint = NewtonBodyGetNextContactJoint(body0, joint)) {
+        if (NewtonJointIsActive(joint) && (NewtonJointGetBody0(joint) == body0 || NewtonJointGetBody0(joint) == body1)) {
+            for (void *contact = NewtonContactJointGetFirstContact(joint); contact; contact = NewtonContactJointGetNextContact(joint, contact)) {
                 dVector point(0.0f);
                 dVector normal(0.0f);
                 dVector contactForce(0.0f);
-                NewtonMaterial* const material = NewtonContactGetMaterial (contact);
-                NewtonMaterialGetContactPositionAndNormal (material, body0, &point.m_x, &normal.m_x);
+                NewtonMaterial *const material = NewtonContactGetMaterial(contact);
+                NewtonMaterialGetContactPositionAndNormal(material, body0, &point.m_x, &normal.m_x);
                 NewtonMaterialGetContactForce(material, body0, &contactForce[0]);
 
-                if(ForceScalar(contactForce) >= maxForce){
+                if (ForceScalar(contactForce) >= maxForce) {
                     return false;
                 }
 
@@ -67,12 +71,7 @@ bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxFo
             break;
         }
     }
-
     return true;
-}
-
-dFloat ForceScalar(dVector force){
-    return (dFloat) sqrt(pow(force.m_x, 2) + pow(force.m_y, 2) + pow(force.m_z, 2));
 }
 
 NewtonMesh *LoadMeshFrom3DS(NewtonWorld *const world, const char *const fileName, const dFloat scale) {
@@ -112,13 +111,13 @@ NewtonMesh *LoadMeshFrom3DS(NewtonWorld *const world, const char *const fileName
     return meshNewton;
 }
 
-void MoveTool(const NewtonBody * const body, dFloat time, int threadIndex) {
+void MoveTool(const NewtonBody *const body, dFloat time, int threadIndex) {
     NewtonBodySetVelocity(body, &dVector(0, 1, 0)[0]);
 
     dVector omega;
-    NewtonBodyGetOmega(body,&omega[0]);
+    NewtonBodyGetOmega(body, &omega[0]);
 
-    omega = dVector(0,0,0) - omega;
+    omega = dVector(0, 0, 0) - omega;
     NewtonBodySetOmega(body, &omega[0]);
 }
 
@@ -151,9 +150,6 @@ NewtonBody *CreateSimpleBody(NewtonWorld *const world, void *const userData, dFl
     // assign the wood id
     NewtonBodySetMaterialGroupID(rigidBody, materialId);
 
-    // set the force and torque call back function
-    NewtonBodySetForceAndTorqueCallback(rigidBody, PhysicsApplyGravityForce);
-
     return rigidBody;
 }
 
@@ -176,13 +172,13 @@ void CalculateAABB(const NewtonCollision *const collision, const dMatrix &matrix
     }
 }
 
-void CalculateAABB(const NewtonBody *body,dVector &minP ,dVector &maxP){
+void CalculateAABB(const NewtonBody *body, dVector &minP, dVector &maxP) {
     dMatrix matrix;
 
-    NewtonCollision* const collision = NewtonBodyGetCollision(body);
-    NewtonBodyGetMatrix (body, &matrix[0][0]);
-    NewtonCollisionCalculateAABB (collision, &matrix[0][0], &minP[0], &maxP[0]);
-    CalculateAABB (collision, matrix, minP, maxP);
+    NewtonCollision *const collision = NewtonBodyGetCollision(body);
+    NewtonBodyGetMatrix(body, &matrix[0][0]);
+    NewtonCollisionCalculateAABB(collision, &matrix[0][0], &minP[0], &maxP[0]);
+    CalculateAABB(collision, matrix, minP, maxP);
 }
 
 NewtonMesh *CreateFloorMesh(NewtonWorld *const world) {
