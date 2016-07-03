@@ -4,7 +4,6 @@
 #include "Simulation.h"
 #include "PhysicsUtils.h"
 
-
 Simulation::Simulation(const char *const outputFile) : m_world(NewtonCreate()) {
 
     NewtonSetThreadsCount(m_world, NewtonGetMaxThreadsCount(m_world));
@@ -27,13 +26,8 @@ Simulation::Simulation(const char *const outputFile) : m_world(NewtonCreate()) {
 }
 
 Simulation::~Simulation() {
-    // is we are run asynchronous we need make sure no update in on flight.
     if (m_world) {
         NewtonWaitForUpdateToFinish(m_world);
-    }
-
-    // destroy the empty world
-    if (m_world) {
         NewtonDestroy(m_world);
         m_world = NULL;
     }
@@ -43,7 +37,13 @@ Simulation::~Simulation() {
 void Simulation::UpdatePhysics() {
     // update the physics
     if (m_world) {
-        NewtonUpdate(m_world, this->GetTimeStep());
+        try {
+            NewtonUpdate(m_world, this->GetTimeStep());
+        }
+        catch (...){
+            std::cout<<"Segmentation Fault ";
+            PrintTime();
+        }
     }
 }
 
@@ -225,6 +225,7 @@ void Simulation::NextScenario() {
     }
 
     //remove newton_world state after moving the objects
+    NewtonWaitForUpdateToFinish(m_world);
     NewtonInvalidateCache(m_world);
 
     //add small force so invalid collisions to behave chaotically
