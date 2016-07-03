@@ -23,8 +23,8 @@
 #define maxRoll 360
 
 #define rotationStep 5
-#define positionStep 0.015f
-#define marginFactor 5.0f
+#define positionStep 0.02f
+#define marginFactor 3.0f
 
 class Simulation {
 
