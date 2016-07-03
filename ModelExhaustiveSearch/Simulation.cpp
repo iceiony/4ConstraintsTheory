@@ -147,7 +147,7 @@ void Simulation::ReadjustMinMaxLimits() {//set min/max values for simulation sea
     minZ += positionStep * marginFactor;
     maxZ -= positionStep * marginFactor;
 
-    //reset offsets
+//    reset offsets
     offsetX = minX ;
     offsetY = minY ;
     offsetZ = minZ ;
@@ -257,7 +257,7 @@ bool Simulation::IterateScenario() {
     iterationCount++;
 
     //check if objects do not penetrate each other
-    if(!IsSmallPenetration(m_toolBody,m_objBody,0.04f)){
+    if(!IsSmallPenetration(m_toolBody,m_objBody,0.02f)){
         return false;
     }
 
@@ -270,7 +270,7 @@ bool Simulation::IterateScenario() {
     dVector objVelocity;
     NewtonBodyGetVelocity(m_objBody, &objVelocity[0]);
 
-    if(objVelocity.m_y < 0.3f){
+    if(objVelocity.m_y < 0.5f){
         return false;
     }
 
