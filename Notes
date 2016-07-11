@@ -102,6 +102,19 @@ Modifying existing demo code involved replacing 3D rendering initialisation. Cod
 
 Newton dynamics supports loading models from unusual file formats (*.ngd and *.off). The sported formats are not compatible with widely used 3D modelling software or engines (e.g. blender, ldView or lego designer). In order to avoid difficulties in converting to unpopular formats, code was written to support the widely used *.3ds format ( 3D studio ).
 
-When loading objects in the simulation world, collision points are not detected immediately. A few simulation time steps are required in order for these to be detected. 
+Simulation Set-Up
+The target object is placed on a flat surface. The tool is then placed in successive relative positions testing the validity of object collisions. 
+When loading or updating the position of our models, a newton physics world update has to be executed for any collision points to be detected. Newton Physics allows obtaining penetration depth from collision points. If the penetration depth is too high, the position is considered invalid. 
 
+If penetration is zero, the object and tool may not be in contact at all. To invalidate such scenarios, a lifting force is applied to the tool. By allowing a small penetration value, the lifting velocity would transfer to the target object helping invalidate no contact scenarios. The expected vertical velocity and penetration threshold were determined by trial and error.
 
+The approach is able to validate a tool's relative position to an object within a single physics engine update step. However, it is possible that the small penetration margin would trigger a vertical velocity force as if transferred from the tool's lifting. A result set would therefore contain invalid results and would require further validation.
+
+Exhaustively searching for possible tool to object configurations is however not a viable solution. The tool's position is determined by 6 parameters X,Y,Z coordinates and rotations along these axis (i.e. yaw,pitch,roll). The search interval per each coordinate depends on the rotation of the object. For example, if the tool is L shaped, and rotated 90 degrees, the search interval for the X axis becomes greater whilst the Y axis becomes smaller. Even so, assuming per axis a search space between -1 and +1, with a step size of 0.01, there are 200^3 possible positions for a tool given a single rotation scenario. When also considering rotations, the number of possible solutions becomes at least 10^12 making the process unfeasible. 
+
+The physics engine can therefore be used to verify possible tool to object configurations, but can not be used as a method for exhaustive search. 
+
+LIMITATIONS:
+The forces are applied to the centre of gravity. What if the subject does not have any space to grasp the tool from.( Dietmar discussion) . Rings object and tools would find solutions but it would not be viable because the tool would not be able to reach that position because of collisions. 
+
+Surface Correlation 
