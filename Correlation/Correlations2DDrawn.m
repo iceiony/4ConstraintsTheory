@@ -1,13 +1,19 @@
-close all;
-addpath('./stats');
-
-n = 7; %number of points
+n = 15; %number of points
 a = zeros(n,2);
 b = zeros(n,2);
 
-fig = figure();
+fig1 = figure();
+set(fig1,'position',[200 200 1200 500]);
+
+subplot(1,2,2);
+hold on;
+axis([-9 17 -2 2]);
+
+subplot(1,2,1);
 hold on;
 axis([-2 2 -2 2]);
+
+
 
 %get object 1 surface 
 for i = 1:n 
@@ -25,42 +31,64 @@ for i = 1:n
     delete(t);
 end
 
-b = a - repmat(mean(a),length(a),1) + repmat(mean(b),length(b),1);
+pause();
+
+% b = a - repmat(mean(a),length(a),1) + repmat(mean(b),length(b),1);
 bOrig = b;
 
-for theta= 0 : 15*pi/180 : 380*pi/180
+for theta= 0 : 15*pi/180 : 20*380*pi/180
+    clf(fig1); 
+    
     %draw final surfaces 
-    if ishandle(fig) 
-        clf(fig); 
-        hold on;
-        axis([-2 2 -2 2]);
-    end;
+    subplot(1,2,1);
+    hold on;
+    axis([-2 2 -2 2]);
     
     plot(a(:,1),a(:,2),'b');
     plot(b(:,1),b(:,2),'r');
     label_points(a,b);
 
     %display 2D correlation matrix
-    corDim = corr_multi_dim(a,b);
+    [cor,pval] = corr_multi_dim(a,b);
     disp = {};
-    disp{1} = [ 'X-X : ' num2str(corDim(1,1))];
-    disp{2} = [ 'X-Y : ' num2str(corDim(1,2))];
-    disp{3} = [ 'Y-X : ' num2str(corDim(2,1))];
-    disp{4} = [ 'Y-Y : ' num2str(corDim(2,2))];
+    disp{1} = 'Correlation';
+    disp{2} = [ 'X-X : ' num2str(cor(1,1))];
+    disp{3} = [ 'X-Y : ' num2str(cor(1,2))];
+    disp{4} = [ 'Y-X : ' num2str(cor(2,1))];
+    disp{5} = [ 'Y-Y : ' num2str(cor(2,2))];
     text(-1.9,1.7,disp');
-
+    
+    disp = {};
+    disp{1} = 'Pvalues: ';
+    disp{2} = [ 'X-X : ' num2str(pval(1,1))];
+    disp{3} = [ 'X-Y : ' num2str(pval(1,2))];
+    disp{4} = [ 'Y-X : ' num2str(pval(2,1))];
+    disp{5} = [ 'Y-Y : ' num2str(pval(2,2))];
+    text(1.3,1.7,disp');
     
     corSelf(1) = corr_multi_dim(a(:,1),a(:,2));
     corSelf(2) = corr_multi_dim(b(:,1),b(:,2));
     
-    
-    fullCor = (nansum(abs(corDim(:))) - nansum(abs(corSelf))) * 2 / sum(~isnan(corDim(:)));
-    
+    fullCor = (nansum(abs(cor(:))) - nansum(abs(corSelf))) * 2 / sum(~isnan(cor(:)));
 %     fullCor = nansum(abs(corDim(:))) * 2 / sum(~isnan(corDim(:)));
   
     title(sprintf('Surface Similarity : %f',fullCor));
 
-    pause;
+    %plot point clouds for correlation
+    subplot(1,2,2);
+    hold on;
+    axis([-9 17 -3 3]);
+    
+    plot(a(:,1)-5,b(:,1),'x');
+    plot(a(:,1),b(:,2),'x');
+    plot(a(:,2)+5,b(:,1),'x');
+    plot(a(:,2)+10,b(:,2),'x');
+    text(-5,2,'X-X');
+    text(0,2,'X-Y');
+    text(5,2,'Y-X');
+    text(10,2,'Y-Y');
+    
+    pause();
 
     %rotate in succession the Y variable to see how values change
     meansY = repmat(mean(bOrig),length(bOrig),1);
