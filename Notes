@@ -117,4 +117,18 @@ The physics engine can therefore be used to verify possible tool to object confi
 LIMITATIONS:
 The forces are applied to the centre of gravity. What if the subject does not have any space to grasp the tool from.( Dietmar discussion) . Rings object and tools would find solutions but it would not be viable because the tool would not be able to reach that position because of collisions. 
 
-Surface Correlation 
+
+Surface Similarity vs Contour Matching
+--------------------------------------
+Contour matching captures a set of techniques for measuring the similarity of two shapes. It is commonly engaged in image processing or robot vision for detecting and tracking objects of similar features. Traditionally, contour matching techniques work by selecting key points on the surface of two shapes and measuring their displacement. If the total point distance is low or close to zero, then the shapes are the same. Contour matching techniques tend to not support geometric transformations such as scaling, rotations, and mirroring.
+
+ More advanced techniques consider contours as composed of a defined set of primitives. Such methods are called syntactic, in that the full contour is composed of primitives similar to how sentences are composed of words. In such cases, only parts of the contours are matched and undergo transformations to minimise the total displacements of their parts.
+
+ Syntactic techniques are sensitive to primitive ordering and resolution degradation (smoothing). Contours composed of similar parts but miss-order would otherwise appear to match. Matching contours could also appear to not match after being composed of completely different parts. 
+
+[Need references!]
+
+
+
+
+
