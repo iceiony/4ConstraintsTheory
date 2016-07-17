@@ -49,7 +49,8 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     label_points(a,b);
 
     %display 2D correlation matrix
-    [cor,pval] = corr_multi_dim(a,b);
+    [cor,pval,fullCor,angle_diff] = corr_multi_dim(a,b);
+    
     disp = {};
     disp{1} = 'Correlation';
     disp{2} = [ 'X-X : ' num2str(cor(1,1))];
@@ -66,13 +67,50 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     disp{5} = [ 'Y-Y : ' num2str(pval(2,2))];
     text(1.3,1.7,disp');
     
-    corSelf(1) = corr_multi_dim(a(:,1),a(:,2));
-    corSelf(2) = corr_multi_dim(b(:,1),b(:,2));
+%     corSelf(1) = corr_multi_dim(a(:,1),a(:,2));
+%     corSelf(2) = corr_multi_dim(b(:,1),b(:,2));
     
-    fullCor = (nansum(abs(cor(:))) - nansum(abs(corSelf))) * 2 / sum(~isnan(cor(:)));
+%     fullCor = (nansum(abs(cor(:))) - nansum(abs(corSelf))) * 2 / sum(~isnan(cor(:)));
 %     fullCor = nansum(abs(corDim(:))) * 2 / sum(~isnan(corDim(:)));
-  
-    title(sprintf('Surface Similarity : %f',fullCor));
+    %first item pca
+    D = a;
+    meanD = repmat(mean(D),length(D),1);
+    D = D - meanD;
+    [U,S,V]=svd(D);
+    D2=V(:,2)*V(:,2)'*D';
+    D2=D2' + meanD;
+    
+    D1=V(:,1)*V(:,1)'*D';
+    D1=D1' + meanD;
+    
+    plot(D2(:,1),D2(:,2),'g');  
+    plot(D1(:,1),D1(:,2),'g');  
+    
+    angle = atan2(V(2),V(1));
+    rot = [cos(angle) -sin(angle) ; sin(angle) cos(angle)];
+    D_rot = D * rot + meanD;
+    plot(D_rot(:,1),D_rot(:,2),'b.');
+    
+    %second item pca
+    D = b;
+    meanD = repmat(mean(D),length(D),1);
+    D = D - meanD;
+    [U,S,V]=svd(D);
+    D2=V(:,2)*V(:,2)'*D';
+    D2=D2' + meanD;
+    
+    D1=V(:,1)*V(:,1)'*D';
+    D1=D1' + meanD;
+    
+    plot(D2(:,1),D2(:,2),'g');  
+    plot(D1(:,1),D1(:,2),'g');  
+    
+    angle = atan2(V(2),V(1));
+    rot = [cos(angle) -sin(angle) ; sin(angle) cos(angle)];
+    D_rot = D * rot + meanD;
+    plot(D_rot(:,1),D_rot(:,2),'r.');
+
+    title(sprintf('Surface Similarity : %f \n Angle %f',fullCor,angle_diff*180/pi));
 
     %plot point clouds for correlation
     subplot(1,2,2);
