@@ -251,6 +251,7 @@ void Simulation::SetToolParameters(float yaw, float pitch, float roll, float x, 
     rotation.m_posit = objPosition.m_posit + dVector(offsetX, offsetY, offsetZ);
 
     NewtonBodySetMatrix(m_toolBody, &rotation[0][0]);
+    NewtonWaitForUpdateToFinish(m_world);
 }
 
 
