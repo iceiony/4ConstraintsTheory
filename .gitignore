@@ -1,3 +1,9 @@
+*.blg
+*.bbl
+*blx.bib
+*.bcf
+*.dvi
+*.run.xml
 *.pdf
 *.gz
 *.log
