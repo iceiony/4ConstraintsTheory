@@ -44,7 +44,16 @@ In structural appraches, shapes are considered as composed out of primitives. In
 
 Both structural and global approaches have justification in human perception \cite{zhang2004}. Human subjects show a preference for features even when other shape descriptors are available \cite{chatbri2016}. At the same time, global shape perception seems to preceed local feature detection\cite{navon1977}. 
 
-Matching human behaviour requires more insight into human visual perception. Loncaric\cite{loncaric1998} describes some theories of human visual perception with interest in image processing. In a tool use scenario, more interest should be given to theories describing perception as volumetric, such as through the use of generalised cylinders (geons\cite{dickinson2014}). Such insight may however be of use in future work.    
+Matching human behaviour requires more insight into human visual perception. Loncaric\cite{loncaric1998} describes some theories of human visual perception with interest in image processing. In a tool use scenario, emphasys should be given to theories describing perception as volumetric, such as through the use of generalised cylinders (geons\cite{dickinson2014}). Such insight may better explain human tool performance, but will however remain for future work.    
+
+\subsubsection{Limitations}
+As previously remarked, contour based techniques contain promising approaches for solving tool-object matching problems. It is important to consider some of the limitations of such techniques, especially with regards to human ability. 
+
+Global contour matching techniques are sensitive to occlusion (i.e. part of the object is hidden from the view point by some obstacle). In such cases, structural approaches are better suited to identify shapes from visible parts. Human perception is regarded as able to recognise objects even from sparse information or occluded perspective \cite{loncaric1998}. In solving tool use scenarios, it is important to consider a subject's visual perpective ( point of view ). The geometry of objects may not be fully visible. 
+
+Most shape similarity techniques are tailored to analysing image based information (i.e. 2D projections of reality). Human perception however also makes use of depth related knowledge. As tool use encompasses real world scenarios of geometric constraints, any contour based approach would have to function with 3D information ( e.g. point clouds ).  
+
+
 
 \printbibliography
 \end{document}
