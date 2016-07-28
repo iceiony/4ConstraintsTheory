@@ -65,8 +65,8 @@ set(SOURCE_FILES
     )
 
 
-add_executable(ExhaustiveSearchGUI mainGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
+add_executable(ExhaustiveSearchGUI exhaustiveSearchGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
 target_link_libraries(ExhaustiveSearchGUI dMath dScene dCustomJoints dContainers dAnimation )
 
-add_executable(ExhaustiveSearch main.cpp ${SOURCE_FILES})
+add_executable(ExhaustiveSearch exhaustiveSearch.cpp ${SOURCE_FILES})
 target_link_libraries(ExhaustiveSearch dMath dScene dCustomJoints dContainers dAnimation )
