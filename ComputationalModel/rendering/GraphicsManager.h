@@ -96,6 +96,7 @@ public:
     void SetCamera(dVector origin, dFloat leftAngle, dFloat upAngle);
 
     void TogglePause();
+    void ToggleAdditionalRender();
 
     bool IsPhysicsPaused();
 
@@ -120,6 +121,7 @@ private:
     GLFWwindow *InitialiseGraphics();
 
     bool m_physicsPaused;
+    bool m_additionalRendering;
 };
 
 // for simplicity we are not going to run the demo in a separate thread at this time
@@ -147,6 +149,7 @@ inline int GraphicsManager::GetWidth() const {
 inline int GraphicsManager::GetHeight() const {
     return this->m_height;
 }
+
 
 
 #endif

@@ -21,8 +21,10 @@ Simulation::Simulation(const char *const outputFile) : m_world(NewtonCreate()) {
 
     CreateFloor();
 
-    m_output.open(outputFile);
-    m_output << "x,y,z,yaw,pitch,roll\n";
+    if(outputFile){
+        m_output.open(outputFile);
+        m_output << "x,y,z,yaw,pitch,roll\n";
+    }
 }
 
 Simulation::~Simulation() {

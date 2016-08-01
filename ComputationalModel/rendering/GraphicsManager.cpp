@@ -18,7 +18,8 @@
 
 GraphicsManager::GraphicsManager(NewtonWorld *world) :
         dList<GraphicsEntity *>(), m_world(world),
-        m_physicsPaused(false) ,m_cameraManager(new CameraListener(this)) {
+        m_physicsPaused(false) ,m_cameraManager(new CameraListener(this)),
+        m_additionalRendering(false) {
 
     m_instance = this;
     m_window = InitialiseGraphics();
@@ -167,14 +168,15 @@ void GraphicsManager::RenderFrame(dFloat timeStep) {
         glLoadMatrix(&modelView[0][0]);
     }
 
+    if(m_additionalRendering){
+        RenderContactPoints(m_world);
 
-    RenderContactPoints(m_world);
+        RenderCenterOfMass(m_world);
 
-    RenderCenterOfMass(m_world);
+        DebugRenderWorldCollision(m_world, m_lines);
 
-    DebugRenderWorldCollision(m_world, m_lines);
-
-    RenderAABB(m_world);
+        RenderAABB(m_world);
+    }
 
     // draw everything and swap the display buffer
     glFlush();
@@ -222,8 +224,19 @@ void GraphicsManager::PauseKeyCallback(GLFWwindow *window,int key,int scancode,i
         m_instance->TogglePause();
 }
 
+/**
+ * By default physics engine is not paused
+ */
 void GraphicsManager::TogglePause() {
     this->m_physicsPaused = !this->m_physicsPaused;
+}
+
+/**
+ * Toggles additional rendering ( collision mesh lines, AABB, massNormals , collision points)
+ * By default additional rendering is true
+ */
+void GraphicsManager::ToggleAdditionalRender() {
+    this->m_additionalRendering = !this->m_additionalRendering;
 }
 
 bool GraphicsManager::IsPhysicsPaused() {

@@ -48,7 +48,6 @@ private:
     std::ofstream m_output;
 
     NewtonBody *CreateFloor();
-    NewtonBody *LoadModel(const char *fileName);
     void ReadjustMinMaxLimits();
 
 public:
@@ -60,6 +59,7 @@ public:
 
     NewtonWorld *GetNewtonWorld();
 
+    NewtonBody *LoadModel(const char *fileName);
     NewtonBody * LoadObject(const char *fileName);
     NewtonBody * LoadTool(const char *fileName);
 

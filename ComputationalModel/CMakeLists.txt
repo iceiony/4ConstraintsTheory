@@ -55,6 +55,7 @@ set(GRAPHICS_FILES
         rendering/Camera.cpp
         rendering/CameraListener.cpp
         rendering/DebugDisplay.cpp
+        rendering/RayCastEntity.cpp
     )
 
 set(SOURCE_FILES
@@ -64,6 +65,8 @@ set(SOURCE_FILES
         ${LIB3DS}
     )
 
+add_executable(extractSurfacePoints extractSurfacePoints.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
+target_link_libraries(extractSurfacePoints dMath dScene dCustomJoints dContainers dAnimation )
 
 add_executable(ExhaustiveSearchGUI exhaustiveSearchGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
 target_link_libraries(ExhaustiveSearchGUI dMath dScene dCustomJoints dContainers dAnimation )
