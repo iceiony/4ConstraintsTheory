@@ -4,6 +4,7 @@
 #include "GraphicsEntity.h"
 #include "RayCastEntity.h"
 
+#define OUTPUT_FILE "./surfaces/surface.csv"
 
 static dFloat RayCast (const NewtonBody* const body, const NewtonCollision* const collisionHit, const dFloat* const contact, const dFloat* const normal, dLong collisionID, void* const userData, dFloat intersetParam) {
     dFloat *const paramPtr = (dFloat *) userData;
@@ -16,7 +17,7 @@ static dFloat RayCast (const NewtonBody* const body, const NewtonCollision* cons
 static void ExportSurface(const dVector intersectionPoints[][VIEW_DIMENSION]){
     //output points from current view
     std::ofstream outFile;
-    outFile.open("surface.csv");
+    outFile.open(OUTPUT_FILE);
     for(int i=0;i<VIEW_DIMENSION;i++) {
         for (int j = 0; j < VIEW_DIMENSION; j++) {
             dVector point = intersectionPoints[i][j];
@@ -62,10 +63,10 @@ int main(int argc, char * argv[]) {
     float mid = (float) VIEW_DIMENSION / 2.0f;
     for(int i=0;i<VIEW_DIMENSION;i++){
         for(int j=0;j<VIEW_DIMENSION;j++){
-//            startPoints[i][j].m_x = (i-mid)*CAST_STEP;
-//            startPoints[i][j].m_y = 3.0f;
-//            startPoints[i][j].m_z = (j-mid)*CAST_STEP;
-            startPoints[i][j] = dVector(.0f,3.5f,.0f);
+            startPoints[i][j].m_x = (i-mid)*CAST_STEP;
+            startPoints[i][j].m_y = 3.0f;
+            startPoints[i][j].m_z = (j-mid)*CAST_STEP;
+//            startPoints[i][j] = dVector(.0f,2.5f,.0f);
 
             endPoints[i][j].m_x = (i - mid)*CAST_STEP;
             endPoints[i][j].m_y = 0.0f;

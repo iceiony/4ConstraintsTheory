@@ -17,19 +17,12 @@ void RayCastEntity::Render(dFloat timeStep, GraphicsManager *const scene) const{
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
 
-    //raycast lines
-//    glColor3f(0.0f, 0.7f, 0.7f);
-//    glBegin(GL_LINES);
-//    for (int i = 0; i < VIEW_DIMENSION; i++) {
-//        for (int j = 0; j < VIEW_DIMENSION; j++) {
-//            glVertex3f(startPoints[i][j].m_x, startPoints[i][j].m_y, startPoints[i][j].m_z);
-//            glVertex3f(intersectionPoints[i][j].m_x, intersectionPoints[i][j].m_y, intersectionPoints[i][j].m_z);
-//        }
-//    }
-//    glEnd();
+    // Enable blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //intersection points
-    glColor3f(1.0f, 0.0f, 0.0f);
+    glColor4f(1.0f, 0.0f, 0.0f,0.7f);
     glPointSize(6.0f);
     glBegin(GL_POINTS);
     for (int i = 0; i < VIEW_DIMENSION; i++) {
@@ -41,5 +34,19 @@ void RayCastEntity::Render(dFloat timeStep, GraphicsManager *const scene) const{
     glPointSize(1.0f);
 
     glColor3f(1.0f, 1.0f, 1.0f);
+
+    //raycast lines
+    glColor4f(0.0f, 0.7f, 0.7f, 0.5f);
+    glBegin(GL_LINES);
+    for (int i = 0; i < VIEW_DIMENSION; i++) {
+        for (int j = 0; j < VIEW_DIMENSION; j++) {
+            glVertex3f(startPoints[i][j].m_x, startPoints[i][j].m_y, startPoints[i][j].m_z);
+            glVertex3f(intersectionPoints[i][j].m_x, intersectionPoints[i][j].m_y, intersectionPoints[i][j].m_z);
+        }
+    }
+    glDisable(GL_BLEND);
+    glEnd();
+
+
 }
 

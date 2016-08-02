@@ -39,7 +39,7 @@ typedef long long unsigned64;
 
 #define MAX_PHYSICS_FPS  120.0f
 #define VIEW_DIMENSION 50
-#define CAST_STEP .02f;
+#define CAST_STEP .01f;
 
 #include <stddef.h>
 #include <stdarg.h>

@@ -9,8 +9,7 @@ X = reshape(points(:,3),VIEW_DIM,VIEW_DIM);
 Z(Z(:)<1) = nan;
 % Z(isnan(Z(:))) = min(Z(:));
 
-figure();
-hold on;
+
 axis([min(X(:)) max(X(:)) min(Y(:)) max(Y(:)) min(Z(:))-0.3 max(Z(:))]);
 % surf(X,Y,Z);
 surf(X,Y,Z,'FaceColor','red','EdgeColor','none')
