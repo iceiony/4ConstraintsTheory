@@ -1,4 +1,4 @@
-function [c,p,full_corr,angle_diff] = corr_multi_dim(a,b)
+function [c,p,full_corr,angle_diff] = corr_dim2(a,b)
 %Calculates correlations between two multi-dimensional random variables.
 %The correlation matrix returned is the value of Pearson correlation on 
 %each combination of columns of X and Y.
@@ -14,13 +14,13 @@ end
 %correlate on pca
 a = a - repmat(mean(a),length(a),1);
 [u,s,v] = svd(a);
-angle_a = atan2(v(2),v(1));
+angle_a = mod(atan2(v(2),v(1),2*pi));
 rot = [cos(angle_a) -sin(angle_a) ; sin(angle_a) cos(angle_a)];
 a_rot = a * rot;
 
 b = b - repmat(mean(b),length(b),1);
 [u,s,v] = svd(b);
-angle_b = atan2(v(2),v(1));
+angle_b = mod(atan2(v(2),v(1)),2*pi);
 rot = [cos(angle_b) -sin(angle_b) ; sin(angle_b) cos(angle_b)];
 b_rot = b * rot;
 

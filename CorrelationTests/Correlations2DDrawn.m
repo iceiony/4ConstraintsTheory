@@ -49,7 +49,7 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     label_points(a,b);
 
     %display 2D correlation matrix
-    [cor,pval,fullCor,angle_diff] = corr_multi_dim(a,b);
+    [cor,pval,fullCor,angle_diff] = corr_dim2(a,b);
     
     disp = {};
     disp{1} = 'Correlation';
@@ -67,40 +67,16 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     disp{5} = [ 'Y-Y : ' num2str(pval(2,2))];
     text(1.3,1.7,disp');
     
-%     corSelf(1) = corr_multi_dim(a(:,1),a(:,2));
-%     corSelf(2) = corr_multi_dim(b(:,1),b(:,2));
-    
-%     fullCor = (nansum(abs(cor(:))) - nansum(abs(corSelf))) * 2 / sum(~isnan(cor(:)));
-%     fullCor = nansum(abs(corDim(:))) * 2 / sum(~isnan(corDim(:)));
     %first item pca
-    D = a;
-    meanD = repmat(mean(D),length(D),1);
-    D = D - meanD;
-    [U,S,V]=svd(D);
-    D2=V(:,2)*V(:,2)'*D';
-    D2=D2' + meanD;
-    
-    D1=V(:,1)*V(:,1)'*D';
-    D1=D1' + meanD;
-    
-    plot(D2(:,1),D2(:,2),'g');  
-    plot(D1(:,1),D1(:,2),'g');  
+    plot_pca(a);
     
     angle = atan2(V(2),V(1));
     rot = [cos(angle) -sin(angle) ; sin(angle) cos(angle)];
     D_rot = D * rot + meanD;
-    plot(D_rot(:,1),D_rot(:,2),'b.');
+    plot(D_rot(:,1),D_rot(:,2)-1,'b.');
     
     %second item pca
-    D = b;
-    meanD = repmat(mean(D),length(D),1);
-    D = D - meanD;
-    [U,S,V]=svd(D);
-    D2=V(:,2)*V(:,2)'*D';
-    D2=D2' + meanD;
-    
-    D1=V(:,1)*V(:,1)'*D';
-    D1=D1' + meanD;
+    plot_pca(b);
     
     plot(D2(:,1),D2(:,2),'g');  
     plot(D1(:,1),D1(:,2),'g');  
@@ -108,7 +84,7 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     angle = atan2(V(2),V(1));
     rot = [cos(angle) -sin(angle) ; sin(angle) cos(angle)];
     D_rot = D * rot + meanD;
-    plot(D_rot(:,1),D_rot(:,2),'r.');
+    plot(D_rot(:,1),D_rot(:,2)-1,'r.');
 
     title(sprintf('Surface Similarity : %f \n Angle %f',fullCor,angle_diff*180/pi));
 
@@ -129,9 +105,9 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     pause();
 
     %rotate in succession the Y variable to see how values change
-    meansY = repmat(mean(bOrig),length(bOrig),1);
+    meansB = repmat(mean(bOrig),length(bOrig),1);
     rotMat = [ cos(theta) -sin(theta);sin(theta) cos(theta)];
-    b = (bOrig - meansY) * rotMat + meansY;
+    b = (bOrig - meansB) * rotMat + meansB;
 end
 
 
