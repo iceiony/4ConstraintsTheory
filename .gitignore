@@ -8,6 +8,7 @@
 *.gz
 *.log
 *.aux
+*.m~
 .DS_Store
 Makefile
 CMakeCash.txt
