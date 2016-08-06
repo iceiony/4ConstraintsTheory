@@ -1,17 +1,17 @@
 [X1,Y1,Z1] = load_surface('./Surfaces/surface_square.csv');
 
+%load single surface and rotate for 
 points = [X1(:) Y1(:) Z1(:)];
-
+% 
 meansB = repmat(mean(points),length(points),1);
 points = (rotz(60*pi/180) * roty(60*pi/180) * rotx(60*pi/180) * (points - meansB)')'  + meansB;
-
+% 
 VIEW_DIM = sqrt(length(points));
 X2 = reshape(points(:,1),VIEW_DIM,VIEW_DIM);
 Y2 = reshape(points(:,2),VIEW_DIM,VIEW_DIM);
 Z2 = reshape(points(:,3),VIEW_DIM,VIEW_DIM);
 
 [fullCorr,angleX,angleY,angleZ] = corr_dim3( [X1(:) Y1(:) Z1(:)], [X2(:) Y2(:) Z2(:)] );
-
 
 figure();
 subplot(1,2,1);
