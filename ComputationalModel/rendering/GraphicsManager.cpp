@@ -281,7 +281,9 @@ void GraphicsManager::SetCamera(dVector origin, dFloat upAngle = 0.0f, dFloat le
     SetCameraMatrix( dQuaternion(upRotation * leftRotation), origin );
 }
 
-
+dMatrix GraphicsManager::GetCameraMatrix() {
+    return m_cameraManager->GetCamera()->m_matrix;
+}
 
 
 

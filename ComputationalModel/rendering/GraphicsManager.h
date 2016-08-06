@@ -93,6 +93,7 @@ public:
 
     void Register(NewtonBody *body, dVector color);
 
+    dMatrix GetCameraMatrix();
     void SetCamera(dVector origin, dFloat leftAngle, dFloat upAngle);
 
     void TogglePause();

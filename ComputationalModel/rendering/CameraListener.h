@@ -34,7 +34,6 @@ class CameraListener: public ListenerBase
 	void SetCameraMatrix (GraphicsManager* const scene, const dQuaternion& rotation, const dVector& position)
 	{
 		m_camera->SetMatrix(*scene, rotation, position);
-		m_camera->SetMatrix(*scene, rotation, position);
 		m_yaw = m_camera->GetYawAngle();
 		m_pitch = m_camera->GetPichAngle();
 	}
