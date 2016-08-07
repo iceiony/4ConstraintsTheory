@@ -1,6 +1,6 @@
 #include <iomanip>
 #include "Util.h"
-#include "Simulation.h"
+#include "ExhaustiveSimulation.h"
 #include "GraphicsEntity.h"
 #include "RayCastEntity.h"
 #include "PhysicsUtils.h"
@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
 
     std::cout << "Loading model from :" << fileName << "\n\r";
 
-    Simulation sim(nullptr);
+    ExhaustiveSimulation sim(nullptr);
     GraphicsManager graphicsManager(sim.GetNewtonWorld());
     graphicsManager.Register(sim.GetFloor(), BLUE);
 

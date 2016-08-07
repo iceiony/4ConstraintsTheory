@@ -26,7 +26,7 @@
 #define positionStep 0.02f
 #define marginFactor 3.0f
 
-class Simulation {
+class ExhaustiveSimulation {
 
 private:
     float minX;
@@ -51,9 +51,9 @@ private:
     void ReadjustMinMaxLimits();
 
 public:
-    Simulation(const char * const outputFile);
+    ExhaustiveSimulation(const char * const outputFile);
 
-    ~Simulation();
+    ~ExhaustiveSimulation();
 
     void UpdatePhysics();
 

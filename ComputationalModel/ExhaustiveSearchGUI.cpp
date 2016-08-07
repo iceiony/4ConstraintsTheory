@@ -1,5 +1,5 @@
 #include "Util.h"
-#include "Simulation.h"
+#include "ExhaustiveSimulation.h"
 #include "GraphicsManager.h"
 
 int main(int argc, char * argv[]) {
@@ -19,7 +19,7 @@ int main(int argc, char * argv[]) {
 
 
     //run exhaustive simulation in graphics mode
-    Simulation sim("results.csv");
+    ExhaustiveSimulation sim("results.csv");
     NewtonBody *objBody  = sim.LoadObject(objModelFileName);
     NewtonBody *toolBody = sim.LoadTool(toolModelFileName);
 

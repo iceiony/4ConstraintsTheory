@@ -1,10 +1,10 @@
 //
 // Created by Adrian Ionita on 23/06/2016.
 //
-#include "Simulation.h"
+#include "ExhaustiveSimulation.h"
 #include "PhysicsUtils.h"
 
-Simulation::Simulation(const char *const outputFile) : m_world(NewtonCreate()) {
+ExhaustiveSimulation::ExhaustiveSimulation(const char *const outputFile) : m_world(NewtonCreate()) {
 
     NewtonSetThreadsCount(m_world, NewtonGetMaxThreadsCount(m_world));
 
@@ -27,7 +27,7 @@ Simulation::Simulation(const char *const outputFile) : m_world(NewtonCreate()) {
     }
 }
 
-Simulation::~Simulation() {
+ExhaustiveSimulation::~ExhaustiveSimulation() {
     if (m_world) {
         NewtonWaitForUpdateToFinish(m_world);
         NewtonDestroy(m_world);
@@ -36,7 +36,7 @@ Simulation::~Simulation() {
     dAssert (NewtonGetMemoryUsed() == 0);
 }
 
-void Simulation::UpdatePhysics() {
+void ExhaustiveSimulation::UpdatePhysics() {
     // update the physics
     if (m_world) {
         try {
@@ -49,7 +49,7 @@ void Simulation::UpdatePhysics() {
     }
 }
 
-NewtonBody *Simulation::CreateFloor() {
+NewtonBody *ExhaustiveSimulation::CreateFloor() {
     dMatrix origin(dGetIdentityMatrix());
     dFloat mass = 0.0f;
 
@@ -66,11 +66,11 @@ NewtonBody *Simulation::CreateFloor() {
     return m_floorBody;
 }
 
-NewtonWorld *Simulation::GetNewtonWorld() {
+NewtonWorld *ExhaustiveSimulation::GetNewtonWorld() {
     return m_world;
 }
 
-NewtonBody *Simulation::LoadModel(const char *fileName) {
+NewtonBody *ExhaustiveSimulation::LoadModel(const char *fileName) {
     NewtonMesh *const mesh = LoadMeshFrom3DS(m_world, fileName, 0.008);
     NewtonMesh *const convexApproximation = NewtonMeshApproximateConvexDecomposition(mesh, 0.00001f, 0.0f, 512, 256,
                                                                                      nullptr, nullptr);
@@ -85,7 +85,7 @@ NewtonBody *Simulation::LoadModel(const char *fileName) {
     return modelBody;
 }
 
-NewtonBody *Simulation::LoadTool(const char *fileName) {
+NewtonBody *ExhaustiveSimulation::LoadTool(const char *fileName) {
     m_toolBody = this->LoadModel(fileName);
 
     // set the force and torque call back function
@@ -94,7 +94,7 @@ NewtonBody *Simulation::LoadTool(const char *fileName) {
     return m_toolBody;
 }
 
-NewtonBody *Simulation::LoadObject(const char *fileName) {
+NewtonBody *ExhaustiveSimulation::LoadObject(const char *fileName) {
     m_objBody = this->LoadModel(fileName);
 
     // set the force and torque call back function
@@ -110,14 +110,14 @@ NewtonBody *Simulation::LoadObject(const char *fileName) {
     return m_objBody;
 }
 
-void Simulation::Start() {
+void ExhaustiveSimulation::Start() {
     ResetObjPosition();
     SetToolParameters(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
     ReadjustMinMaxLimits();
     SetToolParameters(offsetYaw, offsetPitch, offsetRoll, offsetX, offsetY, offsetZ);
 }
 
-void Simulation::ReadjustMinMaxLimits() {//set min/max values for simulation search based on current rotation
+void ExhaustiveSimulation::ReadjustMinMaxLimits() {//set min/max values for simulation search based on current rotation
     //calculate new min/max for xyz coordinates
     dVector toolMinP, toolMaxP, objMinP, objMaxP;
     CalculateAABB(m_toolBody, toolMinP, toolMaxP);
@@ -158,21 +158,21 @@ void Simulation::ReadjustMinMaxLimits() {//set min/max values for simulation sea
 //    offsetZ = 0.32f;
 }
 
-NewtonBody *Simulation::GetFloor() {
+NewtonBody *ExhaustiveSimulation::GetFloor() {
     return m_floorBody;
 }
 
-bool Simulation::IsFinished() {
+bool ExhaustiveSimulation::IsFinished() {
     return offsetRoll > maxRoll;
 }
 
-void Simulation::ResetObjPosition() {
+void ExhaustiveSimulation::ResetObjPosition() {
     dMatrix origin(dGetIdentityMatrix());
     origin.m_posit = m_objInitialPos;
     NewtonBodySetMatrix(m_objBody, &origin[0][0]);
 }
 
-void Simulation::NextScenario() {
+void ExhaustiveSimulation::NextScenario() {
     this->ResetObjPosition();
 
     //increment position values
@@ -243,7 +243,7 @@ void Simulation::NextScenario() {
 
 }
 
-void Simulation::SetToolParameters(float yaw, float pitch, float roll, float x, float y, float z) {
+void ExhaustiveSimulation::SetToolParameters(float yaw, float pitch, float roll, float x, float y, float z) {
     dMatrix objPosition;
     dMatrix rotation(dYawMatrix(yaw * 3.1416f / 180.0f) * dPitchMatrix(pitch * 3.1416f / 180.0f) *
                      dRollMatrix(roll * 3.1416f / 180.0f));
@@ -257,7 +257,7 @@ void Simulation::SetToolParameters(float yaw, float pitch, float roll, float x, 
 }
 
 
-bool Simulation::IterateScenario() {
+bool ExhaustiveSimulation::IterateScenario() {
     iterationCount++;
 
     //check if objects do not penetrate each other
@@ -284,7 +284,7 @@ bool Simulation::IterateScenario() {
     return iterationCount < maxIterationCount;
 }
 
-void Simulation::SaveResults() {
+void ExhaustiveSimulation::SaveResults() {
     if (isPossibleSolution) {
         std::cout << "x:" << offsetX << " y:" << offsetY << " z:" << offsetZ;
         std::cout << " yaw:" << offsetYaw << " pitch:" << offsetPitch << " roll:" << offsetRoll << '\n';
@@ -297,7 +297,7 @@ void Simulation::SaveResults() {
     }
 }
 
-float Simulation::GetTimeStep() {
+float ExhaustiveSimulation::GetTimeStep() {
     return 1.0f / MAX_PHYSICS_FPS;
 }
 

@@ -60,7 +60,7 @@ set(GRAPHICS_FILES
 
 set(SOURCE_FILES
         Util.cpp
-        Simulation.cpp
+        ExhaustiveSimulation.cpp
         PhysicsUtils.cpp
         ${LIB3DS}
     )
