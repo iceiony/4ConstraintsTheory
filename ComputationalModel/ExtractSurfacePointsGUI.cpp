@@ -39,9 +39,6 @@ int main(int argc, char * argv[]) {
     std::cout << "Loading model from :" << fileName << "\n\r";
 
     ExhaustiveSimulation sim(nullptr);
-    GraphicsManager graphicsManager(sim.GetNewtonWorld());
-    graphicsManager.Register(sim.GetFloor(), BLUE);
-
     NewtonBody *modelBody = sim.LoadModel(fileName);
 
     //set object position and rotation
@@ -49,6 +46,9 @@ int main(int argc, char * argv[]) {
     origin.m_posit = dVector( .5f, 1.0f, -.0f);
     NewtonBodySetMatrix(modelBody,&origin[0][0]);
 
+    //initialise graphics
+    GraphicsManager graphicsManager(sim.GetNewtonWorld());
+    graphicsManager.Register(sim.GetFloor(), BLUE);
     graphicsManager.Register(modelBody, GRAY);
     graphicsManager.SetCamera(dVector(0.f, 3.5f, .0f), -90, 0);
 
