@@ -22,7 +22,7 @@ void RayCastEntity::Render(dFloat timeStep, GraphicsManager *const scene) const{
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //intersection points
-    glColor4f(1.0f, 0.0f, 0.0f,0.7f);
+    glColor4f(1.0f, 0.0f, 0.0f,0.8f);
     glPointSize(6.0f);
     glBegin(GL_POINTS);
     for (int i = 0; i < VIEW_DIMENSION; i++) {

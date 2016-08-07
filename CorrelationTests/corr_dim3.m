@@ -36,7 +36,7 @@ r = rotz(az) * roty(ay) * rotx(ax) * rotx(-bx) * roty(-by) * rotz(-bz);
 
 %test lines for estimated rotation matrix
 %the difference between points should be 0
-round(sum(oa - (r * ob')'),4)
+% round(sum(oa - (r * ob')'),4)
 
 angleZ = atan(r(2)/r(1));
 angleX = atan(r(6)/r(9));

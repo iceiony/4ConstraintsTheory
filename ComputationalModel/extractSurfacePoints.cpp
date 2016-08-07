@@ -4,7 +4,7 @@
 #include "GraphicsEntity.h"
 #include "RayCastEntity.h"
 
-#define OUTPUT_FILE "./surfaces/surface_tool"
+#define OUTPUT_FILE "./surfaces/surface_obj"
 
 static dFloat RayCast (const NewtonBody* const body, const NewtonCollision* const collisionHit, const dFloat* const contact, const dFloat* const normal, dLong collisionID, void* const userData, dFloat intersetParam) {
     dFloat *const paramPtr = (dFloat *) userData;
@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
 
     //set object position and rotation
     dMatrix origin(dGetIdentityMatrix()*dPitchMatrix(90.0f*3.14f/180.0f)*dYawMatrix(-90.0f*3.14f/180.0f));
-    origin.m_posit = dVector( -.0f, 1.0f, -.0f);
+    origin.m_posit = dVector( .5f, 1.0f, -.0f);
     NewtonBodySetMatrix(modelBody,&origin[0][0]);
 
     graphicsManager.Register(modelBody, GRAY);

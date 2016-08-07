@@ -1,4 +1,4 @@
-function [out,extra] = corr_matrix(a,b)
+function [fullCorr,matrixCorr] = corr_matrix(a,b)
     
 rowCorr = zeros(1,length(a));
 colCorr = zeros(length(a),1);
@@ -11,5 +11,5 @@ end
 rowCorr(isnan(rowCorr)) = 1;
 colCorr(isnan(colCorr)) = 1;
 
-extra = rowCorr * colCorr / length(a);
-out = colCorr * rowCorr;
+fullCorr = rowCorr * colCorr / length(a);
+matrixCorr = colCorr * rowCorr;
