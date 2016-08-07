@@ -33,4 +33,7 @@ void CalculateAABB(const NewtonBody *body,dVector &minP ,dVector &maxP);
 NewtonBody* CreateSimpleBody (NewtonWorld* const world, void* const userData, dFloat mass, const dMatrix& matrix, NewtonCollision* const collision, int materialId);
 NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const fileName, const dFloat scale);
 NewtonMesh* CreateFloorMesh(NewtonWorld* const world);
+
+dFloat RayCast (const NewtonBody* const body, const NewtonCollision* const collisionHit, const dFloat* const contact, const dFloat* const normal, dLong collisionID, void* const userData, dFloat intersetParam) ;
+void UpdateRayCastPosition(dVector startPoints[][VIEW_DIMENSION],dVector endPoints[][VIEW_DIMENSION],dMatrix positionOffset);
 #endif

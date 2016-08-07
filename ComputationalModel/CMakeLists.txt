@@ -65,11 +65,11 @@ set(SOURCE_FILES
         ${LIB3DS}
     )
 
-add_executable(extractSurfacePoints extractSurfacePoints.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
-target_link_libraries(extractSurfacePoints dMath dScene dCustomJoints dContainers dAnimation )
+add_executable(ExtractSurfacePointsGUI ExtractSurfacePointsGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
+target_link_libraries(ExtractSurfacePointsGUI dMath dScene dCustomJoints dContainers dAnimation )
 
-add_executable(ExhaustiveSearchGUI exhaustiveSearchGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
+add_executable(ExhaustiveSearchGUI ExhaustiveSearchGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
 target_link_libraries(ExhaustiveSearchGUI dMath dScene dCustomJoints dContainers dAnimation )
 
-add_executable(ExhaustiveSearch exhaustiveSearch.cpp ${SOURCE_FILES})
+add_executable(ExhaustiveSearch ExhaustiveSearch.cpp ${SOURCE_FILES})
 target_link_libraries(ExhaustiveSearch dMath dScene dCustomJoints dContainers dAnimation )
