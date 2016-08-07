@@ -19,3 +19,6 @@ newton-dynamics*
 CMakeCache.txt
 newton-dynamics
 results*
+ExhaustiveSearch
+ExhaustiveSearchGUI
+ExtractSurfacePointsGUI
