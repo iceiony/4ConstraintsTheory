@@ -24,8 +24,8 @@ bool IsSmallPenetration(NewtonBody *const body0, NewtonBody *const body1, float 
 bool IsSmallImpact (NewtonBody* const body0, NewtonBody* const body1,float maxForce);
 dFloat ForceScalar(dVector force);
 
-void PhysicsApplyGravityForce (const NewtonBody* body, dFloat timestep, int threadIndex);
 void MoveTool (const NewtonBody * const body, dFloat timestep, int threadIndex);
+void PhysicsApplyGravityForce (const NewtonBody* const body, dFloat timestep, int threadIndex);
 
 void CalculateAABB (const NewtonCollision* const collision, const dMatrix& matrix, dVector& minP, dVector& maxP);
 void CalculateAABB(const NewtonBody *body,dVector &minP ,dVector &maxP);
