@@ -5,9 +5,36 @@
 #include "RayCastEntity.h"
 #include "PhysicsUtils.h"
 
+#include <vector>
+using namespace std;
+
 #define OUTPUT_FILE "./surfaces/surface_obj"
 
-static void ExportSurface(const dVector intersectionPoints[][VIEW_DIMENSION],int suffixCount){
+static void UpdateRayCastPosition(vector<dVector> *startPoints, vector<dVector> *endPoints, dMatrix positionOffset)
+{
+//    dVector position = positionOffset.m_front;
+//    std::cout << position.m_x << ' ' << position.m_y << ' ' << position.m_z  << "\n\r";
+//    position = positionOffset.m_posit;
+
+    float mid = (float) VIEW_DIMENSION / 2.0f;
+    for(int i=0;i<VIEW_DIMENSION;i++){
+        for(int j=0;j<VIEW_DIMENSION;j++){
+
+            auto idx = (unsigned long) i * VIEW_DIMENSION + j;
+            float rotationFactor = positionOffset.m_posit.m_y * 1.57f;
+
+            startPoints->at(idx).m_x = (i-mid)*CAST_STEP + positionOffset.m_posit.m_x;
+            startPoints->at(idx).m_y = positionOffset.m_posit.m_y;
+            startPoints->at(idx).m_z = (j-mid)*CAST_STEP + positionOffset.m_posit.m_z;
+
+            endPoints->at(idx).m_x = (i - mid)*CAST_STEP + positionOffset.m_posit.m_x + rotationFactor * positionOffset.m_front.m_x;
+            endPoints->at(idx).m_y = -0.1f;
+            endPoints->at(idx).m_z = (j - mid)*CAST_STEP + positionOffset.m_posit.m_z + rotationFactor * positionOffset.m_front.m_z;
+        }
+    }
+}
+
+static void ExportSurface(vector<dVector> *intersectionPoints, int suffixCount){
     //output points from current view
     std::ostringstream fileName;
     fileName << OUTPUT_FILE << suffixCount << ".csv";
@@ -15,9 +42,9 @@ static void ExportSurface(const dVector intersectionPoints[][VIEW_DIMENSION],int
     std::ofstream outFile;
     outFile.open(fileName.str());
 
-    for(int i=0;i<VIEW_DIMENSION;i++) {
-        for (int j = 0; j < VIEW_DIMENSION; j++) {
-            dVector point = intersectionPoints[i][j];
+    for(unsigned int i=0;i<VIEW_DIMENSION;i++) {
+        for (unsigned int j = 0; j < VIEW_DIMENSION; j++) {
+            dVector point = intersectionPoints->at( i * VIEW_DIMENSION + j);
             outFile << point.m_x << ',' << point.m_y << ',' << point.m_z << "\n";
         }
     }
@@ -42,7 +69,7 @@ int main(int argc, char * argv[]) {
     NewtonBody *modelBody = sim.LoadModel(fileName);
 
     //set object position and rotation
-    dMatrix origin(dGetIdentityMatrix()*dPitchMatrix(90.0f*3.14f/180.0f)*dYawMatrix(-90.0f*3.14f/180.0f));
+    dMatrix origin(dGetIdentityMatrix()*dPitchMatrix(radians(90.0f))*dYawMatrix(radians(-90.0f)));
     origin.m_posit = dVector( .5f, 1.0f, -.0f);
     NewtonBodySetMatrix(modelBody,&origin[0][0]);
 
@@ -53,9 +80,9 @@ int main(int argc, char * argv[]) {
     graphicsManager.SetCamera(dVector(0.f, 3.5f, .0f), -90, 0);
 
     //setup raycast parameters
-    dVector startPoints[VIEW_DIMENSION][VIEW_DIMENSION];
-    dVector endPoints[VIEW_DIMENSION][VIEW_DIMENSION];
-    dVector intersectionPoints[VIEW_DIMENSION][VIEW_DIMENSION];
+    vector<dVector> *startPoints = new vector<dVector>(VIEW_DIMENSION * VIEW_DIMENSION);
+    vector<dVector> *endPoints = new vector<dVector>(VIEW_DIMENSION * VIEW_DIMENSION);
+    vector<dVector> *intersectionPoints = new vector<dVector>(VIEW_DIMENSION * VIEW_DIMENSION);
 
     RayCastEntity *castEntity = new RayCastEntity(startPoints,intersectionPoints);
     graphicsManager.Append(castEntity);
@@ -77,9 +104,10 @@ int main(int argc, char * argv[]) {
         //calculate intersection points
         for(int i=0;i<VIEW_DIMENSION;i++) {
             for (int j = 0; j < VIEW_DIMENSION; j++) {
+                auto idx = (unsigned int) i * VIEW_DIMENSION + j;
                 dFloat scaleParam(1.1f);
-                NewtonWorldRayCast(sim.GetNewtonWorld(), &startPoints[i][j][0], &endPoints[i][j][0], RayCast, &scaleParam, NULL, 1);
-                intersectionPoints[i][j] = startPoints[i][j] + (endPoints[i][j] - startPoints[i][j]).Scale (scaleParam);
+                NewtonWorldRayCast(sim.GetNewtonWorld(), &startPoints->at(idx)[0], &endPoints->at(idx)[0], RayCast, &scaleParam, NULL, 1);
+                intersectionPoints->at(idx) = startPoints->at(idx) + (endPoints->at(idx) - startPoints->at(idx)).Scale (scaleParam);
             }
         }
 
@@ -95,4 +123,9 @@ int main(int argc, char * argv[]) {
 
     }
 
+    delete(startPoints);
+    delete(endPoints);
+    delete(intersectionPoints);
+
 }
+

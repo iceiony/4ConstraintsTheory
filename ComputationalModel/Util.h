@@ -40,6 +40,7 @@ typedef long long unsigned64;
 #define MAX_PHYSICS_FPS  120.0f
 #define VIEW_DIMENSION 20
 #define CAST_STEP .02f
+#define radians(x) x * 3.14f / 180.0f
 
 #include <stddef.h>
 #include <stdarg.h>
