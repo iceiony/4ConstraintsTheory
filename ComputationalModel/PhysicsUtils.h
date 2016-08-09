@@ -35,5 +35,5 @@ NewtonMesh* LoadMeshFrom3DS(NewtonWorld* const world, const char* const fileName
 NewtonMesh* CreateFloorMesh(NewtonWorld* const world);
 
 dFloat RayCast (const NewtonBody* const body, const NewtonCollision* const collisionHit, const dFloat* const contact, const dFloat* const normal, dLong collisionID, void* const userData, dFloat intersetParam) ;
-void UpdateRayCastPosition(dVector startPoints[][VIEW_DIMENSION],dVector endPoints[][VIEW_DIMENSION],dMatrix positionOffset);
+
 #endif

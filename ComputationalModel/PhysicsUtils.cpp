@@ -249,26 +249,3 @@ dFloat RayCast (const NewtonBody* const body, const NewtonCollision* const colli
     return paramPtr[0];
 }
 
-void UpdateRayCastPosition(dVector startPoints[][VIEW_DIMENSION]
-        ,dVector endPoints[][VIEW_DIMENSION]
-        ,dMatrix positionOffset) {
-
-//    dVector position = positionOffset.m_front;
-//    std::cout << position.m_x << ' ' << position.m_y << ' ' << position.m_z  << "\n\r";
-//    position = positionOffset.m_posit;
-
-    float mid = (float) VIEW_DIMENSION / 2.0f;
-    for(int i=0;i<VIEW_DIMENSION;i++){
-        for(int j=0;j<VIEW_DIMENSION;j++){
-            float rotationFactor = positionOffset.m_posit.m_y * 1.57;
-
-            startPoints[i][j].m_x = (i-mid)*CAST_STEP + positionOffset.m_posit.m_x;
-            startPoints[i][j].m_y = positionOffset.m_posit.m_y;
-            startPoints[i][j].m_z = (j-mid)*CAST_STEP + positionOffset.m_posit.m_z;
-
-            endPoints[i][j].m_x = (i - mid)*CAST_STEP + positionOffset.m_posit.m_x + rotationFactor * positionOffset.m_front.m_x;
-            endPoints[i][j].m_y = -0.1f;
-            endPoints[i][j].m_z = (j - mid)*CAST_STEP + positionOffset.m_posit.m_z + rotationFactor * positionOffset.m_front.m_z;
-        }
-    }
-}

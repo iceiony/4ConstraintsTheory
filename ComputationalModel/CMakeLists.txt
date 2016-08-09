@@ -58,18 +58,31 @@ set(GRAPHICS_FILES
         rendering/RayCastEntity.cpp
     )
 
-set(SOURCE_FILES
+set(EXHAUSTIVE_SEARCH
         Util.cpp
         ExhaustiveSimulation.cpp
         PhysicsUtils.cpp
         ${LIB3DS}
     )
 
-add_executable(ExtractSurfacePointsGUI.exe ExtractSurfacePointsGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
+set(VISUAL_SEARCH
+        Util.cpp
+        VisualSimulation.cpp
+        PhysicsUtils.cpp
+        ${LIB3DS}
+        )
+
+#utility aplicaiton for extracting 3D model surface points
+add_executable(ExtractSurfacePointsGUI.exe ExtractSurfacePointsGUI.cpp ${EXHAUSTIVE_SEARCH} ${GRAPHICS_FILES})
 target_link_libraries(ExtractSurfacePointsGUI.exe dMath dScene dCustomJoints dContainers dAnimation )
 
-add_executable(ExhaustiveSearchGUI.exe ExhaustiveSearchGUI.cpp ${SOURCE_FILES} ${GRAPHICS_FILES})
+#exhaustive search simulation for finding tool-object interaction
+add_executable(ExhaustiveSearchGUI.exe ExhaustiveSearchGUI.cpp ${EXHAUSTIVE_SEARCH} ${GRAPHICS_FILES})
 target_link_libraries(ExhaustiveSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation )
 
-add_executable(ExhaustiveSearch.exe ExhaustiveSearch.cpp ${SOURCE_FILES})
+add_executable(ExhaustiveSearch.exe ExhaustiveSearch.cpp ${EXHAUSTIVE_SEARCH})
 target_link_libraries(ExhaustiveSearch.exe dMath dScene dCustomJoints dContainers dAnimation )
+
+#visual search simulation for finding tool-object interaction
+add_executable(VisualSearchGUI.exe VisualSearchGUI.cpp ${VISUAL_SEARCH} ${GRAPHICS_FILES})
+target_link_libraries(VisualSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation )

@@ -6,6 +6,8 @@
 #include "GraphicsEntity.h"
 #include "RayCastEntity.h"
 #include <vector>
+#include <array>
+
 using namespace std;
 
 RayCastEntity::RayCastEntity(vector<dVector> *startPoints, vector<dVector> *intersectionPoints)
@@ -24,35 +26,50 @@ void RayCastEntity::Render(dFloat timeStep, GraphicsManager *const scene) const{
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //intersection points
-    glColor4f(1.0f, 0.0f, 0.0f,0.6f);
+    glColor4f(1.0f, 0.0f, 0.0f,0.4f);
     glPointSize(6.0f);
     glBegin(GL_POINTS);
 
-    for (int i = startPoints->size() - 1; i >= 0; i--) {
-        if(i==0){
-            glColor4f(0.0f, 0.0f, 1.0f, 1.0f); //mark starting point for visual feedback
+    unsigned startIdx = indices && indices->at(0) != -1  ? indices->at(0) : 0 ;
+    if(indices && indices->at(0) != -1)
+        for (int i : *indices) {
+            glVertex3f(intersectionPoints->at(i).m_x, intersectionPoints->at(i).m_y, intersectionPoints->at(i).m_z);
+        }
+    else
+        for (auto i = intersectionPoints->size() - 1; i > 0; i--) {
+            glVertex3f(intersectionPoints->at(i).m_x, intersectionPoints->at(i).m_y, intersectionPoints->at(i).m_z);
         }
 
-        glVertex3f(intersectionPoints->at(i).m_x, intersectionPoints->at(i).m_y, intersectionPoints->at(i).m_z);
-    }
+    glColor4f(0.0f, 0.0f, 1.0f, 1.0f); //mark starting point for visual feedback
+    glVertex3f(intersectionPoints->at(startIdx).m_x, intersectionPoints->at(startIdx).m_y, intersectionPoints->at(startIdx).m_z);
 
     glEnd();
     glPointSize(1.0f);
-
     glColor3f(1.0f, 1.0f, 1.0f);
 
+    if (!startPoints) return;
+
     //raycast lines
-    glColor4f(0.0f, 0.7f, 0.7f, 0.9f);
+    glColor4f(0.0f, 0.7f, 0.7f, 0.3f);
     glBegin(GL_LINES);
 
-    for (int i = startPoints->size() - 1; i >= 0; i--) {
-        glVertex3f(startPoints->at(i).m_x, startPoints->at(i).m_y, startPoints->at(i).m_z);
-        glVertex3f(intersectionPoints->at(i).m_x, intersectionPoints->at(i).m_y, intersectionPoints->at(i).m_z);
-    }
+    if(indices && indices->at(0) != -1)
+        for (int i : *indices) {
+            glVertex3f(startPoints->at(i).m_x, startPoints->at(i).m_y, startPoints->at(i).m_z);
+            glVertex3f(intersectionPoints->at(i).m_x, intersectionPoints->at(i).m_y, intersectionPoints->at(i).m_z);
+        }
+    else
+        for (int i = startPoints->size() - 1; i >= 0; i--) {
+            glVertex3f(startPoints->at(i).m_x, startPoints->at(i).m_y, startPoints->at(i).m_z);
+            glVertex3f(intersectionPoints->at(i).m_x, intersectionPoints->at(i).m_y, intersectionPoints->at(i).m_z);
+        }
 
     glDisable(GL_BLEND);
     glEnd();
-
-
 }
+
+void RayCastEntity::SetSubSurface(array<int, VIEW_DIMENSION * VIEW_DIMENSION> *indices) {
+    this->indices = indices;
+}
+
 

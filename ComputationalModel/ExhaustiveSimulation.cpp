@@ -230,7 +230,6 @@ void ExhaustiveSimulation::NextScenario() {
     NewtonWaitForUpdateToFinish(m_world);
     NewtonInvalidateCache(m_world);
 
-    //add small force so invalid collisions to behave chaotically
     NewtonBodySetVelocity(m_toolBody, &dVector(.0f)[0]);
     NewtonBodySetOmega(m_toolBody, &dVector(.0f)[0]);
 

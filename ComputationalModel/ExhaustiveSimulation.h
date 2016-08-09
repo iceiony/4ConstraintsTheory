@@ -6,8 +6,8 @@
 #include <iostream>
 #include <fstream>
 
-#ifndef __SIMULATION__
-#define __SIMULATION__
+#ifndef __EXHAUSTIVE_SIMULATION__
+#define __EXHAUSTIVE_SIMULATION__
 
 #define MASS  10.0f
 

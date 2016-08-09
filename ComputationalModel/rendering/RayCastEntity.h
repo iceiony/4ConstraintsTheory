@@ -5,6 +5,8 @@
 #include "GraphicsEntity.h"
 #include "GraphicsManager.h"
 #include <vector>
+#include <array>
+
 using namespace std;
 
 
@@ -17,5 +19,9 @@ private:
 public:
     RayCastEntity(vector<dVector> *startPoints, vector<dVector> *intersectionPoints);
     virtual void Render(dFloat timeStep, GraphicsManager *const scene) const;
+
+    void SetSubSurface(array<int, VIEW_DIMENSION * VIEW_DIMENSION> *indices);
+
+    array<int, VIEW_DIMENSION * VIEW_DIMENSION> *indices = nullptr;
 };
 #endif //MATLABNEWTONDYNAMICS_RAYCASTENTITY_H
