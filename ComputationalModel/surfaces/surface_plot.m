@@ -1,4 +1,4 @@
-points = load('surface_obj2.csv');
+points = load('obj.csv');
 VIEW_DIM = sqrt(length(points));
 
 %adjust coordinates to matlab's rendering 

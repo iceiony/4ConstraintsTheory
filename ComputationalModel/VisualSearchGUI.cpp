@@ -4,20 +4,20 @@
 #include "VisualSimulation.h"
 
 int main(int argc, char * argv[]) {
-//    const char *objModelFileName  = "../ToolAndObjectModels/obj11.3ds";
-//    const char *toolModelFileName = "../ToolAndObjectModels/obj12.3ds";
-    const char *objModelFileName  = "obj51.3ds";
-    const char *toolModelFileName = "obj52.3ds";
+    const char *objModelFileName  = "../ToolAndObjectModels/obj11.3ds";
+    const char *toolModelFileName = "../ToolAndObjectModels/obj12.3ds";
+    // const char *objModelFileName  = "obj51.3ds";
+    // const char *toolModelFileName = "obj52.3ds";
 
     if(argc==3){
-        std::cout << "Loading models from input parameters\n\r";
+        std::cout << "Loading models from input parameters\r\n";
         objModelFileName = argv[1];
         toolModelFileName = argv[2];
     }
-    else std::cout << "Using default tool and object models\n\r";
+    else std::cout << "Using default tool and object models\r\n";
 
-    std::cout << "Object model : " << objModelFileName << "\n\r";
-    std::cout << "Tool   model : " << toolModelFileName << "\n\r";
+    std::cout << "Object model : " << objModelFileName << "\r\n";
+    std::cout << "Tool   model : " << toolModelFileName << "\r\n";
 
 
     //run exhaustive simulation in graphics mode
@@ -54,10 +54,13 @@ int main(int argc, char * argv[]) {
 //                graphicsManager.TogglePause();
                 sim.NextSubSurface();
                 correlationFound = sim.CorrelateSubSurfaces();
-                if(correlationFound)
-                    sim.RotateToConfiguration();
+                if(correlationFound){
+                    sim.TryConfiguration();
+                    graphicsManager.TogglePause();
+                }
                 else if(!sim.HasNextSubSurface()) {
                     sim.PrepareNextScenario();
+//                    graphicsManager.TogglePause();
                 }
             }
             else{

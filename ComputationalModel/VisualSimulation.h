@@ -16,15 +16,6 @@ using namespace std;
 
 #define maxIterationCount 1
 
-#define minYaw 0
-#define maxYaw 360
-
-#define minPitch 0
-#define maxPitch 360
-
-#define minRoll 0
-#define maxRoll 360
-
 #define rotationStep 45
 #define positionStep 0.02f
 #define marginFactor 3.0f
@@ -37,8 +28,8 @@ private:
     NewtonBody *m_objBody;
     NewtonBody *m_floorBody;
 
-    dVector m_objInitialPos;
-    dVector m_toolInitialPos;
+    dVector m_objInitialPos = dVector(0.0f);
+    dVector m_toolInitialPos = dVector(.0f,.0f,2.0f) ;
 
     dFloat m_toolYaw = -rotationStep;
     dFloat m_toolPitch;
@@ -99,7 +90,7 @@ public:
     array<int,VIEW_DIMENSION * VIEW_DIMENSION> m_toolSubView;
     array<int,VIEW_DIMENSION * VIEW_DIMENSION> m_objSubView;
 
-    int m_subSurfaceAttempt;
+    int m_subSurfaceAttempt = 0;
 
     void NextSubSurface();
     bool HasNextSubSurface();
@@ -108,6 +99,6 @@ public:
 
     bool CorrelateSubSurfaces();
 
-    void RotateToConfiguration();
+    void TryConfiguration();
 };
 #endif

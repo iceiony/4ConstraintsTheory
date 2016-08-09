@@ -5,7 +5,9 @@
 #include <array>
 #include "VisualSimulation.h"
 #include "PhysicsUtils.h"
+#include "statistics.h"
 
+using namespace alglib;
 using namespace std;
 
 VisualSimulation::VisualSimulation(const char *const outputFile) : m_world(NewtonCreate()) {
@@ -81,7 +83,7 @@ NewtonBody *VisualSimulation::LoadModel(const char *fileName) {
                                                                                      nullptr, nullptr);
     NewtonCollision *const compound = NewtonCreateCompoundCollisionFromMesh(m_world, convexApproximation, 0.001f, 0, 0);
 
-    NewtonBody *modelBody = CreateSimpleBody(m_world, NULL, MASS, dGetIdentityMatrix(), compound, 0);
+    NewtonBody *modelBody = CreateSimpleBody(m_world, NULL, MASS, dGetZeroMatrix() , compound, 0);
 
     NewtonDestroyCollision(compound);
     NewtonMeshDestroy(convexApproximation);
@@ -96,12 +98,6 @@ NewtonBody *VisualSimulation::LoadTool(const char *fileName) {
     // set the force and torque call back function
     NewtonBodySetForceAndTorqueCallback(m_toolBody, MoveTool);
 
-    dVector minP, maxP;
-    CalculateAABB(m_toolBody, minP, maxP);
-
-    m_toolInitialPos = dVector(0.0f, .0f, 2.0f);
-    m_toolInitialPos.m_y = .0f - minP.m_y;
-
     ResetToolPositionMatrix();
 
     return m_toolBody;
@@ -113,12 +109,7 @@ NewtonBody *VisualSimulation::LoadObject(const char *fileName) {
     // set the force and torque call back function
     NewtonBodySetForceAndTorqueCallback(m_objBody, PhysicsApplyGravityForce);
 
-    //position lowest point on the floor
-    dVector minP, maxP;
-    CalculateAABB(m_objBody, minP, maxP);
-
-    m_objInitialPos = dVector(.0f);
-    m_objInitialPos.m_y = .0f - minP.m_y;
+    ResetObjectPositionMatrix();
 
     return m_objBody;
 }
@@ -141,10 +132,10 @@ void VisualSimulation::PrepareNextScenario() {
 
     //get raycast surface for entire AABB block
     dVector minP,maxP;
-    NewtonBodyGetAABB(m_toolBody, &minP[0], &maxP[0]);
+    CalculateAABB(m_toolBody, minP, maxP);
     std::tie(m_toolRowCount,m_toolColCount) = GetRaycastSurfaces(minP,maxP,m_toolRayStart,m_toolRayEnd);
 
-    NewtonBodyGetAABB(m_objBody, &minP[0], &maxP[0]);
+    CalculateAABB(m_objBody, minP, maxP);
     std::tie(m_objRowCount,m_objColCount) = GetRaycastSurfaces(minP,maxP,m_objRayStart,m_objRayEnd);
 
     m_subSurfaceAttempt = 0;
@@ -210,16 +201,37 @@ float VisualSimulation::GetTimeStep() {
 }
 
 void VisualSimulation::ResetObjectPositionMatrix() {
-
     dMatrix origin(dYawMatrix(radians(m_objYaw)));
     origin.m_posit = m_objInitialPos;
     NewtonBodySetMatrix(m_objBody, &origin[0][0]);
+
+    //position lowest point on the floor
+    dVector minP, maxP;
+    CalculateAABB(m_objBody, minP, maxP);
+
+    if(minP.m_y<0){
+        NewtonBodyGetMatrix(m_objBody,&origin[0][0]);
+        origin.m_posit.m_y += .0f - minP.m_y;
+        NewtonBodySetMatrix(m_objBody, &origin[0][0]);
+    }
+
 }
 
 void VisualSimulation::ResetToolPositionMatrix() {
     dMatrix origin(dPitchMatrix(radians(m_toolPitch)) * dYawMatrix(radians(m_toolYaw)));
     origin.m_posit = m_toolInitialPos;
     NewtonBodySetMatrix(m_toolBody, &origin[0][0]);
+
+    //position lowest point on the floor
+    dVector minP, maxP;
+    CalculateAABB(m_toolBody, minP, maxP);
+
+    if(minP.m_y<0){
+        NewtonBodyGetMatrix(m_toolBody,&origin[0][0]);
+        origin.m_posit.m_y += .0f - minP.m_y;
+        NewtonBodySetMatrix(m_toolBody, &origin[0][0]);
+    }
+
 }
 
 std::tuple<int, int> VisualSimulation::GetRaycastSurfaces(dVector minP, dVector maxP, vector<dVector> *start, vector<dVector> *end) {
@@ -232,8 +244,8 @@ std::tuple<int, int> VisualSimulation::GetRaycastSurfaces(dVector minP, dVector 
     for (float r = minP.m_y; r < maxP.m_y ; r += CAST_STEP) {
         for(float c = minP.m_z; c < maxP.m_z ; c += CAST_STEP){
             //initialise ray at a slight angle downwards
-            dVector startPoint = dVector(-1.0f,r + 0.2f,c);
-            dVector endPoint = dVector(+1.0f,r - 0.2f,c);
+            dVector startPoint = dVector(-1.5f,r + 0.2f,c);
+            dVector endPoint = dVector(+1.5f,r - 0.2f,c);
 
             //calculate intersection points
             dFloat scaleParam(1.1f);
@@ -258,13 +270,13 @@ void VisualSimulation::NextSubSurface() {
 
     m_toolMinX += rand() % ( m_toolColCount - VIEW_DIMENSION);
     m_toolMinY += rand() % ( m_toolRowCount - VIEW_DIMENSION);
-    m_toolMinX = m_toolMinX + VIEW_DIMENSION > m_toolColCount ? m_toolMinX = 0 : m_toolMinX;
-    m_toolMinY = m_toolMinY + VIEW_DIMENSION > m_toolRowCount ? m_toolMinY = 0 : m_toolMinY;
+    m_toolMinX = m_toolMinX + VIEW_DIMENSION > m_toolColCount ? 0 : m_toolMinX;
+    m_toolMinY = m_toolMinY + VIEW_DIMENSION > m_toolRowCount ? 0 : m_toolMinY;
 
     m_objMinX += rand() % ( m_objColCount - VIEW_DIMENSION);
     m_objMinY += rand() % ( m_objRowCount - VIEW_DIMENSION);
-    m_objMinX = m_objMinX + VIEW_DIMENSION > m_objColCount ? m_objMinX = 0 : m_objMinX;
-    m_objMinY = m_objMinY + VIEW_DIMENSION > m_objRowCount ? m_objMinY = 0 : m_objMinY;
+    m_objMinX = m_objMinX + VIEW_DIMENSION > m_objColCount ? 0 : m_objMinX;
+    m_objMinY = m_objMinY + VIEW_DIMENSION > m_objRowCount ? 0 : m_objMinY;
 
     //select indices of the points defining the sub-surfaces
     m_toolSubView.fill(0);
@@ -279,7 +291,7 @@ void VisualSimulation::NextSubSurface() {
 
 
 bool VisualSimulation::HasNextSubSurface() {
-    return m_subSurfaceAttempt > 5;
+    return m_subSurfaceAttempt <= 20;
 }
 
 void VisualSimulation::ResetStateAndPosition() {
@@ -297,10 +309,59 @@ void VisualSimulation::ResetStateAndPosition() {
 }
 
 bool VisualSimulation::CorrelateSubSurfaces() {
-    return true;
+//    std::ofstream objFile;
+//    std::ofstream toolFile;
+//    objFile.open("./surfaces/obj.csv");
+//    toolFile.open("./surfaces/tool.csv");
+
+    real_1d_array objX,objY,objZ;
+    real_1d_array toolX,toolY,toolZ;
+    
+    unsigned total = VIEW_DIMENSION*VIEW_DIMENSION;
+    
+    objX.setlength(total);
+    objY.setlength(total);
+    objZ.setlength(total);
+
+    toolX.setlength(total);
+    toolY.setlength(total);
+    toolZ.setlength(total);
+
+    for(int i=0;i<total;i++){
+        dVector objPoint = m_objRayEnd->at(m_objSubView[i]);
+        dVector toolPoint = m_toolRayEnd->at(m_toolSubView[i]);
+
+//       objFile << objPoint.m_x << ',' << objPoint.m_y << ',' << objPoint.m_z << "\n";
+//       toolFile << toolPoint.m_x << ',' << toolPoint.m_y << ',' << toolPoint.m_z << "\n";
+
+        objX[i] = objPoint.m_x;
+        objY[i] = objPoint.m_y;
+        objZ[i] = objPoint.m_z;
+
+        toolX[i] = toolPoint.m_x;
+        toolY[i] = toolPoint.m_y;
+        toolZ[i] = toolPoint.m_z;
+
+    }
+
+    double xCorr = pearsoncorr2(objX,toolX);
+    double yCorr = pearsoncorr2(objY,toolY);
+    double zCorr = pearsoncorr2(objZ,toolZ);
+    double fullCorr = xCorr * yCorr * zCorr;
+
+//    objFile.flush();
+//    objFile.close();
+//    toolFile.flush();
+//    toolFile.close();
+
+    if(fullCorr < -0.2f){
+        cout << fullCorr << "\r\n";
+    }
+
+    return fullCorr < -0.2f;
 }
 
-void VisualSimulation::RotateToConfiguration() {
+void VisualSimulation::TryConfiguration() {
 
 }
 

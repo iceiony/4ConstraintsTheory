@@ -44,8 +44,10 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
 include_directories("./")
 include_directories("rendering")
 include_directories("lib3ds")
+include_directories("alglib/src")
 
 FILE(GLOB LIB3DS "lib3ds/*.c")
+FILE(GLOB ALGLIB "alglib/src/*.cpp")
 
 set(GRAPHICS_FILES
         rendering/GraphicsManager.cpp
@@ -70,6 +72,7 @@ set(VISUAL_SEARCH
         VisualSimulation.cpp
         PhysicsUtils.cpp
         ${LIB3DS}
+        ${ALGLIB}
         )
 
 #utility aplicaiton for extracting 3D model surface points
