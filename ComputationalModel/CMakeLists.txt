@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.2)
 project(MatlabNewtonDynamics)
 
 
@@ -14,7 +14,7 @@ add_subdirectory("newton-dynamics")
 
 find_package( GLFW3 REQUIRED)
 include_directories(${GLFW3_INCLUDE_DIR})
-link_libraries(${GLFW3_LIBRARY})
+#link_libraries(${GLFW3_LIBRARY})
 
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
@@ -26,7 +26,8 @@ link_libraries(${GLEW_LIBRARY})
 
 find_package(TinyXML REQUIRED)
 include_directories(${TinyXML_INCLUDE_DIRS})
-link_libraries(${TinyXML_LIBRARIES})
+
+find_package(Threads)
 
 if(APPLE)
         find_library(COCOA NAMES Cocoa)
@@ -39,7 +40,7 @@ if(APPLE)
         link_Libraries(${COREVIDEO})
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
 include_directories("./")
 include_directories("rendering")
@@ -77,15 +78,15 @@ set(VISUAL_SEARCH
 
 #utility aplicaiton for extracting 3D model surface points
 add_executable(ExtractSurfacePointsGUI.exe ExtractSurfacePointsGUI.cpp ${EXHAUSTIVE_SEARCH} ${GRAPHICS_FILES})
-target_link_libraries(ExtractSurfacePointsGUI.exe dMath dScene dCustomJoints dContainers dAnimation )
+target_link_libraries(ExtractSurfacePointsGUI.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
 
 #exhaustive search simulation for finding tool-object interaction
 add_executable(ExhaustiveSearchGUI.exe ExhaustiveSearchGUI.cpp ${EXHAUSTIVE_SEARCH} ${GRAPHICS_FILES})
-target_link_libraries(ExhaustiveSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation )
+target_link_libraries(ExhaustiveSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
 
 add_executable(ExhaustiveSearch.exe ExhaustiveSearch.cpp ${EXHAUSTIVE_SEARCH})
-target_link_libraries(ExhaustiveSearch.exe dMath dScene dCustomJoints dContainers dAnimation )
+target_link_libraries(ExhaustiveSearch.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
 
 #visual search simulation for finding tool-object interaction
 add_executable(VisualSearchGUI.exe VisualSearchGUI.cpp ${VISUAL_SEARCH} ${GRAPHICS_FILES})
-target_link_libraries(VisualSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation )
+target_link_libraries(VisualSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
