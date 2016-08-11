@@ -5,6 +5,47 @@
 
 \usepackage{graphicx}
 
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{darkgray}{rgb}{.35,.25,.35}
+\definecolor{lightgray}{rgb}{.6,.6,.6}
+
+%\lstdefinelanguage{bash}{
+%  keywords={git,update,apt-get,submodule,init,clone},
+%  keywordstyle=\color{cyan}\bfseries,
+%  ndkeywords={return, null},
+%  ndkeywordstyle=\color{red}\bfseries,
+%  identifierstyle=\color{darkgray},
+%  sensitive=false,
+%  comment=[l]{//},
+%  morecomment=[s]{/*}{*/},
+%  commentstyle=\color{lightgray}\ttfamily,
+%  stringstyle=\color{red}\ttfamily,
+%  morestring=[b]',
+%  morestring=[b]"
+%}
+\lstdefinelanguage{bash}{
+  basicstyle=\scriptsize\ttfamily\color{white},
+  backgroundcolor=\color{lightgray},
+  commentstyle = \color{darkgray},
+  keywordstyle = \color{white},
+  rulecolor    = \color{black},
+  stringstyle  = \color{white}
+  commentstyle=\color{lightgray}\ttfamily
+}
+
+\lstset{
+   language=bash,
+   extendedchars=true,
+   basicstyle=\scriptsize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   tabsize=2,
+   showtabs=false,
+   captionpos=b,
+}
+
+
 \begin{document}
 
 \section{Review : Contour Matching Techniques}
@@ -27,7 +68,7 @@ It is not necessary for the whole geometry of objects to fit. It is sufficient f
 
 \subsubsection{Shape Description and Matching}
 
-We consider techniques of shape similarity in matching object parts. Shape analysis techniques have traditionally been engaged in image processing and robot vision for detecting and tracking objects of similar features. The last two decades have provided many approaches for this type of problem \cite{loncaric1998,zhang2004,veltkamp2001,robert2012}. Fundamentally, the callenge lies in detecting similarit even as objects undergo geometric transformations (i.e. rotation,translation,scalling and shearing).     
+We consider techniques of shape similarity in matching object parts. Shape analysis techniques have traditionally been engaged in image processing and robot vision for detecting and tracking objects of similar features. The last two decades have provided many approaches for this type of problem \cite{loncaric1998,zhang2004,veltkamp2001,robert2012}. Fundamentally, the challenge lies in detecting similarity even as objects undergo geometric transformations (i.e. rotation,translation,scaling and shearing).     
 
 Zhang\cite{zhang2004} et al. classify shape similarity into contour-based and region-based techniques. These are further divided into structural and global approaches. A comprehensive list and structure can be found in fig. \ref{fig:shape_similarity}.
 
@@ -38,23 +79,81 @@ Zhang\cite{zhang2004} et al. classify shape similarity into contour-based and re
   \label{fig:shape_similarity}
 \end{figure}  
 
-Contour techniques asses shape similarity by extracting features from the edge of detected objects. In comparison, region techniques work by assessing surface level information such as: colour features, gradient changes and surface medial. Techniques from both approaches have justification in human perception \cite{chatbri2016}. Nontheless, our use case excludes most reagion-based approaches. Tool parts must corespond to shape gaps. It is hard to consider gaps as having the surface information needed for region-based matching.
+Contour techniques asses shape similarity by extracting features from the edge of detected objects. In comparison, region techniques work by assessing surface level information such as: colour features, gradient changes and surface medial. Techniques from both approaches have justification in human perception \cite{chatbri2016}. Nonetheless, our use case excludes most region-based approaches. Tool parts must correspond to shape gaps. It is hard to consider gaps as having the surface information needed for region-based matching.
 
-In structural appraches, shapes are considered as composed out of primitives. In the case of contour techniques, primitives are segments on the boundry of an object. The organisation of primitives can be linear (feature vector\cite{zhang2004}) or hierarchical (tree like structures\cite{zhu2015}). Two objects are considered similiar when they have the same primitive structures (or features). In comparison, global approaches make use of shapes as a whole when assesing similarity. 
+In structural approaches, shapes are considered as composed out of primitives. In the case of contour techniques, primitives are segments on the boundary of an object. The organisation of primitives can be linear (feature vector\cite{zhang2004}) or hierarchical (tree like structures\cite{zhu2015}). Two objects are considered similar when they have the same primitive structures (or features). In comparison, global approaches make use of shapes as a whole when assessing similarity. 
 
 Both structural and global approaches have justification in human perception \cite{zhang2004}. Human subjects show a preference for features even when other shape descriptors are available \cite{chatbri2016}. At the same time, global shape perception seems to preceed local feature detection\cite{navon1977}. 
 
-Matching human behaviour requires more insight into human visual perception. Loncaric\cite{loncaric1998} describes some theories of human visual perception with interest in image processing. In a tool use scenario, emphasys should be given to theories describing perception as volumetric, such as through the use of generalised cylinders (geons\cite{dickinson2014}). Such insight may better explain human tool performance, but will however remain for future work.    
+Matching human behaviour requires more insight into human visual perception. Loncaric\cite{loncaric1998} describes some theories of human visual perception with interest in image processing. In a tool use scenario, emphasis should be given to theories describing perception as volumetric, such as through the use of generalised cylinders (geons\cite{dickinson2014}). Such insight may better explain human tool performance, but will however remain for future work.    
 
 \subsubsection{Limitations}
 As previously remarked, contour based techniques contain promising approaches for solving tool-object matching problems. It is important to consider some of the limitations of such techniques, especially with regards to human ability. 
 
-Global contour matching techniques are sensitive to occlusion (i.e. part of the object is hidden from the view point by some obstacle). In such cases, structural approaches are better suited to identify shapes from visible parts. Human perception is regarded as able to recognise objects even from sparse information or occluded perspective \cite{loncaric1998}. In solving tool use scenarios, it is important to consider a subject's visual perpective ( point of view ). The geometry of objects may not be fully visible. 
+Global contour matching techniques are sensitive to occlusion (i.e. part of the object is hidden from the view point by some obstacle). In such cases, structural approaches are better suited to identify shapes from visible parts. Human perception is regarded as able to recognise objects even from sparse information or occluded perspective \cite{loncaric1998}. In solving tool use scenarios, it is important to consider a subject's visual perspective ( point of view ). The geometry of objects may not be fully visible. 
 
 Most shape similarity techniques are tailored to analysing image based information (i.e. 2D projections of reality). Human perception however also makes use of depth related knowledge. As tool use encompasses real world geometric constraints, any contour based approach would have to be adaptable to 3D information ( e.g. point clouds ). To simplify the problem of visual analysis, surface point coordinates are extracted directly from the physics simulator. 
 
 We next consider a novel and simple approach for matching point surfaces. It avoids most of the problems enumerated above and scales easily to multi-dimensional data.  
 
+\section{Appendix 1 - Compilation}
+The following section describes how to compile and run the computational model on Windows and Linux operating systems. 
+Original source-code and documentation can be found at \url{https://github.com/iceiony/4ConstraintsTheory}
+\subsection{Linux}
+\begin{enumerate}
+  \item Install \textbf{git} and clone the code repository: 
+    \begin{lstlisting}[language=bash]
+  apt-get update
+  apt-get install git-core
+
+  git clone git@github.com:iceiony/4ConstraintsTheory.git
+  cd 4ConstraintsTheory
+  git submodule init
+  git submodule update
+    \end{lstlisting}
+
+    If the folder ./ComputationalModel/newton-dynamics is missing, run the following commands :
+    \begin{lstlisting}[language=bash]
+  cd ./ComputationalModel
+  git clone --depth 1 git@github.com:MADEAPPS/newton-dynamics.git
+    \end{lstlisting}
+
+  \item Install \textbf{cmake version 3.2} (which is not available on Ubuntu by default): 
+    \begin{lstlisting}[language=bash]
+    apt-get install software-properties-common
+    apt-get-repository ppa:george-edison55/cmake-3.x
+    apt-get update
+    apt-get install cmake
+    \end{lstlisting}
+
+  \item Install \textbf{GLFW3} library:
+    \begin{lstlisting}[language=bash]
+    add-apt-repository ppa:keithw/glfw3
+    apt-get update
+    apt-get install libglfw3
+    apt-get install libglfw3-dev
+    \end{lstlisting}
+
+  \item Install \textbf{GLEW} library:
+    \begin{lstlisting}[language=bash]
+    apt-get install libglew-dev
+    \end{lstlisting}
+    
+
+  \item Install \textbf{tinyxml} library:
+    \begin{lstlisting}[language=bash]
+    apt-get install libtinyxml-dev
+    \end{lstlisting}
+    
+  \item The computational model is located in the ./ComputationalModel subfolder. To compile run:
+    \begin{lstlisting}[language=bash]
+    cmake .
+    make -j4
+    \end{lstlisting}
+
+\end{enumerate}
+
+If the compilation was successful the following 
 
 \printbibliography
 \end{document}
