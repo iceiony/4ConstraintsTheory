@@ -12,35 +12,48 @@ SET(NEWTON_DEMOS_SANDBOX OFF CACHE BOOL "Disable sandbox demo build" FORCE)
 add_subdirectory("newton-dynamics")
 #add_subdirectory("DEMO")
 
-find_package( GLFW3 REQUIRED)
+set(CMAKE_CXX_FLAGS "-std=c++11")
+
+find_package(GLFW3 REQUIRED)
 include_directories(${GLFW3_INCLUDE_DIR})
-#link_libraries(${GLFW3_LIBRARY})
 
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
-link_libraries(${OPENGL_LIBRARIES})
 
 find_package(GLEW)
 include_directories(${GLEW_INCLUDE_DIR})
-link_libraries(${GLEW_LIBRARY})
 
 find_package(TinyXML REQUIRED)
 include_directories(${TinyXML_INCLUDE_DIRS})
 
 find_package(Threads)
 
+
+set(TARGET_LIBRARIES
+        dMath
+        dScene
+        dCustomJoints
+        dContainers
+        dAnimation
+        ${GLFW3_LIBRARY}
+        ${GLEW_LIBRARY}
+        ${TinyXML_LIBRARIES}
+        ${OPENGL_LIBRARIES}
+        Threads::Threads
+        )
+
 if(APPLE)
         find_library(COCOA NAMES Cocoa)
-        link_libraries(${COCOA})
-
         find_library(IOKIT_FRAMEWORK NAMES IOKit)
-        link_libraries(${IOKIT_FRAMEWORK})
-
         find_library(COREVIDEO CoreVideo)
-        link_Libraries(${COREVIDEO})
+
+        list(APPEND TARGET_LIBRARIES
+                ${COCOA}
+                ${IOKIT_FRAMEWORK}
+                ${COREVIDEO}
+                )
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
 
 include_directories("./")
 include_directories("rendering")
@@ -78,15 +91,15 @@ set(VISUAL_SEARCH
 
 #utility aplicaiton for extracting 3D model surface points
 add_executable(ExtractSurfacePointsGUI.exe ExtractSurfacePointsGUI.cpp ${EXHAUSTIVE_SEARCH} ${GRAPHICS_FILES})
-target_link_libraries(ExtractSurfacePointsGUI.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
+target_link_libraries(ExtractSurfacePointsGUI.exe ${TARGET_LIBRARIES})
 
 #exhaustive search simulation for finding tool-object interaction
 add_executable(ExhaustiveSearchGUI.exe ExhaustiveSearchGUI.cpp ${EXHAUSTIVE_SEARCH} ${GRAPHICS_FILES})
-target_link_libraries(ExhaustiveSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
+target_link_libraries(ExhaustiveSearchGUI.exe ${TARGET_LIBRARIES})
 
 add_executable(ExhaustiveSearch.exe ExhaustiveSearch.cpp ${EXHAUSTIVE_SEARCH})
-target_link_libraries(ExhaustiveSearch.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
+target_link_libraries(ExhaustiveSearch.exe ${TARGET_LIBRARIES})
 
 #visual search simulation for finding tool-object interaction
 add_executable(VisualSearchGUI.exe VisualSearchGUI.cpp ${VISUAL_SEARCH} ${GRAPHICS_FILES})
-target_link_libraries(VisualSearchGUI.exe dMath dScene dCustomJoints dContainers dAnimation Threads::Threads ${TinyXML_LIBRARIES})
+target_link_libraries(VisualSearchGUI.exe ${TARGET_LIBRARIES})
