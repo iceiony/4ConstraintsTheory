@@ -68,31 +68,23 @@ typedef long long unsigned64;
 	// opengl stuff
 	#include <GL/glew.h>
 	#include <GL/wglew.h>
-	#include <gl/gl.h>
+	#include <gl/>
 	#include <gl/glu.h>
 #elif defined(__APPLE__)
 #include <CoreFoundation/CoreFoundation.h>
 #include <unistd.h>
 #include <GL/glew.h>
 #include <OpenGL/OpenGL.h>
-#include <OpenGL/OpenGL.h>
 
 // audio library support
-#include <OpenAL/OpenAL.h>
-#include <OpenAL/OpenAL.h>
-#elif (defined (_POSIX_VER) || defined (_POSIX_VER_64))
-#include <stdlib.h>
-	#include <unistd.h>
-	#include <time.h>
-	#include <GL/glxew.h>
-	#include <GL/glew.h>
-	#include <GL/glu.h>
-	#include <GL/gl.h>
-
-	// audio library support
-	#include <AL/al.h>
-	#include <AL/alc.h>
 #else
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+#include <GL/glxew.h>
+#include <GL/glew.h>
+#include <GL/glu.h>
+#include <GL/gl.h>
 #endif
 
 #ifdef _MSC_VER

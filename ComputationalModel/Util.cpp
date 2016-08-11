@@ -60,8 +60,6 @@ void GetWorkingFileName (const char* const name, char* const outPathName)
 		*end = 0;
 		sprintf (outPathName, "%sapplications/media/%s", appPath, name);
 
-	#else
-		#error  "error: need to implement \"GetWorkingFileName\" here for this platform"
 #endif
 }
 
