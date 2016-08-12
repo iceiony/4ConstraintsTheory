@@ -4,20 +4,39 @@
 #   TINYXML_FOUND       - True if TinyXML found.
 #   TINYXML_INCLUDE_DIR - where to find tinyxml.h, etc.
 #   TINYXML_LIBRARIES   - List of libraries when using TinyXML.
-#
 
-IF( TinyXML_INCLUDE_DIR )
-    # Already in cache, be silent
-    SET( TinyXML_FIND_QUIETLY TRUE )
-ENDIF( TinyXML_INCLUDE_DIR )
+if (WIN32)
+    find_path( TINYXML_INCLUDE_DIR
+            NAMES
+                "tinyxml.h"
+            PATHS
+                ${PROJECT_SOURCE_DIR}/tinyxml/include
+            )
+    if(ARCH STREQUAL "x86")
+        find_library( TinyXML_LIBRARIES
+                NAMES
+                    tinyxml
+                PATHS
+                    ${PROJECT_SOURCE_DIR}/tinyxml/lib/win32
+                )
+    else()
+        find_library( TinyXML_LIBRARIES
+                NAMES
+                    tinyxml
+                PATHS
+                    ${PROJECT_SOURCE_DIR}/tinyxml/lib/win32
+                )
+    endif()
 
-FIND_PATH( TinyXML_INCLUDE_DIR "tinyxml.h" PATH_SUFFIXES "tinyxml" )
+else()
+#    FIND_PATH( TinyXML_INCLUDE_DIR "tinyxml.h" PATH_SUFFIXES "tinyxml" )
+#    FIND_LIBRARY( TinyXML_LIBRARIES NAMES "tinyxml" PATH_SUFFIXES "tinyxml" )
+endif()
 
-FIND_LIBRARY( TinyXML_LIBRARIES NAMES "tinyxml" PATH_SUFFIXES "tinyxml" )
 
 # handle the QUIETLY and REQUIRED arguments and set TINYXML_FOUND to TRUE if
 # all listed variables are TRUE
 INCLUDE( "FindPackageHandleStandardArgs" )
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( "TinyXML" DEFAULT_MSG TinyXML_INCLUDE_DIR TinyXML_LIBRARIES )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( "TinyXML" DEFAULT_MSG TINYXML_INCLUDE_DIR TinyXML_LIBRARIES )
 
-MARK_AS_ADVANCED( TinyXML_INCLUDE_DIR TinyXML_LIBRARIES )
+MARK_AS_ADVANCED( TINYXML_INCLUDE_DIR TinyXML_LIBRARIES )

@@ -19,7 +19,10 @@ set( _glfw3_HEADER_SEARCH_DIRS
 set( _glfw3_LIB_SEARCH_DIRS
   "/usr/lib"
   "/usr/local/lib"
-  "C:/Program Files (x86)/glfw/lib-msvc110" )
+  "C:/Program Files (x86)/glfw/lib-vc2015"
+  "C:/Program Files (x86)/glfw/lib-vc2013"
+  "C:/Program Files (x86)/glfw/lib-vc2012"
+        )
 
 # Check environment for root search directory
 set( _glfw3_ENV_ROOT $ENV{GLFW3_ROOT} )
