@@ -6,6 +6,9 @@
 #include "PhysicsUtils.h"
 
 #include <vector>
+#include <string>
+#include <sstream>
+
 using namespace std;
 
 #define OUTPUT_FILE "./surfaces/surface_obj"

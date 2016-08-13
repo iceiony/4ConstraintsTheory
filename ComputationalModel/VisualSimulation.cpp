@@ -153,7 +153,7 @@ NewtonBody *VisualSimulation::GetFloor() {
 }
 
 bool VisualSimulation::IsFinished() {
-//    return offsetRoll > maxRoll;
+	return false;
 }
 
 bool VisualSimulation::IterateScenario() {

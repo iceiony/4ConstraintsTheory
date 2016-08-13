@@ -3,6 +3,12 @@
 //
 #include "ExhaustiveSimulation.h"
 #include "PhysicsUtils.h"
+#include <iostream>
+#ifdef _MSC_VER
+#include <windows.h>
+#endif
+
+using namespace std;
 
 ExhaustiveSimulation::ExhaustiveSimulation(const char *const outputFile) : m_world(NewtonCreate()) {
 
@@ -43,7 +49,7 @@ void ExhaustiveSimulation::UpdatePhysics() {
             NewtonUpdate(m_world, this->GetTimeStep());
         }
         catch (...){
-            std::cout<<"Segmentation Fault ";
+            cout<<"Segmentation Fault ";
             PrintTime();
         }
     }
@@ -135,7 +141,7 @@ void ExhaustiveSimulation::ReadjustMinMaxLimits() {//set min/max values for simu
 
     minY = (objMinP.m_y - objPosition.m_y) + (toolPosition.m_y - toolMaxP.m_y);
     //set object above floor
-    minY = std::max(minY, .0f - toolMinP.m_y);
+    minY = max(minY, .0f - toolMinP.m_y);
     maxY = (objMaxP.m_y - objPosition.m_y) + (toolPosition.m_y - toolMinP.m_y);
 
     minZ = (objMinP.m_z - objPosition.m_z) + (toolPosition.m_z - toolMaxP.m_z);
@@ -196,8 +202,8 @@ void ExhaustiveSimulation::NextScenario() {
         offsetYaw += rotationStep;
         isRotationChanged = true;
 
-        std::cout << "Yaw increased to " << offsetYaw << '\n';
-        std::cout.flush();
+        cout << "Yaw increased to " << offsetYaw << '\n';
+        cout.flush();
     }
 
     if (offsetYaw > maxYaw) {
@@ -205,8 +211,8 @@ void ExhaustiveSimulation::NextScenario() {
         offsetPitch += rotationStep;
         isRotationChanged = true;
 
-        std::cout << "Pitch increased to " << offsetPitch << '\n';
-        std::cout.flush();
+        cout << "Pitch increased to " << offsetPitch << '\n';
+        cout.flush();
     }
 
     if (offsetPitch > maxPitch) {
@@ -214,8 +220,8 @@ void ExhaustiveSimulation::NextScenario() {
         offsetRoll += rotationStep;
         isRotationChanged = true;
 
-        std::cout << 100 * offsetRoll / maxRoll << "%\n";
-        std::cout.flush();
+        cout << 100 * offsetRoll / maxRoll << "%\n";
+        cout.flush();
     }
 
     //set tool position to new coordinates
@@ -285,9 +291,9 @@ bool ExhaustiveSimulation::IterateScenario() {
 
 void ExhaustiveSimulation::SaveResults() {
     if (isPossibleSolution) {
-        std::cout << "x:" << offsetX << " y:" << offsetY << " z:" << offsetZ;
-        std::cout << " yaw:" << offsetYaw << " pitch:" << offsetPitch << " roll:" << offsetRoll << '\n';
-        std::cout.flush();
+        cout << "x:" << offsetX << " y:" << offsetY << " z:" << offsetZ;
+        cout << " yaw:" << offsetYaw << " pitch:" << offsetPitch << " roll:" << offsetRoll << '\n';
+        cout.flush();
 
         m_output << offsetX << ',' << offsetY << ',' << offsetZ << ',';
         m_output << offsetYaw << ',' << offsetPitch << ',' << offsetRoll << '\n';

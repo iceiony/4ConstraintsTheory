@@ -15,6 +15,7 @@
 #include <lib3ds/mesh.h>
 #include <vector>
 #include <math.h>
+#include <iostream>
 
 // return the collision joint, if the body collide
 NewtonJoint *CheckIfBodiesCollide(NewtonBody *const body0, NewtonBody *const body1) {
