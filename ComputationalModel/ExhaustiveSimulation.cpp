@@ -1,6 +1,7 @@
 //
 // Created by Adrian Ionita on 23/06/2016.
 //
+#include "Util.h"
 #include "ExhaustiveSimulation.h"
 #include "PhysicsUtils.h"
 #include <iostream>

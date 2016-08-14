@@ -11,6 +11,7 @@ if (WIN32)
                 "tinyxml.h"
             PATHS
                 ${PROJECT_SOURCE_DIR}/tinyxml/include
+				${PROJECT_SOURCE_DIR}/visualStudio_2015/tinyxml/include
             )
     if(ARCH STREQUAL "x86")
         find_library( TinyXML_LIBRARIES
@@ -18,6 +19,7 @@ if (WIN32)
                     tinyxml
                 PATHS
                     ${PROJECT_SOURCE_DIR}/tinyxml/lib/win32
+                    ${PROJECT_SOURCE_DIR}/tinyxml/visualStudio_2015/lib/win32
                 )
     else()
         find_library( TinyXML_LIBRARIES
@@ -25,6 +27,7 @@ if (WIN32)
                     tinyxml
                 PATHS
                     ${PROJECT_SOURCE_DIR}/tinyxml/lib/win32
+                    ${PROJECT_SOURCE_DIR}/visualStudio_2015/tinyxml/lib/win32
                 )
     endif()
 
