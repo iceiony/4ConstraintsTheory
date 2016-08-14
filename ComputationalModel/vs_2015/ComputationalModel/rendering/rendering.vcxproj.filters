@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="rendering">
+      <UniqueIdentifier>{754e4710-13ec-4dd5-8c3b-924ebd144509}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\rendering\Camera.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\rendering\CameraListener.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\rendering\DebugDisplay.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\rendering\GraphicsEntity.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\rendering\GraphicsManager.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\rendering\GraphicsMesh.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\rendering\ListenerBase.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\rendering\RayCastEntity.cpp">
+      <Filter>rendering</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\rendering\Camera.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\rendering\CameraListener.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\rendering\DebugDisplay.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\rendering\GraphicsEntity.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\rendering\GraphicsManager.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\rendering\GraphicsMesh.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\rendering\ListenerBase.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\rendering\RayCastEntity.h">
+      <Filter>rendering</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

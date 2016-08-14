@@ -21,3 +21,4 @@ newton-dynamics
 results*
 *.exe
 bin
+.vs
