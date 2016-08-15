@@ -58,15 +58,14 @@ static void ExportSurface(vector<dVector> *intersectionPoints, int suffixCount){
 }
 
 int main(int argc, char * argv[]) {
+	const char * fileName = "obj51.3ds" ;
 
     if(argc == 1)
-    {
-        std::cout << "No model file name given as parameter \n\r";
-        return -1;
-    }
-    const char * fileName = argv[1];
-
-    std::cout << "Loading model from :" << fileName << "\n\r";
+        std::cout << "No model file name given as parameter (using default)\n\r";
+	else 
+		fileName = argv[1];
+    
+	std::cout << "Loading model from :" << fileName << "\n\r";
 
     ExhaustiveSimulation sim(nullptr);
     NewtonBody *modelBody = sim.LoadModel(fileName);

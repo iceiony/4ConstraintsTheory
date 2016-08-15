@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\VisualSimulation.cpp" />
+    <ClCompile Include="..\..\..\PhysicsUtils.cpp" />
+    <ClCompile Include="..\..\..\Util.cpp" />
+    <ClCompile Include="..\..\..\VisualSearchGUI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\VisualSimulation.h" />
+    <ClInclude Include="..\..\..\PhysicsUtils.h" />
+    <ClInclude Include="..\..\..\Util.h" />
+  </ItemGroup>
+</Project>

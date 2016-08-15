@@ -4,8 +4,6 @@
 #include "VisualSimulation.h"
 
 int main(int argc, char * argv[]) {
-//    const char *objModelFileName  = "../ToolAndObjectModels/obj11.3ds";
-//    const char *toolModelFileName = "../ToolAndObjectModels/obj12.3ds";
      const char *objModelFileName  = "obj51.3ds";
      const char *toolModelFileName = "obj52.3ds";
 
