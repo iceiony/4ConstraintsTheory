@@ -1,0 +1,185 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks,urlcolor=blue}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{darkgray}{rgb}{.35,.25,.35}
+\definecolor{lightgray}{rgb}{.6,.6,.6}
+
+\lstdefinelanguage{bash}{
+  basicstyle=\scriptsize\ttfamily\color{white},
+  backgroundcolor=\color{lightgray},
+  commentstyle = \color{darkgray},
+  keywordstyle = \color{white},
+  rulecolor    = \color{black},
+  stringstyle  = \color{white}
+  commentstyle=\color{lightgray}\ttfamily
+}
+
+\lstset{
+   language=bash,
+   extendedchars=true,
+   basicstyle=\scriptsize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   tabsize=2,
+   showtabs=false,
+   captionpos=b,
+}
+
+\let \shorttitle \textbf 
+
+\begin{document}
+
+\section{Appendix A}
+\shorttitle{Compilation}
+
+The following section describes how to compile and run the computational model on Windows and Linux operating systems. 
+Original source-code and documentation can be found at \url{https://github.com/iceiony/4ConstraintsTheory}
+The below installation steps are meant to be run using a terminal window.
+
+\subsection{Linux}
+Linux and Unix based operating systems require GCC compiler version 4.6 or earlier. 
+\begin{enumerate}
+  \item Install \textbf{git} and clone the code repository: 
+    \begin{lstlisting}[language=bash]
+  apt-get update
+  apt-get install git-core
+
+  git clone --depth 1 https://github.com/iceiony/4ConstraintsTheory.git 
+  cd 4ConstraintsTheory
+  git submodule init
+  git submodule update
+    \end{lstlisting}
+
+    If the folder ./ComputationalModel/newton-dynamics is missing, clone the physics engine repository:
+    \begin{lstlisting}[language=bash]
+  cd ./ComputationalModel
+  git clone --depth 1 https://github.com/MADEAPPS/newton-dynamics.git 
+    \end{lstlisting}
+
+  \item Install \textbf{cmake version 3.2} (which is not available on Ubuntu by default): 
+    \begin{lstlisting}[language=bash]
+    apt-get install software-properties-common
+    apt-get-repository ppa:george-edison55/cmake-3.x
+    apt-get update
+    apt-get install cmake
+    \end{lstlisting}
+
+  \item Install \textbf{GLFW3} library:
+    \begin{lstlisting}[language=bash]
+    add-apt-repository ppa:keithw/glfw3
+    apt-get update
+    apt-get install libglfw3
+    apt-get install libglfw3-dev
+    \end{lstlisting}
+
+  \item Install \textbf{GLEW} library:
+    \begin{lstlisting}[language=bash]
+    apt-get install libglew-dev
+    \end{lstlisting}
+    
+
+  \item Install \textbf{tinyxml} library:
+    \begin{lstlisting}[language=bash]
+    apt-get install libtinyxml-dev
+    \end{lstlisting}
+    
+  \item The computational model source code is located in the ./ComputationalModel subfolder. To compile it run:
+    \begin{lstlisting}[language=bash]
+    cmake .
+    make -j4
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Windows}
+Windows based operating systems require the Visual C++ compiler which part of Visual Studio package.
+The Windows solution contains pre-compiled packages required for graphic rendering. 
+As these packages were compiled using VisualStudio - 2015, other viersions of the compiler would not work.   
+\begin{enumerate}
+
+  \item Install \textbf{git} using 
+    \href{https://github.com/gitextensions/gitextensions/releases/latest}{GitExtensions-2.48-SetupComplete.msi} 
+    During installation the following options should be chosen : 
+    \begin{description}
+	\item [MsysGit] should be installed 
+	\item [OpenSSH] authentication should be chosen instead of Putty
+    \end{description}
+
+  \item After installation open \textbf{Git Bash} available in the start menu. Clone the code repository:   
+    \begin{lstlisting}[language=bash]
+  git clone --depth 1 https://github.com/iceiony/4ConstraintsTheory.git 
+  cd 4ConstraintsTheory
+  git submodule init
+  git submodule update
+    \end{lstlisting}
+
+    If the folder ./ComputationalModel/newton-dynamics is missing, clone the physics engine repository:
+    \begin{lstlisting}[language=bash]
+  cd ./ComputationalModel
+  git clone --depth 1 https://github.com/MADEAPPS/newton-dynamics.git 
+    \end{lstlisting}
+
+  \item Install \textbf{VisualStudio 2015} community edition, with the \textbf{Visual C++} option enabled. 
+  
+  \item Open the visual studio solution located in : 
+    
+    \textbf{./ComputationalModel  /vs\_2015  /ComputationalModel  ComputationalModel.sln}
+    
+    From the solution cou can build any of the computational model executable.
+    Output is directed to folder :
+    
+    \textbf{./ComputationalModel /vs\_2015 /ComputationalModel /bin} 
+
+\end{enumerate}
+
+Successful compilations would result in 4 executable files: 
+\begin{itemize}
+  \item ExhaustiveSearchGUI.exe 
+  \item ExhaustiveSearch.exe
+  \item ExtractSurfacePointsGUI.exe  
+  \item VisualSearchGUI.exe
+\end{itemize}
+
+\section{Appendix B}
+\shorttitle{Software Glossary}
+
+This section describes the functional basis of the computational model software. 
+For the graphic version of the software (files ending in GUI), camera view-point can be controlled using \textbf{W,A,S,D} keyboard keys and \textbf{Mouse Click \& Drag}.Execution of the 3D simulation can be paused and resumed by pressing the \textbf{P} key.
+
+\begin{description}
+
+  \item [ExhaustiveSearchGUI.exe] performs an exhaustive search of the tool and object fitting. It can be invoked from command line with the tool and object model files 	in 3DS file format. If no parameters are used, the executable will default to loading obj51.3ds and obj52.3ds .
+
+    \begin{lstlisting}[language=bash]
+  ./ExhaustiveSearchGUI.exe obj51.3ds obj52.3ds
+    \end{lstlisting}
+
+    On startup, the tool to object fitting is paused. Execution can be resumed and visualised in 3D by pressing the \textbf{'P'} key.
+    Potential fitting position are written to \textbf{results.csv}.
+
+  \item [ExhaustiveSearch.exe] performs an exhaustive search without the use of a graphic user interface. As no 3D rendering is shown, the execution is considerably faster. All output is written to \textbf{results.csv}
+
+  \item [ExtractSurfacePointsGUI.exe] utility software for extracting points on the surface of an object in current view. The model of an object must be passed as parameter in 3DS format. 
+
+    \begin{lstlisting}[language=bash]
+  ./ExtractSurfacePointsGUI.exe obj51.3ds
+    \end{lstlisting}
+
+    Surface points are recorded every time physics simulation is paused (by hitting the \textbf{P} key).
+    Output is written to the \textbf{./surfaces} subfolder with one file per extracted surface.   
+
+  \item [VisualSearchGUI.exe] performs a visual search of surfaces that would potentially offer good tool to object interaction. Tool and object models can be passed as parameters. If the program is invoked with no arguments, obj51.3ds and obj52.3ds are loaded.
+    
+    \begin{lstlisting}[language=bash]
+  ./VisualSearchGUI.exe obj51.3ds obj52.3ds
+    \end{lstlisting}
+
+    During execution the tool and object are selectively rotated. For every rotation, random sub-surfaces are selected and checked for correlation.
+    When correlation value is strong, execution is paused for a human observer to asses validity. 
+
+\end{description}
+
+\end{document}
