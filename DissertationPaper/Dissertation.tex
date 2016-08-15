@@ -1,7 +1,48 @@
-\documentclass[11]{article}
+\documentclass[
+    a4paper,
+    man,
+    floatsintext,
+    british
+]{apa6}
 
-\usepackage[backend=bibtex]{biblatex}
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{epstopdf}
+\usepackage{csquotes}
+\usepackage[hidelinks]{hyperref}
+\usepackage[
+    style=apa,
+    backend=biber,
+    sortcites=true,
+    sorting=nyt,
+%    isbn=false,
+%    url=false,
+%    doi=false,
+%    eprint=false,
+%    hyperref=false,
+%    backref=false,
+%    firstinits=false,
+]{biblatex}
+
+\DeclareLanguageMapping{british}{british-apa}
+
+% maps apacite commands to biblatex commands
+%\let \citeNP \cite
+%\let \citeA \textcite
+%\let \cite \parencite
+
 \bibliography{references}
+
+
+\title{Spatial Reasoning in Human Tool Use}
+\shorttitle{}
+\author{Adrian Ionita\\
+1057404}
+\affiliation{University Of Birmingham\\
+2016\\
+}
+
+
 
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -12,20 +53,6 @@
 \definecolor{darkgray}{rgb}{.35,.25,.35}
 \definecolor{lightgray}{rgb}{.6,.6,.6}
 
-%\lstdefinelanguage{bash}{
-%  keywords={git,update,apt-get,submodule,init,clone},
-%  keywordstyle=\color{cyan}\bfseries,
-%  ndkeywords={return, null},
-%  ndkeywordstyle=\color{red}\bfseries,
-%  identifierstyle=\color{darkgray},
-%  sensitive=false,
-%  comment=[l]{//},
-%  morecomment=[s]{/*}{*/},
-%  commentstyle=\color{lightgray}\ttfamily,
-%  stringstyle=\color{red}\ttfamily,
-%  morestring=[b]',
-%  morestring=[b]"
-%}
 \lstdefinelanguage{bash}{
   basicstyle=\scriptsize\ttfamily\color{white},
   backgroundcolor=\color{lightgray},
@@ -48,8 +75,12 @@
 }
 
 
-\begin{document}
 
+\begin{document}
+\thispagestyle{otherpage}
+\maketitle
+
+\shorttitle{Contour Matching Techniques}
 \section{Review : Contour Matching Techniques}
 
 \subsection{Motivation}
@@ -74,7 +105,7 @@ We consider techniques of shape similarity in matching object parts. Shape analy
 
 Zhang\cite{zhang2004} et al. classify shape similarity into contour-based and region-based techniques. These are further divided into structural and global approaches. A comprehensive list and structure can be found in fig. \ref{fig:shape_similarity}.
 
-\begin{figure}[h]
+\begin{figure}[b]
   \centering
   \includegraphics[width=1\textwidth]{./figures/similarity_techniques.png}
   \caption{Classification of shape similarity techniques (reprinted from \cite{zhang2004})}
@@ -113,7 +144,7 @@ Linux and Unix based operating systems require GCC compiler version 4.6 or earli
   apt-get update
   apt-get install git-core
 
-  git clone https://github.com/iceiony/4ConstraintsTheory.git 
+  git clone --depth 1 https://github.com/iceiony/4ConstraintsTheory.git 
   cd 4ConstraintsTheory
   git submodule init
   git submodule update
@@ -175,7 +206,7 @@ As these packages were compiled using VisualStudio - 2015, other viersions of th
 
   \item After installation open \textbf{Git Bash} available in the start menu. Clone the code repository:   
     \begin{lstlisting}[language=bash]
-  git clone https://github.com/iceiony/4ConstraintsTheory.git 
+  git clone --depth 1 https://github.com/iceiony/4ConstraintsTheory.git 
   cd 4ConstraintsTheory
   git submodule init
   git submodule update
@@ -189,9 +220,14 @@ As these packages were compiled using VisualStudio - 2015, other viersions of th
 
   \item Install \textbf{VisualStudio 2015} community edition, with the \textbf{Visual C++} option enabled. 
   
-  \item Open the visual studio solution located in ./ComputationalModel/vs\_2015/ComputationalModel/ComputationalModel.sln. 
-    Simply build any desired executable of the model.
-    All output is directed to ./ComputationalModel/vs\_2015/ComputationalModel/bin . 
+  \item Open the visual studio solution located in : 
+    
+    \textbf{./ComputationalModel  /vs\_2015  /ComputationalModel  ComputationalModel.sln}
+    
+    From the solution cou can build any of the computational model executable.
+    Output is directed to folder :
+    
+    \textbf{./ComputationalModel /vs\_2015 /ComputationalModel /bin} 
 
 \end{enumerate}
 

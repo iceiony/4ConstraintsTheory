@@ -25,3 +25,8 @@ bin
 *.opendb
 ipch
 *.VC.db
+*.swp
+*.fff
+*.lof
+*.out
+*.ttt
