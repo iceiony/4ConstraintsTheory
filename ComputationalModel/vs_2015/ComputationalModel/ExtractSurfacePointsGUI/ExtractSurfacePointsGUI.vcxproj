@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{ADB6EF52-2235-49BF-8B29-7E52ADEE80C5}</ProjectGuid>
+    <RootNamespace>ExtractSurfacePointsGUI</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>bin\$(Platform)\$(Configuration)\</IntDir>
+    <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>bin\$(Platform)\$(Configuration)\</IntDir>
+    <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>bin\$(Platform)\$(Configuration)\</IntDir>
+    <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>bin\$(Platform)\$(Configuration)\</IntDir>
+    <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>../../../;../../../rendering;../glew/include;../../../newton-dynamics/coreLibrary_300/source/newton/;../../../newton-dynamics/packages/dMath/;../../../newton-dynamics/packages/dContainers/;../../../newton-dynamics/packages/dCustomJoints/;../../../newton-dynamics/packages/thirdParty/timeTracker/;../../../newton-dynamics/packages/dScene;../../../newton-dynamics/packages/dAnimation;../tinyxml/include/;../glfw/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HAVE_GL_H;HAVE_GLU_H;GLEW_STATIC;AL_LIBTYPE_STATIC;_NEWTON_STATIC_LIB;_CUSTOM_JOINTS_STATIC_LIB;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>Util.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;opengl32.lib;glu32.lib;winmm.lib;wsock32.lib;Ws2_32.lib;rpcrt4.lib;../tinyxml/lib/win32/tinyxml.lib;../glfw/lib/x86/glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/VERBOSE:LIB %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)ExtractSurfacePointsGUI.pdb</ProgramDatabaseFile>
+      <SubSystem>NotSet</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalOptions>/VERBOSE</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>mkdir $(TargetDir)surfaces</Command>
+      <Message>create surfaces folder</Message>
+      <Outputs>surfaces</Outputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>../../../;../../../rendering;../glew/include;../../../newton-dynamics/coreLibrary_300/source/newton/;../../../newton-dynamics/packages/dMath/;../../../newton-dynamics/packages/dContainers/;../../../newton-dynamics/packages/dCustomJoints/;../../../newton-dynamics/packages/thirdParty/timeTracker/;../../../newton-dynamics/packages/dScene;../../../newton-dynamics/packages/dAnimation;../tinyxml/include/;../glfw/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HAVE_GL_H;HAVE_GLU_H;GLEW_STATIC;AL_LIBTYPE_STATIC;_NEWTON_STATIC_LIB;_CUSTOM_JOINTS_STATIC_LIB;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;opengl32.lib;glu32.lib;winmm.lib;wsock32.lib;Ws2_32.lib;rpcrt4.lib;../tinyxml/lib/x64/tinyxml.lib;../glfw/lib/x64/glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)ExtractSurfacePointsGUI.pdb</ProgramDatabaseFile>
+      <SubSystem>NotSet</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <AdditionalOptions>
+      </AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>mkdir $(TargetDir)surfaces</Command>
+      <Message>create surfaces folder</Message>
+      <Outputs>surfaces</Outputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>../../../;../../../rendering;../glew/include;../../../newton-dynamics/coreLibrary_300/source/newton/;../../../newton-dynamics/packages/dMath/;../../../newton-dynamics/packages/dContainers/;../../../newton-dynamics/packages/dCustomJoints/;../../../newton-dynamics/packages/thirdParty/timeTracker/;../../../newton-dynamics/packages/dScene;../../../newton-dynamics/packages/dAnimation;../tinyxml/include/;../glfw/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;HAVE_GL_H;HAVE_GLU_H;GLEW_STATIC;AL_LIBTYPE_STATIC;_NEWTON_STATIC_LIB;_CUSTOM_JOINTS_STATIC_LIB;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;opengl32.lib;glu32.lib;winmm.lib;wsock32.lib;Ws2_32.lib;rpcrt4.lib;../tinyxml/lib/win32/tinyxml.lib;../glfw/lib/x86/glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>NotSet</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalOptions>
+      </AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>mkdir $(TargetDir)surfaces</Command>
+      <Message>create surfaces folder</Message>
+      <Outputs>surfaces</Outputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>../../../;../../../rendering;../glew/include;../../../newton-dynamics/coreLibrary_300/source/newton/;../../../newton-dynamics/packages/dMath/;../../../newton-dynamics/packages/dContainers/;../../../newton-dynamics/packages/dCustomJoints/;../../../newton-dynamics/packages/thirdParty/timeTracker/;../../../newton-dynamics/packages/dScene;../../../newton-dynamics/packages/dAnimation;../tinyxml/include/;../glfw/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;HAVE_GL_H;HAVE_GLU_H;GLEW_STATIC;AL_LIBTYPE_STATIC;_NEWTON_STATIC_LIB;_CUSTOM_JOINTS_STATIC_LIB;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;opengl32.lib;glu32.lib;winmm.lib;wsock32.lib;Ws2_32.lib;rpcrt4.lib;../tinyxml/lib/x64/tinyxml.lib;../glfw/lib/x64/glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>NotSet</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <AdditionalOptions>
+      </AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>mkdir $(TargetDir)surfaces</Command>
+      <Message>create surfaces folder</Message>
+      <Outputs>surfaces</Outputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\ExtractSurfacePointsGUI.cpp" />
+    <ClCompile Include="..\..\..\ExhaustiveSimulation.cpp" />
+    <ClCompile Include="..\..\..\PhysicsUtils.cpp" />
+    <ClCompile Include="..\..\..\Util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\ExhaustiveSimulation.h" />
+    <ClInclude Include="..\..\..\PhysicsUtils.h" />
+    <ClInclude Include="..\..\..\Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\obj51.3ds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <DeploymentContent>true</DeploymentContent>
+    </Content>
+    <Content Include="..\..\..\obj52.3ds">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\surfaces\surface_plot.m">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\newton-dynamics\coreLibrary_300\projects\windows\project_vs2015\ampPhysics.vcxproj">
+      <Project>{4798da95-fe1b-4160-b752-24c4b1faba49}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\coreLibrary_300\projects\windows\project_vs2015\core.vcxproj">
+      <Project>{57ac4f2d-b115-4931-8f6e-af8ad616b6aa}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\coreLibrary_300\projects\windows\project_vs2015\newton.vcxproj">
+      <Project>{68d9962c-0ec7-445a-b0fd-f87b16d43901}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\coreLibrary_300\projects\windows\project_vs2015\physics.vcxproj">
+      <Project>{39737a8f-6151-4259-8e39-25530345d4b4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\coreLibrary_300\source\pthreads.2\VS_2015_static_mt\pthread.vcxproj">
+      <Project>{03bca23c-02a5-415b-a37b-26600bc2ce96}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\packages\projects\visualStudio_2015\dAnimation.vcxproj">
+      <Project>{e3c14351-bad1-4add-ab9a-31054d6e7cdb}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\packages\projects\visualStudio_2015\dContainers.vcxproj">
+      <Project>{f67c4593-a914-4ddf-8cb5-c59a3ef3ece0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\packages\projects\visualStudio_2015\dJointLibrary.vcxproj">
+      <Project>{721c99ce-4716-4146-9817-59bc2671b844}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\packages\projects\visualStudio_2015\dMath.vcxproj">
+      <Project>{cbe9e751-e58b-46c1-b6b0-873670d0f981}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\newton-dynamics\packages\projects\visualStudio_2015\dScene.vcxproj">
+      <Project>{b5eec82d-938f-44c9-89bb-4a058581750b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\lib3ds\lib3ds.vcxproj">
+      <Project>{8d64590e-6757-4a85-8190-7a2b01833373}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\rendering\rendering.vcxproj">
+      <Project>{5f869611-eedb-4c60-9864-9d1761889975}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

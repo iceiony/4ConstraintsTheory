@@ -68,7 +68,7 @@ typedef long long unsigned64;
 	// opengl stuff
 	#include <GL/glew.h>
 	#include <GL/wglew.h>
-	#include <gl/>
+	#include <gl/gl.h>
 	#include <gl/glu.h>
 #elif defined(__APPLE__)
 #include <CoreFoundation/CoreFoundation.h>

@@ -1,18 +1,11 @@
 cmake_minimum_required(VERSION 3.2)
-project(MatlabNewtonDynamics)
+project(ComputationalModel)
 
 
 file(COPY "obj51.3ds" DESTINATION "./")
 file(COPY "obj52.3ds" DESTINATION "./")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
-
-#add NEWTON-DYNAMICS to the build path
-SET(NEWTON_DEMOS_SANDBOX OFF CACHE BOOL "Disable sandbox demo build" FORCE)
-add_subdirectory("newton-dynamics")
-#add_subdirectory("DEMO")
-
-set(CMAKE_CXX_FLAGS "-std=c++11")
 
 find_package(GLFW3 REQUIRED)
 include_directories(${GLFW3_INCLUDE_DIR})
@@ -24,10 +17,16 @@ find_package(GLEW)
 include_directories(${GLEW_INCLUDE_DIR})
 
 find_package(TinyXML REQUIRED)
-include_directories(${TinyXML_INCLUDE_DIRS})
+include_directories(${TINYXML_INCLUDE_DIR})
 
 find_package(Threads)
 
+#add NEWTON-DYNAMICS to the build path
+SET(NEWTON_DEMOS_SANDBOX OFF CACHE BOOL "Disable sandbox demo build" FORCE)
+add_subdirectory("newton-dynamics")
+#add_subdirectory("DEMO")
+
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
 set(TARGET_LIBRARIES
         dMath

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\alglib\src\alglibinternal.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\alglibmisc.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\ap.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\dataanalysis.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\diffequations.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\fasttransforms.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\integration.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\interpolation.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\linalg.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\optimization.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\solvers.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\specialfunctions.cpp" />
+    <ClCompile Include="..\..\..\alglib\src\statistics.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\alglib\src\alglibinternal.h" />
+    <ClInclude Include="..\..\..\alglib\src\alglibmisc.h" />
+    <ClInclude Include="..\..\..\alglib\src\ap.h" />
+    <ClInclude Include="..\..\..\alglib\src\dataanalysis.h" />
+    <ClInclude Include="..\..\..\alglib\src\diffequations.h" />
+    <ClInclude Include="..\..\..\alglib\src\fasttransforms.h" />
+    <ClInclude Include="..\..\..\alglib\src\integration.h" />
+    <ClInclude Include="..\..\..\alglib\src\interpolation.h" />
+    <ClInclude Include="..\..\..\alglib\src\linalg.h" />
+    <ClInclude Include="..\..\..\alglib\src\optimization.h" />
+    <ClInclude Include="..\..\..\alglib\src\solvers.h" />
+    <ClInclude Include="..\..\..\alglib\src\specialfunctions.h" />
+    <ClInclude Include="..\..\..\alglib\src\statistics.h" />
+    <ClInclude Include="..\..\..\alglib\src\stdafx.h" />
+  </ItemGroup>
+</Project>

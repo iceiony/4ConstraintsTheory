@@ -84,7 +84,7 @@ NewtonBody *VisualSimulation::LoadModel(const char *fileName) {
                                                                                      nullptr, nullptr);
     NewtonCollision *const compound = NewtonCreateCompoundCollisionFromMesh(m_world, convexApproximation, 0.001f, 0, 0);
 
-    NewtonBody *modelBody = CreateSimpleBody(m_world, NULL, MASS, dGetZeroMatrix() , compound, 0);
+    NewtonBody *modelBody = CreateSimpleBody(m_world, NULL, MASS, dGetIdentityMatrix(), compound, 0);
 
     NewtonDestroyCollision(compound);
     NewtonMeshDestroy(convexApproximation);
@@ -153,7 +153,7 @@ NewtonBody *VisualSimulation::GetFloor() {
 }
 
 bool VisualSimulation::IsFinished() {
-//    return offsetRoll > maxRoll;
+	return false;
 }
 
 bool VisualSimulation::IterateScenario() {

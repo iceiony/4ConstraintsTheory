@@ -26,15 +26,15 @@
 extern "C" {
 #endif
 
-#ifdef _MSC_VER
-#ifdef LIB3DS_EXPORTS
-#define LIB3DSAPI __declspec(dllexport)
-#else               
-#define LIB3DSAPI __declspec(dllimport)
-#endif           
-#else
+//#ifdef _MSC_VER
+//#ifdef LIB3DS_EXPORTS
+//#define LIB3DSAPI __declspec(dllexport)
+//#else               
+//#define LIB3DSAPI __declspec(dllimport)
+//#endif           
+//#else
 #define LIB3DSAPI
-#endif
+//#endif
 
 #define LIB3DS_TRUE 1
 #define LIB3DS_FALSE 0
