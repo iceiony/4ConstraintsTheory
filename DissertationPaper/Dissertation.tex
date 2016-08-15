@@ -160,7 +160,9 @@ Linux and Unix based operating systems require GCC compiler version 4.6 or earli
 \end{enumerate}
 
 \subsection{Windows}
-Windows based operating systems require Visual C++ compiler ( part of Visual Studio package ).
+Windows based operating systems require the Visual C++ compiler which part of Visual Studio package.
+The Windows solution contains pre-compiled packages required for graphic rendering. 
+As these packages were compiled using VisualStudio - 2015, other viersions of the compiler would not work.   
 \begin{enumerate}
 
   \item Install \textbf{git} using 
@@ -185,17 +187,11 @@ Windows based operating systems require Visual C++ compiler ( part of Visual Stu
   git clone --depth 1 https://github.com/MADEAPPS/newton-dynamics.git 
     \end{lstlisting}
 
-  \item Install \textbf{Cmake} for windows from \url{http://cmake.org/download}. 
-    During installation, chose to ``Add CMake to the system PATH for current user''.
-
-  \item Install \textbf{VisualStudio} community edition, with the \textbf{Visual C++} option enabled. 
-
-  \item Install \textbf{GLFW3} pre-compiled binaries for windows from \url{http://glfw.org/download.html}
-    Zip should be extracted to C:\\Program Files (x86)\\glfw . The glfw folder should contain at least an includes directory
-    and at least one lib-vc201X directory.
-
-  \item Install \textbf{GLEW} pre-compiled binaries for windows from \url{http://glew.sourceforge.net}. 
-    Zip should be extracted to C:\\Program Files (x86)\\glew. The glew folder should contain an includes , bin and lib directories.
+  \item Install \textbf{VisualStudio 2015} community edition, with the \textbf{Visual C++} option enabled. 
+  
+  \item Open the visual studio solution located in ./ComputationalModel/vs\_2015/ComputationalModel/ComputationalModel.sln. 
+    Simply build any desired executable of the model.
+    All output is directed to ./ComputationalModel/vs\_2015/ComputationalModel/bin . 
 
 \end{enumerate}
 
