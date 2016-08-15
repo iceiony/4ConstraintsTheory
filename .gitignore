@@ -23,3 +23,5 @@ results*
 bin
 .vs
 *.opendb
+ipch
+*.VC.db
