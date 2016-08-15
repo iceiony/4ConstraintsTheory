@@ -17,7 +17,7 @@ find_package(GLEW)
 include_directories(${GLEW_INCLUDE_DIR})
 
 find_package(TinyXML REQUIRED)
-include_directories(${TINYXML_INCLUDE_DIR})
+include_directories(${TinyXML_INCLUDE_DIR})
 
 find_package(Threads)
 

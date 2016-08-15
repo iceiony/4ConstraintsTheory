@@ -2,11 +2,11 @@
 # Find the native TinyXML includes and library
 #
 #   TINYXML_FOUND       - True if TinyXML found.
-#   TINYXML_INCLUDE_DIR - where to find tinyxml.h, etc.
+#   TinyXML_INCLUDE_DIR - where to find tinyxml.h, etc.
 #   TINYXML_LIBRARIES   - List of libraries when using TinyXML.
 
 if (WIN32)
-    find_path( TINYXML_INCLUDE_DIR
+    find_path( TinyXML_INCLUDE_DIR
             NAMES
                 "tinyxml.h"
             PATHS
@@ -40,6 +40,6 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set TINYXML_FOUND to TRUE if
 # all listed variables are TRUE
 INCLUDE( "FindPackageHandleStandardArgs" )
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( "TinyXML" DEFAULT_MSG TINYXML_INCLUDE_DIR TinyXML_LIBRARIES )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( "TinyXML" DEFAULT_MSG TinyXML_INCLUDE_DIR TinyXML_LIBRARIES )
 
-MARK_AS_ADVANCED( TINYXML_INCLUDE_DIR TinyXML_LIBRARIES )
+MARK_AS_ADVANCED( TinyXML_INCLUDE_DIR TinyXML_LIBRARIES )
