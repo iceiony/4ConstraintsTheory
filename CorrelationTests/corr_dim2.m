@@ -14,7 +14,7 @@ end
 %correlate on pca
 a = a - repmat(mean(a),length(a),1);
 [u,s,v] = svd(a);
-angle_a = mod(atan2(v(2),v(1),2*pi));
+angle_a = mod(atan2(v(2),v(1)),2*pi);
 rot = [cos(angle_a) -sin(angle_a) ; sin(angle_a) cos(angle_a)];
 a_rot = a * rot;
 

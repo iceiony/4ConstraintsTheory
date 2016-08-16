@@ -146,7 +146,8 @@ Successful compilations would result in 4 executable files:
 \section{Appendix B}
 \shorttitle{Software Glossary}
 
-This section describes the functional basis of the computational model software. 
+\subsection{C++ Code}
+This section describes the functional use of the computational model software. 
 For the graphic version of the software (files ending in GUI), camera view-point can be controlled using \textbf{W,A,S,D} keyboard keys and \textbf{Mouse Click \& Drag}.Execution of the 3D simulation can be paused and resumed by pressing the \textbf{P} key.
 
 \begin{description}
@@ -179,7 +180,10 @@ For the graphic version of the software (files ending in GUI), camera view-point
 
     During execution the tool and object are selectively rotated. For every rotation, random sub-surfaces are selected and checked for correlation.
     When correlation value is strong, execution is paused for a human observer to asses validity. 
-
 \end{description}
 
+\subsection{Matlab Code}
+In analysing the feasibility of our novel visual correlation technique, Matlab was used. Scripts can be found in the \textbf{./CorrelationTetsts} subfolder. 
+As a convention, files starting with a capital letter are a point of interest.
+They represent different tests executed for 2D and 3D surface correlation. 
 \end{document}
