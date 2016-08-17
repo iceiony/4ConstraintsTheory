@@ -13,8 +13,6 @@ subplot(1,2,1);
 hold on;
 axis([-2 2 -2 2]);
 
-
-
 %get object 1 surface 
 for i = 1:n 
     t = text(-1.9,1.9,['Object 1 surface ' num2str(n-i+1) ' points'],'color','blue');
@@ -68,23 +66,12 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     text(1.3,1.7,disp');
     
     %first item pca
-    plot_pca(a);
-    
-    angle = atan2(V(2),V(1));
-    rot = [cos(angle) -sin(angle) ; sin(angle) cos(angle)];
-    D_rot = D * rot + meanD;
-    plot(D_rot(:,1),D_rot(:,2)-1,'b.');
+    a_rot = plot_pca(a);
+    plot(a_rot(:,1),a_rot(:,2)-1,'b.');
     
     %second item pca
-    plot_pca(b);
-    
-    plot(D2(:,1),D2(:,2),'g');  
-    plot(D1(:,1),D1(:,2),'g');  
-    
-    angle = atan2(V(2),V(1));
-    rot = [cos(angle) -sin(angle) ; sin(angle) cos(angle)];
-    D_rot = D * rot + meanD;
-    plot(D_rot(:,1),D_rot(:,2)-1,'r.');
+    b_rot = plot_pca(b);    
+    plot(b_rot(:,1),b_rot(:,2)-1,'r.');
 
     title(sprintf('Surface Similarity : %f \n Angle %f',fullCor,angle_diff*180/pi));
 

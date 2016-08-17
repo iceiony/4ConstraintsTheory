@@ -26,6 +26,6 @@ b_rot = b * rot;
 
 x_corr = corr(a_rot(:,1),b_rot(:,1));
 y_corr = corr(a_rot(:,2),b_rot(:,2));
-full_corr = ( abs(x_corr) + abs(y_corr) ) / 2;
+full_corr = x_corr * y_corr ;
 
 angle_diff = angle_a - angle_b;
