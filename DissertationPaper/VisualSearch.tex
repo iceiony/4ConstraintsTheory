@@ -23,7 +23,7 @@ For example, subjects performing tool fitting tasks, examine the geometry of obj
 
 Tool and object interaction baring high likelihood of success, would satisfy two criteria: 
 \begin{enumerate}
-\item \textbf{Geometric constraints} of the two objects must be met ( i.e. the shapes of the two objects should adequately fit )
+\item \textbf{Geometric constraints} of the two objects must be met (i.e. the shapes of the two objects should adequately fit)
 \item \textbf{Contact forces} generated must correspond to the intention of the actions executed 
   (i.e. for a lifting action, the human subject would focus on points of interaction that would permit vertical forces to be applied)
 \end{enumerate}
@@ -37,14 +37,14 @@ Tighter fits, offer better transfer of energy and control over the movement of t
 In the paradigm of 4CT \cite{osiurak2014}, the effort constraint may explain user's preference for one geometric solution over another.
 
 It is not necessary for the whole geometry of objects to fit. 
-It is sufficient that the tool have the necessary parts to act as affordance and functional basis (end effector\cite{zhu2015}).
+It is sufficient that the tools have the necessary parts to act as affordance and functional basis (end effector\cite{zhu2015}).
 If the functional part matches the gaps of the passive object, then the configuration is likely to achieve the desired effect. 
 
 \subsubsection{Shape Description and Matching Techniques}
 We consider techniques of shape similarity in matching object parts.
 Shape analysis techniques have traditionally been engaged in image processing and robot vision for detecting and tracking objects of similar features.
 The last two decades have provided many approaches for this type of problem \cite{loncaric1998,zhang2004,veltkamp2001,robert2012}.
-Fundamentally, the challenge lies in detecting similarity even as objects undergo geometric transformations (i.e. rotation,translation,scaling and shearing).     
+Fundamentally, the challenge lies in detecting similarity even as objects undergo geometric transformations (i.e. rotation, translation, scaling and shearing).     
 
 \cite{zhang2004} classify shape similarity into contour-based and region-based techniques. These are further divided into structural and global approaches.
 These are further divided into structural and global approaches.
@@ -73,7 +73,7 @@ Human subjects show a preference for features even when other shape descriptors 
 At the same time, global shape perception seems to precede local feature detection \cite{navon1977}. 
 
 Matching human behaviour requires more insight into human visual perception.
-Loncaric \cite{loncaric1998} describes some theories of human visual perception with interest in image processing.
+\cite{loncaric1998} describes some theories of human visual perception with interest in image processing.
 In a tool use scenario, emphasis should be given to theories describing perception as volumetric, such as through the use of generalised cylinders (known as geons \cite{dickinson2014}).
 Such insight may better explain human tool performance, but will however remain for future work.    
 
@@ -84,12 +84,12 @@ It is important to consider some of the limitations of such techniques, especial
 Global contour matching techniques are sensitive to occlusion (i.e. part of the object is hidden from the view point by some obstacle).
 In such cases, structural approaches are better suited to identify shapes from visible parts.
 Human perception is regarded as able to recognise objects even from sparse information or occluded perspective \cite{loncaric1998}.
-In solving tool use scenarios, it is important to consider a subject's visual perspective ( point of view ).
+In solving tool use scenarios, it is important to consider a subject's visual perspective (point of view).
 The geometry of objects may not be fully visible, hiding the functional parts.
 
 Most shape similarity techniques are tailored to analysing image based information (i.e. 2D projections of a 3D space).
 Human perception however also makes use of depth related knowledge.
-As tool use encompasses real world geometric constraints, any contour based approach would have to adapt to 3D information ( e.g. point clouds ).
+As tool use encompasses real world geometric constraints, any contour based approach would have to adapt to 3D information (e.g. point clouds).
 For our scenario, we can simplify the problem of visual analysis by extracting 3D surface point directly from the physics simulator (instead of using 2D projections). 
 
 Additionally, human subjects may attempt tool and object interaction even when parts do not fully match. 
@@ -110,7 +110,7 @@ At it's core, the technique assumes that points taken over similar surfaces chan
 For example, consider two lines as in figure \ref{fig:similar_lines_A}. Pairs of points taken from each line change Y axis value at the same time. 
 I.e. if point 2 on the red line increases, so does the corresponding point on the blue line.   
 More so, compared to figure \ref{fig:similar_lines_B}, the first set of lines change value at the same rate against their Y-axis deviation.
-A human observer would asses lines in figure \ref{fig:similar_lines_A} to be more similar than lines in \ref{fig:similar_lines_B},
+A human observer would assess lines in figure \ref{fig:similar_lines_A} to be more similar than lines in \ref{fig:similar_lines_B},
 which are more similar than in figure \ref{fig:similar_lines_C}.
 
 \begin{figure}[h]
@@ -130,14 +130,14 @@ which are more similar than in figure \ref{fig:similar_lines_C}.
     \caption{Different directions}
     \label{fig:similar_lines_C}
   \end{subfigure}
-  \caption{Lines of different similarity. From (a) to (c) shown in decreasing similarity.}
+  \caption{Lines of different similarity. From (a) to (c), shown in decreasing similarity.}
 \end{figure}
 
 In a scenario where lines share the same orientation (e.g. angle against the X axis), Pearson's correlation provides an adequate measure of line similarity.
 The correlation coefficient measures the extent to which two variables ($x_i$ and $x_i^\prime$) 
-can be defined through a linear equation ($x_i^\prime = a * x_i + b$ ). \\
+can be defined through a linear equation ($x_i^\prime = a * x_i + b$). \\
 
-Resulting values are in the range of $[-1,+1]$ where :
+Resulting values are in the range of $[-1,+1]$ where:
 \begin{itemize}
     \item values close to +1 represent high similarity
     \item values close to 0 represent dissimilarity 
@@ -266,7 +266,7 @@ Higher correlation is achieved for the more similar lines.
     \caption{Dissimilar contours}
     \label{fig:no_correlation_2D}
   \end{subfigure}
-  \caption{Comparison of simialirty measure}
+  \caption{Comparison of simalirty measure}
 \end{figure}
 
 \pagebreak[2]
@@ -282,7 +282,7 @@ As with 2D shapes, points in 3D Cartesian space (i.e. X-Y-Z coordinates) can be 
   \label{fig:mesh_example}
 \end{figure}  
 
-The similarity algorithm steps remain the same : 
+The similarity algorithm steps remain the same: 
 \begin{enumerate}
     \item Calculate the PCA vectors of the points defining each surface 
     \item Establish the rotation angles for aligning the first two principal vectors of each surface 
@@ -291,7 +291,7 @@ The similarity algorithm steps remain the same :
 \end{enumerate}
 
 For 3D space however, calculating angles and applying rotations involve different calculations.
-Two angles are required for aligning the first principal component against the X axis : 
+Two angles are required for aligning the first principal component against the X axis: 
 \begin{equation*}
   \begin{split}
     \alpha = atan2(v_y^1,v_x^1)\ mod\ 2\pi\\
@@ -307,7 +307,7 @@ The second principal component vector must be rotated by $\alpha$ and $\beta$ in
   \end{split}
 \end{equation*}
 Where $v^2=(v_x^2,v_y^2,v_z^2)$ is the direction vector of the second principal component. 
-$rotY(-\beta)$ and $rotZ(-\alpha)$ are rotation matrices taking points counter-clock wise the Y and Z axis.   
+$rotY(-\beta)$ and $rotZ(-\alpha)$ are rotation matrices taking points counter clockwise around the Y and Z axis.   
 
 Surface points can then be aligned to the primary axes by multiplying them to the corresponding rotation matrices:  
 \begin{equation*}
