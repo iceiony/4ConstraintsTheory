@@ -95,7 +95,6 @@ Most shape similarity techniques are tailored to analysing image based informati
 That is two dimensional(2D) projections of a three dimensional(3D) space.
 Human perception however carries depth related information.
 As tool use encompasses real world geometric constraints, any contour based approach would have to adapt to 3D information such as point clouds.
-%For our scenario, we can simplify the problem of visual analysis by extracting 3D surface point directly from the physics simulator (instead of using 2D projections). 
 
 When solving tool use scenarios, it is important to consider a subject's point of view.
 The geometry of objects may hide functional parts until the object is rotated into proper perspective.
@@ -116,9 +115,9 @@ The approach evaluates shapes within the subject's point of view, works on 3D in
 \subsection{Novel Surface Similarity Technique}
 When applied to two dimensional data, contour matching is the problem of assessing similarity of lines. 
 For three dimensional data, the task is better described as assessing similarity of surfaces.
-For clarity we will use the phrase 'surface similarity' as a term that describes either case.  
+For clarity, the phrase 'surface similarity' will imply the application of the technique for either of the above cases.  
 
-The proposed technique can be described as a general approach for assessing surface similarity. 
+The proposed technique can be described as a general approach for assessing data similarity. 
 It is based on principal component analysis (PCA) and Pearson's correlation coefficient. 
 We first describe implementation for 2D data and later discuss the 3D case with implications for tool use.  
 
@@ -322,7 +321,36 @@ Surface points can then be aligned to the primary axes by multiplying them to th
 Where P is the set of points defining the surface mesh.
 
 \subsubsection{Discussion}
-The nature of the technique, permits extracting the angle difference between two shapes.  
+The surface similarity technique, formally described, carries the traits of effective contour matching techniques.
+Translation and scaling invariance are immediate consequences of Pearson's correlation. 
+Rotation invariance is attributed to the properties of PCA, allowing shapes to be aligned to the same orientation. 
+Other non-linear transformations, such as shearing and added noise, would affect the similarity measure only in proportion to the amount of deformation applied.    
+These characteristics place the technique as a potent candidate for computer vision tasks.
+
+The technique can not be regarded as a global matching approach. 
+Its strength lies in assessing part similarity, although it has no mechanism for determining the structure of given shapes.  
+If shapes were prior decomposed into parts, the technique can be used in assessing individual parts. 
+
+For the purpose of tool fitting, surface similarity carries additional helpful properties. 
+The nature of tool use requires attention to complementary features rather than similar. 
+Negative similarity measures would indicate complementary surfaces (fig. \ref{fig:complementary}). 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.7\textwidth]{./figures/complementary.png}
+  \caption{Complementary surfaces having negative similarity measure}
+  \label{fig:complementary}
+\end{figure}  
+
+Tool and object interaction require that intended parts are properly aligned.
+Surface similarity can extract the necessary angle difference between complementary shapes.
+However, care should be given as PCA orthogonal vectors are sometimes reversed. 
+The resulting angles can sometimes be incorrect by $180^{\circ}$ differences. 
+
+
+%The nature of the technique, permits extracting the angle difference between two shapes.  
+
+%For our scenario, we can simplify the problem of visual analysis by extracting 3D surface point directly from the physics simulator (instead of using 2D projections). 
 \end{document}
 
 

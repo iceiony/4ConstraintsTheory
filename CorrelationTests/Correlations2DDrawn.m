@@ -1,4 +1,4 @@
-n = 15; %number of points
+n = 8; %number of points
 a = zeros(n,2);
 b = zeros(n,2);
 
