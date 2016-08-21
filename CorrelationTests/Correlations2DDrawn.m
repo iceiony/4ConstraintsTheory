@@ -1,4 +1,4 @@
-n = 8; %number of points
+n = 6; %number of points
 a = zeros(n,2);
 b = zeros(n,2);
 
@@ -42,8 +42,8 @@ for theta= 0 : 15*pi/180 : 20*380*pi/180
     hold on;
     axis([-2 2 -2 2]);
     
-    plot(a(:,1),a(:,2),'b');
-    plot(b(:,1),b(:,2),'r');
+    plot(a(:,1),a(:,2),'b','linewidth',2);
+    plot(b(:,1),b(:,2),'r','linewidth',2);
     label_points(a,b);
 
     %display 2D correlation matrix

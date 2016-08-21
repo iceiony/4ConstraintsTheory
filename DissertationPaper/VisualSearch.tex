@@ -324,33 +324,119 @@ Where P is the set of points defining the surface mesh.
 The surface similarity technique, formally described, carries the traits of effective contour matching techniques.
 Translation and scaling invariance are immediate consequences of Pearson's correlation. 
 Rotation invariance is attributed to the properties of PCA, allowing shapes to be aligned to the same orientation. 
-Other non-linear transformations, such as shearing and added noise, would affect the similarity measure only in proportion to the amount of deformation applied.    
-These characteristics place the technique as a potent candidate for computer vision tasks.
+Other non-linear transformations, such as shearing and added noise, would affect similarity measure proportional to the amount of applied deformation.    
+These attributes place the technique as a potent candidate for most computer vision tasks.
 
-The technique can not be regarded as a global matching approach. 
-Its strength lies in assessing part similarity, although it has no mechanism for determining the structure of given shapes.  
-If shapes were prior decomposed into parts, the technique can be used in assessing individual parts. 
-
-For the purpose of tool fitting, surface similarity carries additional helpful properties. 
-The nature of tool use requires attention to complementary features rather than similar. 
-Negative similarity measures would indicate complementary surfaces (fig. \ref{fig:complementary}). 
+Surface simulation can not be regarded as a global matching technique. 
+Its strength lies in assessing part similarity, although it has no mechanism for determining the structure of a given shape.  
+If shapes are prior decomposed into parts, the technique can be used in assessing individual parts. 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.7\textwidth]{./figures/complementary.png}
+  \includegraphics[width=.6\textwidth]{./figures/complementary.png}
   \caption{Complementary surfaces having negative similarity measure}
   \label{fig:complementary}
 \end{figure}  
 
+For the purpose of tool fitting, surface similarity carries additional helpful properties. 
+The nature of tool use requires attention to complementary features rather than similar. 
+Negative similarity measures would indicate complementary surfaces (fig. \ref{fig:complementary}). 
+Care should be given as this property depends on the size of the visual field.
+For example, in figure \ref{fig:complementary} if points 1 and 8 were removed, the surfaces would have 
+a positive similarity value. 
+
 Tool and object interaction require that intended parts are properly aligned.
-Surface similarity can extract the necessary angle difference between complementary shapes.
-However, care should be given as PCA orthogonal vectors are sometimes reversed. 
-The resulting angle differences can sometimes be incorrect by $180^{\circ}$. 
+Surface similarity can extract the necessary angle difference between complementary or similar shapes.
+However, PCA orthogonal vectors are sometimes reversed, the resulting angle differences can occasionally be incorrect by $180^{\circ}$. 
+
+Both complementarity and angle differences are highly desired traits for tool use problems.
 
 
-%The nature of the technique, permits extracting the angle difference between two shapes.  
+In the case of tool use, the surface similarity algorithm can be computationally simplified.
+Human subjects physically rotate objects so that important features face their perspective (fig. \ref{fig:same_orientation}). 
+As such, analysed surfaces would have already aligned to the same orientation.
+PCA rotations are therefore unnecessary in practice. 
 
-%For our scenario, we can simplify the problem of visual analysis by extracting 3D surface point directly from the physics simulator (instead of using 2D projections). 
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=.6\textwidth]{./figures/same_orientation.png}
+  \caption{In practice, surfaces are already aligned to the user's point of view}
+  \label{fig:same_orientation}
+\end{figure}  
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.6\textwidth]{./figures/raycasting.png}
+  \caption{Ray casting to extract surface points}
+  \label{fig:raycasting}
+\end{figure}  
+
+\subsubsection{Visual Search Simulation}
+The effectiveness of surface similarity was assessed using a physics simulator for a tool use scenario. 
+Human depth perception and perspective was simulated through ray casting, by extracting object 3D surfaces. 
+Ray casting is feature of physics engines which mimics the propagation of light. 
+Surface are extracted by casting a grid of parallel rays over an object model (fig. \ref{fig:raycasting}). 
+
+
+\subsubsection{Visual Search Simulation}
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}{1\textwidth}
+    \includegraphics[width=1\linewidth]{./figures/object_parts.png}
+    \caption{Object surfaces}
+    \label{fig:obj_parts}
+  \end{subfigure}
+  \begin{subfigure}{1\textwidth}
+    \includegraphics[width=1\linewidth]{./figures/tool_parts.png}
+    \caption{Tool surfaces}
+    \label{fig:tool_part}
+  \end{subfigure}
+  \caption{Surfaces extracted from both tool and object}
+\end{figure}
+
+A first test verifies the effectiveness of the algorithm and impact of PCA to the similarity measures. 
+$8$ pairs of tool and object surfaces were extracted (fig. \ref{fig:obj_parts},\ref{fig:tool_part}). 
+The first $4$ were chosen to represent parts that are normally of interest to human subjects. 
+The second set have no tool fitting value. 
+Figure \ref{fig:correlation_parts} shows a grid of correlation values for each combination of surfaces. 
+In either the PCA or simplified form, the algorithm returns complementary matching for pairs in the first set of surfaces. 
+Other combination achieve 0 or positive similarity, making them less possible tool fitting candidates. 
+The results match intuition of what object parts would provide good fitting. 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{./figures/correlation_comparison.png}
+  \caption{Complementary correlation occurs mostly between parts of interest}
+  \label{fig:correlation_parts}
+\end{figure}  
+
+It is worth observing that a non-PCA algorithm tends to return more false positive matches. 
+Yet, because of its reduced complexity, we employ the simplified algorithm in a visual search task.
+
+As previously mentioned,tool and object fitting can be optimised by visually detecting compatible parts.  
+Visual search simulates the act of finding potential solutions inside the physics simulator.
+Given a tool and object, the search randomly selects surfaces to assesses complementarity.
+When a pair is found, the simulation pauses and lets a human assessor verify validity (fig. \ref{fig:visual_search}). 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{./figures/visual_search.png}
+  \caption{Complementary surfaces found by visual search}
+  \label{fig:visual_search}
+\end{figure}  
+
+Due to project time constraints the effectiveness of visual search was not formally assessed. 
+Future investigation will have to compare results to human data, potentially carrying eye tracking information. 
+
+Additionally, further improvements can be made to the implementation:
+\begin{enumerate}
+   \item the search leverages no strategy to decompose objects into parts 
+   \item ideally, sub-regions of similarity should be located within larger surfaces 
+   \item the size of analysed surfaces was arbitrarily chosen and can be optimised  
+   \item tool-object fitting should be attempted for matched surfaces 
+   \item the more complex PCA based solution can be used to remove false positive results 
+\end{enumerate}
+
 \end{document}
 
 
