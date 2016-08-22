@@ -6,6 +6,17 @@
 \usepackage{hyperref}
 \usepackage{subcaption}
 \usepackage{amsmath}
+\usepackage[
+    backend=bibtex,
+%    isbn=false,
+%    url=false,
+%    doi=false,
+%    eprint=false,
+%    hyperref=false,
+%    backref=false,
+%    firstinits=false,
+]{biblatex}
+\bibliography{references}
 
 \hypersetup{colorlinks,urlcolor=blue}
 \let \shorttitle \textbf
@@ -331,7 +342,7 @@ Surface simulation can not be regarded as a global matching technique.
 Its strength lies in assessing part similarity, although it has no mechanism for determining the structure of a given shape.  
 If shapes are prior decomposed into parts, the technique can be used in assessing individual parts. 
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=.6\textwidth]{./figures/complementary.png}
   \caption{Complementary surfaces having negative similarity measure}
@@ -351,7 +362,6 @@ However, PCA orthogonal vectors are sometimes reversed, the resulting angle diff
 
 Both complementarity and angle differences are highly desired traits for tool use problems.
 
-
 In the case of tool use, the surface similarity algorithm can be computationally simplified.
 Human subjects physically rotate objects so that important features face their perspective (fig. \ref{fig:same_orientation}). 
 As such, analysed surfaces would have already aligned to the same orientation.
@@ -364,22 +374,20 @@ PCA rotations are therefore unnecessary in practice.
   \label{fig:same_orientation}
 \end{figure}  
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=.6\textwidth]{./figures/raycasting.png}
   \caption{Ray casting to extract surface points}
   \label{fig:raycasting}
 \end{figure}  
 
-\subsubsection{Visual Search Simulation}
+\subsubsection{Evaluation}
 The effectiveness of surface similarity was assessed using a physics simulator for a tool use scenario. 
 Human depth perception and perspective was simulated through ray casting, by extracting object 3D surfaces. 
 Ray casting is feature of physics engines which mimics the propagation of light. 
-Surface are extracted by casting a grid of parallel rays over an object model (fig. \ref{fig:raycasting}). 
+Surface are extracted by casting a grid of parallel rays over an object model as in figure \ref{fig:raycasting}). 
 
-
-\subsubsection{Visual Search Simulation}
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \begin{subfigure}{1\textwidth}
     \includegraphics[width=1\linewidth]{./figures/object_parts.png}
@@ -394,16 +402,16 @@ Surface are extracted by casting a grid of parallel rays over an object model (f
   \caption{Surfaces extracted from both tool and object}
 \end{figure}
 
-A first test verifies the effectiveness of the algorithm and impact of PCA to the similarity measures. 
+A first test verifies the effectiveness of the algorithm and the impact of PCA to the similarity measures. 
 $8$ pairs of tool and object surfaces were extracted (fig. \ref{fig:obj_parts},\ref{fig:tool_part}). 
-The first $4$ were chosen to represent parts that are normally of interest to human subjects. 
-The second set have no tool fitting value. 
+The first set of $4$, were chosen to represent parts that are of interest to human subjects. 
+A second set have no tool fitting value. 
 Figure \ref{fig:correlation_parts} shows a grid of correlation values for each combination of surfaces. 
 In either the PCA or simplified form, the algorithm returns complementary matching for pairs in the first set of surfaces. 
 Other combination achieve 0 or positive similarity, making them less possible tool fitting candidates. 
-The results match intuition of what object parts would provide good fitting. 
+The results match intuition of object parts that would provide good fitting. 
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=0.8\textwidth]{./figures/correlation_comparison.png}
   \caption{Complementary correlation occurs mostly between parts of interest}
@@ -418,9 +426,9 @@ Visual search simulates the act of finding potential solutions inside the physic
 Given a tool and object, the search randomly selects surfaces to assesses complementarity.
 When a pair is found, the simulation pauses and lets a human assessor verify validity (fig. \ref{fig:visual_search}). 
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=0.6\textwidth]{./figures/visual_search.png}
+  \includegraphics[width=0.8\textwidth]{./figures/visual_search.png}
   \caption{Complementary surfaces found by visual search}
   \label{fig:visual_search}
 \end{figure}  
@@ -432,10 +440,13 @@ Additionally, further improvements can be made to the implementation:
 \begin{enumerate}
    \item the search leverages no strategy to decompose objects into parts 
    \item ideally, sub-regions of similarity should be located within larger surfaces 
-   \item the size of analysed surfaces was arbitrarily chosen and can be optimised  
-   \item tool-object fitting should be attempted for matched surfaces 
-   \item the more complex PCA based solution can be used to remove false positive results 
+   \item the size of analysed surfaces was arbitrarily chosen and can be adjusted for better results  
+   \item matched surfaces should be verified by fitting the tool and object 
+   \item the PCA based algorithm can be used to remove false positive results 
 \end{enumerate}
+
+\clearpage
+\printbibliography 
 
 \end{document}
 
