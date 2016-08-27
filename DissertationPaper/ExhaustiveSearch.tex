@@ -122,13 +122,109 @@ A tool use model can employ physics engines for one of multiple reasons:
       \item it is analogous to mental simulation (4CT)
 \end{enumerate}
 
-\section{Physics Engine Review}
-For the model we consider physics engines written in C++ or available to Matlab. 
-These engines should preferably be free or have reduced licensing fees. 
-Unfortunately, the majority of engines dedicated to scientific simulation enquire large fees (e.g. Vortex , MuJoCo).
-Most literature reviews focus on commercial or open source software dedicated to game development \ref{boeing2007,roennau2013,hummel2012}. 
-In an academic context, physics engines have traditionally been used in robotic simulations. 
+\section{Physics Engine Evaluation}
+Selecting a suitable physics engine would consider the below criteria: 
+\begin{enumerate}
+    \item The engine should have high fidelity in simulating rigid body collision. 
+      That is, the engine should faithfully reflect real world interaction of bodies involving no moving parts or deformations.
+      As tool and object are composed of LEGO, items are best represented by rigid bodies.   
+      High fidelity is required to correctly evaluate tool-object fitting positions with minimal errors.
+    \item The engine should be available in user-friendly scientific languages (such as Matlab or Python). 
+      Scientific languages have many inbuilt algorithms that can be leveraged.
+      Additionally, language difficulty shifts focus from the problem being solved to solving code complexities.
+    \item There should be no associated fees or reduced cost for engine use.
+    \item The engine should be portable to common platforms (i.e. Windows,Linux,MacOS) to encourage model development by future researchers.
+    \item The engine should have good documentation to improve development time.
+    \item Simulations must work with three dimensional(3D) representations of tools and objects.
+      Engines capable of only two dimensional(2D) simulations are therefore excluded.  
+\end{enumerate}
 
+In an academic context, physics engines have been used for robotic simulations of locomotion and object grasping.
+The fidelity of these scenarios match our experimental requirements and can serve as basis for engine evaluation. 
+Literature reviews, have focused on commercial or open source engines dedicated to game development \cite{boeing2007,roennau2013,hummel2012}. 
+Engines aimed at scientific simulation unfortunately require large usage fees (e.g. Vortex by CM-Labs and MuJoCo).
+However, due to their target audience, game engines achieve real-time simulation at the cost of precision. 
+There is compromise between speed and how faithfully an engine can reflect real physical interaction.
+For this reason, most available engines are not suitable to scientific use and must be investigated. 
+
+With engines undergoing constant improvement, evaluation is transient and specific to the product versions used. 
+Review articles fail to specify the version of the engines evaluated.
+Performance results are also influenced by specifics of implementation. For example reviewers can use the engine directly or through an intermediary abstraction layer which can affect performance.  
+We therefore select the most likely engines for the model and evaluate them individually. 
+
+Two game engines remark themselves as candidates: \emph{Bullet Physics v2} and \emph{Newton Game Dynamics v3}.
+A formally popular option is Open Dynamics Engine, but should no longer be considered as it is not under active development. 
+
+\subsection{Bullet Physics}
+\cite{boeing2007} regards Bullet as having the best overall performance. 
+\cite{hummel2012,roennau2013} also mention Bullet as having the best rigid body collision, but only in the case of large objects.
+What defines objects as large is however unclear. 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.5\textwidth]{./figures/bullet_demo.png}
+  \caption{Tool and object models loaded into Bullet simulation demo}
+  \label{fig:bullet_demo}
+\end{figure}      
+
+We test Bullet's collision detection in a demo containing simple tool and object models (fig. \ref{fig:bullet_demo}).
+Items are positioned such that moving the tool will allow lifting the target object. 
+The tool is first slid into the object fitting, then lifted. 
+
+A magnitude of parameters can influence the effects of interaction between the two objects:
+\begin{enumerate}
+  \item Object collision properties are most commonly represented by classes which approximate the object's shape in order to gain execution speed.
+    A more precise approach is to use classes that represent the object's true collision shape (fig. \ref{fig:collision_shape}).   
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.48\textwidth]{./figures/collision_approximation.png}
+  \includegraphics[width=.41\textwidth]{./figures/collision_exact.png}
+  \caption{Comparison of approximated collision and exact collision shape}
+  \label{fig:collision_shape}
+\end{figure}      
+
+  \item A threshold or margin of contact exists between objects. When the margin is to low, shaking effects can be noticed as the objects make contact. Alternatively, when the margin is too large, the object's collision would not be representative of geometry. 
+
+  \item Moving the tool to interact with the object can be done in multiple ways, each with different degrees of realism.
+\end{enumerate}
+
+From a development perspective, the engine was easy to build and has detailed documentation.
+Matlab integration is also available from 3rd party developers. 
+However, the integration layer is not well maintained having missing functionality or failing to build.
+A model using Bullet Physics would therefore have to be developed in C++. 
+
+Overall Bullet Physics suffers from a high degree of shaking when tool and object interact. 
+As the object is within the grasp of the tool, collision points make the object bounce uncontrollably within the tool's clamp. As bounce forces amplify the target object eventually bursts out of the tool's fixation.  
+Parameters of the engine can be tuned to minimise the effects, but would ultimately lead to less representative tool use simulations. 
+
+\subsection{Newton Game Dynamics}
+Newton Game Dynamics is regarded as having better precision than Bullet, but at the cost of performance \cite{hummel2012}. 
+The precision gain is achieved by using a deterministic solver instead of numerical methods for integrating movement and forces over time. 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.5\textwidth]{./figures/newton_demo.png}
+  \caption{Tool and object models loaded into Bullet simulation demo}
+  \label{fig:newton_demo}
+\end{figure}      
+
+We setup a demo similar to the Bullet one.
+The tool is slid into object's position, then lifted (\ref{fig:newton_demo}). 
+Newton's default behaviour did not cause shaking or other unrealistic effects.
+The tool and object move smoothly on the established trajectory. 
+
+From a development point of view, Newton lacks the quality of documentation found in Bullet. 
+There are thousands of lines of example code available, but locating needed functionality is difficult. 
+This is made worse by a strange, yet consistent API interaction.
+
+Additionally, the engine supports uncommon 3D model file formats.
+Code has to be developed to support more common formats.
+
+As a less popular engine, Newton does not have integration with other languages (e.g. Matlab or Python). 
+A computational model would have to be written in C++.
+
+Even with the above development concerns, the engine's simulation precision make it the prime candidate for our model.  
 
 \printbibliography
 \end{document}
