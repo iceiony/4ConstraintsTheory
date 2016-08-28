@@ -22,7 +22,7 @@
 
 \section{Introduction}
 Tool use is one of the human abilities that uniquely distinguishes man from other species. 
-We refer to tools as hand held devices used in making changes to the surrounding environment. 
+We refer to tools as hand held devices employed in making changes to the surrounding environment. 
 Cases of tool use have been reported in other species, but never to the extent engaged by humans \cite{boysen1999,harrington2009,lefebvre2004}. 
 As a defining attribute of human cognition, we wish to lay the foundations for a computational model of tool use reasoning.
 
@@ -109,10 +109,15 @@ A human subject is presented two novel objects composed out of LEGO blocks.
 One object is passive and may not be directly touched (fig. \ref{fig:obj51}).
 The second object is active and must be used to lift the passive object to a new location (fig. \ref{fig:obj52}).
 As a tool use task, the active and passive objects are analogous to tool and target object.
-
 Due to the unusual geometries, subjects must reason about the correct spatial fitting of tool and object.    
+
+In summary, the experiment is a novel tool-object fitting task requiring spatial reasoning.
+A computational model mimicking human behaviour, would solve geometric constraints similar to human subjects.
+
+\section{Physics Engine Evaluation}
+
 Formally solving object-tool fitting requires considerations of force closure.
-However, a shortcut to computing forces and physical interaction is to consider the use of a physics engine. 
+However, a shortcut to computing forces and physical interaction is the use of a physics engine. 
 To some extent, it is believed that the human brain computes approximate Newtonian laws \cite{battaglia2013}. 
 Similarly, a physics engines does not compute exact friction, closure or gravity laws, but provides realistic alternative results. 
 A tool use model can employ physics engines for one of multiple reasons:
@@ -122,42 +127,42 @@ A tool use model can employ physics engines for one of multiple reasons:
       \item it is analogous to mental simulation (4CT)
 \end{enumerate}
 
-\section{Physics Engine Evaluation}
-Selecting a suitable physics engine would consider the below criteria: 
+A suitable physics engine would satisfy the below criteria:
 \begin{enumerate}
     \item The engine should have high fidelity in simulating rigid body collision. 
       That is, the engine should faithfully reflect real world interaction of bodies involving no moving parts or deformations.
-      As tool and object are composed of LEGO, items are best represented by rigid bodies.   
+      As tool and object are composed of LEGO, items are best represented as rigid bodies.   
       High fidelity is required to correctly evaluate tool-object fitting positions with minimal errors.
     \item The engine should be available in user-friendly scientific languages (such as Matlab or Python). 
       Scientific languages have many inbuilt algorithms that can be leveraged.
       Additionally, language difficulty shifts focus from the problem being solved to solving code complexities.
     \item There should be no associated fees or reduced cost for engine use.
-    \item The engine should be portable to common platforms (i.e. Windows,Linux,MacOS) to encourage model development by future researchers.
-    \item The engine should have good documentation to improve development time.
-    \item Simulations must work with three dimensional(3D) representations of tools and objects.
-      Engines capable of only two dimensional(2D) simulations are therefore excluded.  
+    \item The engine should be portable to common platforms (i.e. Windows,Linux,MacOS) to encourage engagement from future researchers.
+    \item The engine should have good documentation for ease of development.
+    \item Simulations must be done on three dimensional(3D) models of tools and objects.
+      Engines capable of only two dimensional(2D) simulations are therefore inappropriate.  
 \end{enumerate}
 
 In an academic context, physics engines have been used for robotic simulations of locomotion and object grasping.
 The fidelity of these scenarios match our experimental requirements and can serve as basis for engine evaluation. 
-Literature reviews, have focused on commercial or open source engines dedicated to game development \cite{boeing2007,roennau2013,hummel2012}. 
+Literature reviews have focused on commercial or open source engines dedicated to game development \cite{boeing2007,roennau2013,hummel2012}. 
 Engines aimed at scientific simulation unfortunately require large usage fees (e.g. Vortex by CM-Labs and MuJoCo).
-However, due to their target audience, game engines achieve real-time simulation at the cost of precision. 
+However, due to their target audience, game engines achieve high speed simulations at the cost of precision. 
 There is compromise between speed and how faithfully an engine can reflect real physical interaction.
-For this reason, most available engines are not suitable to scientific use and must be investigated. 
+For this reason, most available engines are not suitable to scientific use and must be further investigated. 
 
-With engines undergoing constant improvement, evaluation is transient and specific to the product versions used. 
+With engines undergoing constant improvement, evaluation is transient and specific to product versions. 
 Review articles fail to specify the version of the engines evaluated.
-Performance results are also influenced by specifics of implementation. For example reviewers can use the engine directly or through an intermediary abstraction layer which can affect performance.  
-We therefore select the most likely engines for the model and evaluate them individually. 
+Additionally, performance results are influenced by implementation specifics.
+For example reviewers can use the engine directly or through an abstraction layer that may affect performance.  
+We therefore select the most likely engines for model use, and evaluate individually. 
 
 Two game engines remark themselves as candidates: \emph{Bullet Physics v2} and \emph{Newton Game Dynamics v3}.
-A formally popular option is Open Dynamics Engine, but should no longer be considered as it is not under active development. 
+A formally popular option is Open Dynamics Engine, but should no be considered as it is no longer under active development. 
 
 \subsection{Bullet Physics}
 \cite{boeing2007} regards Bullet as having the best overall performance. 
-\cite{hummel2012,roennau2013} also mention Bullet as having the best rigid body collision, but only in the case of large objects.
+\cite{hummel2012,roennau2013} also mention Bullet as having the best rigid body collision, but only in the case of simulating large objects.
 What defines objects as large is however unclear. 
 
 \begin{figure}[h]
@@ -168,8 +173,9 @@ What defines objects as large is however unclear.
 \end{figure}      
 
 We test Bullet's collision detection in a demo containing simple tool and object models (fig. \ref{fig:bullet_demo}).
-Items are positioned such that moving the tool will allow lifting the target object. 
-The tool is first slid into the object fitting, then lifted. 
+The passive object is first set on a flat surface.
+Following, the tool is positioned to slid into the object's fitting and lift it.
+Demo code is therefore representative of the real-world experiment.  
 
 A magnitude of parameters can influence the effects of interaction between the two objects:
 \begin{enumerate}
@@ -210,21 +216,95 @@ The precision gain is achieved by using a deterministic solver instead of numeri
 \end{figure}      
 
 We setup a demo similar to the Bullet one.
-The tool is slid into object's position, then lifted (\ref{fig:newton_demo}). 
-Newton's default behaviour did not cause shaking or other unrealistic effects.
-The tool and object move smoothly on the established trajectory. 
+The object is set on a flat surface. 
+The tool is then slid into object's fitting and lifted (\ref{fig:newton_demo}). 
+
+Compared to Bullet, Newton's default behaviour shows realistic behaviour. 
+The simulation exhibits no shaking or other unrealistic effects.
+The tool and object move smoothly on established trajectories. 
 
 From a development point of view, Newton lacks the quality of documentation found in Bullet. 
 There are thousands of lines of example code available, but locating needed functionality is difficult. 
 This is made worse by a strange, yet consistent API interaction.
 
-Additionally, the engine supports uncommon 3D model file formats.
-Code has to be developed to support more common formats.
+Additionally, the engine supports unconventional 3D file formats, making it difficult to load item models.
+Code has to be developed to support more common file formats.
 
 As a less popular engine, Newton does not have integration with other languages (e.g. Matlab or Python). 
 A computational model would have to be written in C++.
 
 Even with the above development concerns, the engine's simulation precision make it the prime candidate for our model.  
+
+\section{Exhaustive Search}
+Demos show how tool-object fitting can be verified through simulation.
+As the model aims to solve fitting problems, one can position items in all possible configurations to select valid ones. 
+Validity implies that the tool can lift the object, and that models do not penetrate each other's surface.
+A configuration represents a tool's rotation and relative position to the object.
+That is X,Y,Z coordinates and rotations around each axis (i.e. yaw, pitch, roll). 
+An \emph{Exhaustive Search} model outputs solutions by testing all possible configurations.
+
+\subsection{Implementation Details}
+The target object is positioned on a flat surface. 
+The tool is then placed in successive relative locations, and object collision is tested. 
+For any collision points to be detected, one simulation time step has to be executed.
+Newton Physics allows obtaining the penetration depth of collision points. 
+When penetration is too high, the configuration is deemed invalid. 
+
+If penetration depth is zero, the object and tool may not be in contact at all. 
+To invalidate such scenarios, a lifting force is applied to the tool.
+When the objects are in contact, lifting velocity would transfer to the target object and may be asserted. 
+
+The approach is able to verify a single fitting configuration per physics engine update step.
+However, as object contact is detected through a small penetration margin it is possible that undesired vertical forces appear.
+As a result output data would contain invalid solutions which require further validation.
+
+Physics engines do not require 3D rendering when computing object dynamics. 
+The exhaustive search can run in either graphical or non-graphical mode.
+Graphical rendering allows researchers to investigate the correct loading of objects and interactions in the 3D world.
+The non-graphical model allows faster computation as rendering overburden is removed. 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.7\textwidth]{./figures/newton_simulation.png}
+  \caption{Exhaustive search rendering}
+  \label{fig:newton_simulation}
+\end{figure}      
+
+Figure \ref{fig:newton_simulation} captures the rendering of two objects in fitting position.
+Visual meshes are displayed in green.
+Collision meshes are outlined by white lines.
+Contact points are displayed as red dots.
+3D orientation vectors give visual queues of rotation angles (red, green, blue for X, Y, Z respectively).
+Blue bounding boxes represent vertex extremities (i.e. min and max X, Y, Z coordinates).
+ 
+Newton dynamics has the in built ability to optimise meshes as convex decomposition.
+This means, complex assemblies of triangles representing simple shapes can be optimised to simpler mesh structures representing the same shapes. 
+A complex object would therefore be transformed to an assembly of simple shapes, optimising collision detection and computation. 
+
+\subsection{Discussion}
+When search intervals are in the vicinity of possible solutions, the model finds multiple equivalent fitting configurations.
+However, on a single multi-core computer the exhaustively searching is unfeasible. 
+The tool's position is determined by 6 dimensions of freedom amounting to $~10^12$ possible configurations. 
+Even for a single tool rotation there are $~10^8$ configurations which require an hour of execution to verify. 
+
+As described in the implementation, verifying configurations has been optimised for speed.
+Further improvements can be achieved by splitting the search space over multiple machines.
+Alternatively, the search step can be increased at the expense of missing possible solutions. 
+
+%unrealistic representation of human behaviour
+Exhaustively searching is lengthy and computationally expensive.
+Engine features, such as penetration depth, can be leveraged by more ingenious search algorithms.
+However, solutions based solely on the engine's functionality remain problematically unrealistic of physical laws and human ability.
+For example, the tool can be positioned to lift an object even when no physical manner would allow it to be placed in that location.  
+
+There is also a question of how a subject may grasp the tool.
+During simulations, lifting forces are applied to the tool's center of gravity.
+The search may therefore produce fittings that do not realistically permit the tool to be held.
+
+%motivation for a heuristic search
+Computational expense yet remains the impeding factor to the model's use. 
+Heuristic methods can be used to optimise the search problem, whilst better resembling human ability.
+However, physics simulations remain a viable approach to verifying solutions. 
 
 \printbibliography
 \end{document}
