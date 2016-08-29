@@ -58,7 +58,7 @@ Fundamentally, shape analysis is used in detecting similarity even as objects un
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=1\textwidth]{./figures/affine_transform.png}
+  \includegraphics[width=1\textwidth]{figures/affine_transform.png}
   \caption{Graphical examples of affine transformations}
   \label{fig:affine_transform}
 \end{figure}  .     
@@ -69,7 +69,7 @@ Figure \ref{fig:shape_similarity} shows a comprehensive classification of promin
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=1\textwidth]{./figures/similarity_techniques.png}
+  \includegraphics[width=1\textwidth]{figures/similarity_techniques.png}
   \caption{Classification of shape similarity techniques (reprinted from \cite{zhang2004})}
   \label{fig:shape_similarity}
 \end{figure}  
@@ -140,17 +140,17 @@ which are more similar than in figure \ref{fig:similar_lines_C}.
 \begin{figure}[h]
   \centering
   \begin{subfigure}{.49\textwidth}
-    \includegraphics[width=1\linewidth]{./figures/similar_lines_A.png}
+    \includegraphics[width=1\linewidth]{figures/similar_lines_A.png}
     \caption{Same direction \& rate (different scales)}
     \label{fig:similar_lines_A}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
-    \includegraphics[width=1\linewidth]{./figures/similar_lines_B.png}
+    \includegraphics[width=1\linewidth]{figures/similar_lines_B.png}
     \caption{Same direction but different rates}
     \label{fig:similar_lines_B}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
-    \includegraphics[width=1\linewidth]{./figures/similar_lines_C.png}
+    \includegraphics[width=1\linewidth]{figures/similar_lines_C.png}
     \caption{Different directions}
     \label{fig:similar_lines_C}
   \end{subfigure}
@@ -205,7 +205,7 @@ Rotation is a common occurrence, and can be handled through PCA.
   \begin{bmatrix}
     cos(\theta)  & -sin(\theta) &   0 \\
     -sin(\theta) & cost(\theta) &   0 \\
-    	0   	 &	0       &   1 \\ 
+      0      &  0       &   1 \\ 
   \end{bmatrix} 
   *
   \begin{bmatrix}
@@ -242,7 +242,7 @@ As affine rotations preserve variation, the principal vectors rotate by the same
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.5\textwidth]{./figures/pca_rotation.png}
+  \includegraphics[width=.5\textwidth]{figures/pca_rotation.png}
   \caption{First principal component rotating with the figure}
   \label{fig:pca_rotation}
 \end{figure}  
@@ -264,12 +264,12 @@ Higher correlation is achieved for the more similar lines.
 \begin{figure}[h]
   \centering
   \begin{subfigure}{.5\textwidth}
-    \includegraphics[width=1\linewidth]{./figures/correlation_2D.png}
+    \includegraphics[width=1\linewidth]{figures/correlation_2D.png}
     \caption{Similar contours}
     \label{fig:correlation_2D}
   \end{subfigure}
   \begin{subfigure}{.44\textwidth}
-    \includegraphics[width=1\linewidth]{./figures/no_correlation_2D.png}
+    \includegraphics[width=1\linewidth]{figures/no_correlation_2D.png}
     \caption{Dissimilar contours}
     \label{fig:no_correlation_2D}
   \end{subfigure}
@@ -291,7 +291,7 @@ As with 2D shapes, points in 3D Cartesian space (i.e. X-Y-Z coordinates) can be 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.5\textwidth]{./figures/mesh_example.png}
+  \includegraphics[width=.5\textwidth]{figures/mesh_example.png}
   \caption{Example of surface mesh}
   \label{fig:mesh_example}
 \end{figure}  
@@ -342,7 +342,7 @@ If shapes are prior decomposed into parts, the technique can be used in assessin
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=.6\textwidth]{./figures/complementary.png}
+  \includegraphics[width=.6\textwidth]{figures/complementary.png}
   \caption{Complementary surfaces having negative similarity measure}
   \label{fig:complementary}
 \end{figure}  
@@ -367,14 +367,14 @@ PCA rotations are therefore unnecessary in practice, and can lead to a simplifie
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=.6\textwidth]{./figures/same_orientation.png}
+  \includegraphics[width=.6\textwidth]{figures/same_orientation.png}
   \caption{In practice, surfaces are already aligned to the user's point of view}
   \label{fig:same_orientation}
 \end{figure}  
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=.7\textwidth]{./figures/raycasting.png}
+  \includegraphics[width=.7\textwidth]{figures/raycasting.png}
   \caption{Ray casting to extract surface points}
   \label{fig:raycasting}
 \end{figure}  
@@ -388,12 +388,12 @@ Surface are extracted by casting a grid of parallel rays over an object model as
 \begin{figure}[!h]
   \centering
   \begin{subfigure}{1\textwidth}
-    \includegraphics[width=1\linewidth]{./figures/object_parts.png}
+    \includegraphics[width=1\linewidth]{figures/object_parts.png}
     \caption{Object surfaces}
     \label{fig:obj_parts}
   \end{subfigure}
   \begin{subfigure}{1\textwidth}
-    \includegraphics[width=1\linewidth]{./figures/tool_parts.png}
+    \includegraphics[width=1\linewidth]{figures/tool_parts.png}
     \caption{Tool surfaces}
     \label{fig:tool_part}
   \end{subfigure}
@@ -411,7 +411,7 @@ The results match intuition of object parts that would provide good fitting.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.8\textwidth]{./figures/correlation_comparison.png}
+  \includegraphics[width=0.8\textwidth]{figures/correlation_comparison.png}
   \caption{Complementary correlation occurs mostly between parts of interest}
   \label{fig:correlation_parts}
 \end{figure}  
@@ -426,7 +426,7 @@ When a pair is found, the simulation pauses and lets a human assessor verify val
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.8\textwidth]{./figures/visual_search.png}
+  \includegraphics[width=0.8\textwidth]{figures/visual_search.png}
   \caption{Complementary surfaces found by visual search}
   \label{fig:visual_search}
 \end{figure}  
@@ -443,6 +443,7 @@ Additionally, further improvements can be made to the implementation:
    \item The PCA based algorithm can be used to remove false positive results 
 \end{enumerate}
 
+\clearpage
 \printbibliography 
 
 \end{document}
