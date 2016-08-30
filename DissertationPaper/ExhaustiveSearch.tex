@@ -83,7 +83,7 @@ A computational model would therefore have to elaborate these items before fitti
 
 The topic of this paper is solving geometric constraints through spatial reasoning in order to achieve simple tool-object interaction.  
 
-\section{Experimental Setup}
+\subsection{Experimental Setup}
 
 Dietmar Heinke and Fran\c{c}ois Osiurak,the author of 4CT, have devised an experiment that tests human ability to use novel objects. 
 The experiment is intended for use in both a computational model and to investigate human reasoning on tool and object geometries. 
@@ -118,12 +118,13 @@ To some extent, it is believed that the human brain computes approximate Newtoni
 Similarly, physics engines do not compute exact friction, closure or gravitational forces, but provides realistic approximate results. 
 A tool use model can employ physics engines for one of multiple reasons:
 \begin{enumerate}
+\itemsep0em 
 \item The engine can serve as a source of inference over physical laws and objects 
 \item Solutions of tool-object fitting can be verified through simulation
 \item Physical simulation is analogous to mental tool simulation from 4CT
 \end{enumerate}
 
-\section{Physics Engine Evaluation}
+\subsection{Physics Engine Evaluation}
 
 A suitable physics engine would satisfy the following criteria:
 \begin{enumerate}
@@ -157,7 +158,7 @@ We therefore select the most likely engines for model use, and evaluate individu
 Two game engines emerged as candidates: \emph{Bullet Physics v2} and \emph{Newton Game Dynamics v3}.
 A formerly popular option is Open Dynamics Engine, but should not be considered as it is no longer under active development. 
 
-\subsection{Bullet Physics}
+\subsubsection{Bullet Physics}
 \cite{boeing2007} regards Bullet as having the best overall performance. 
 \cite{hummel2012,roennau2013} also mention Bullet as having the best rigid body collision, but only in the case of large object simulation.
 What defines objects as large is however unclear. 
@@ -203,7 +204,7 @@ When the tool is positioned to lift the object, collision points make the object
 As bounce forces amplify the object eventually bursts out of the tool's fixation.  
 Engine parameters can be tuned to minimise these effects, but would ultimately lead to less representative simulations. 
 
-\subsection{Newton Game Dynamics}
+\subsubsection{Newton Game Dynamics}
 Newton Game Dynamics is regarded as having better precision than Bullet, but at the cost of performance \cite{hummel2012}. 
 The precision gain is achieved by using a deterministic solver instead of numerical methods for integrating movement and forces over time. 
 
@@ -306,5 +307,6 @@ Heuristic methods can be used to optimise the search space whilst considering hu
 The following describes a visual search approach to finding possible fitting configurations. 
 The physics simulations remain a method for testing such configurations. 
 
-\printbibliography
+%\printbibliography
+
 \end{document}
