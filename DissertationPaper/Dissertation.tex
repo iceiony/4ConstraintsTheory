@@ -1,6 +1,7 @@
 \documentclass[
     a4paper,
     man,
+    donotrepeattitle,
     floatsintext,
     british
 ]{apa6}
@@ -68,18 +69,45 @@
    captionpos=b,
 }
 
-\title{Spatial Reasoning in Human Tool Use}
-\shorttitle{}
-\author{Adrian Ionita\\
-1057404}
-\affiliation{University Of Birmingham\\
-2016
-}
+\usepackage{lipsum} 
 
+\title{SPATIAL REASONING IN HUMAN TOOL USE}
+\shorttitle{}
+\author{
+  \small{by}\\
+  Adrian Ionita (ID: 1057404)
+}
+\affiliation{Supervisor: Dietmar Heinke\\
+\vfill
+\includegraphics[width=40mm]{figures/bham_logo.png}
+\vfill
+Submitted in partial fulfilment\\
+of the requirements for the degree of\\ 
+Master of Science
+\vfill
+School of Psychology\\
+University of Birmingham\\
+Birmingham, UK\\
+September 2016
+}
+\abstract{\lipsum[1]}
 
 \begin{document}
+\pagenumbering{gobble}
 \thispagestyle{otherpage}
 \maketitle
+
+\section{\normalfont Acknowledgements}
+\lipsum[1]
+\clearpage
+
+\pagenumbering{arabic}
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+
 \include*{ExhaustiveSearch}
 \include*{HeuristicSearch}
 \clearpage

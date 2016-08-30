@@ -33,15 +33,14 @@
 
 \begin{document}
 
-\section{Appendix A}
-\shorttitle{Compilation}
+\section{Appendix A - Compiling}
+\shorttitle{Compiling}
 
 The following section describes how to compile and run the computational model on Windows and Linux operating systems. 
 Original source-code and documentation can be found at \url{https://github.com/iceiony/4ConstraintsTheory}
 The below installation steps are meant to be run using a terminal window.
 
-\subsection{Linux}
-Linux and Unix based operating systems require GCC compiler version 4.6 or earlier. 
+\textbf{Linux} and \textbf{Unix} based operating systems require GCC compiler version 4.6 or earlier. 
 \begin{enumerate}
   \item Install \textbf{git} and clone the code repository: 
     \begin{lstlisting}[language=bash]
@@ -94,8 +93,7 @@ Linux and Unix based operating systems require GCC compiler version 4.6 or earli
     \end{lstlisting}
 \end{enumerate}
 
-\subsection{Windows}
-Windows based operating systems require the Visual C++ compiler which part of Visual Studio package.
+\textbf{Windows} operating systems require the Visual C++ compiler which part of Visual Studio package.
 The Windows solution contains pre-compiled packages required for graphic rendering. 
 As these packages were compiled using VisualStudio - 2015, other viersions of the compiler would not work.   
 \begin{enumerate}
@@ -124,14 +122,18 @@ As these packages were compiled using VisualStudio - 2015, other viersions of th
 
   \item Install \textbf{VisualStudio 2015} community edition, with the \textbf{Visual C++} option enabled. 
   
-  \item Open the visual studio solution located in : 
-    
-    \textbf{./ComputationalModel  /vs\_2015  /ComputationalModel  ComputationalModel.sln}
-    
-    From the solution cou can build any of the computational model executable.
-    Output is directed to folder :
-    
-    \textbf{./ComputationalModel /vs\_2015 /ComputationalModel /bin} 
+    \pagebreak
+  \item Open the visual studio solution located in: 
+    \nopagebreak
+    \begin{lstlisting}[language=bash]
+    ./ComputationalModel/vs\_2015/ComputationalModel/ComputationalModel.sln
+    \end{lstlisting}
+    \nopagebreak
+    The solution allows building any of the computational model executable.
+    Output is directed to:
+    \begin{lstlisting}[language=bash]
+    ./ComputationalModel/vs\_2015/ComputationalModel/bin
+    \end{lstlisting}
 
 \end{enumerate}
 
@@ -143,10 +145,10 @@ Successful compilations would result in 4 executable files:
   \item VisualSearchGUI.exe
 \end{itemize}
 
-\section{Appendix B}
+\clearpage
+\section{Appendix B - Software Glossary}
 \shorttitle{Software Glossary}
 
-\subsection{C++ Code}
 This section describes the functional use of the computational model software. 
 For the graphic version of the software (files ending in GUI), camera view-point can be controlled using \textbf{W,A,S,D} keyboard keys and \textbf{Mouse Click \& Drag}.Execution of the 3D simulation can be paused and resumed by pressing the \textbf{P} key.
 
@@ -173,17 +175,16 @@ For the graphic version of the software (files ending in GUI), camera view-point
     Output is written to the \textbf{./surfaces} subfolder with one file per extracted surface.   
 
   \item [VisualSearchGUI.exe] performs a visual search of surfaces that would potentially offer good tool to object interaction. Tool and object models can be passed as parameters. If the program is invoked with no arguments, obj51.3ds and obj52.3ds are loaded.
-    
     \begin{lstlisting}[language=bash]
   ./VisualSearchGUI.exe obj51.3ds obj52.3ds
     \end{lstlisting}
-
     During execution the tool and object are selectively rotated. For every rotation, random sub-surfaces are selected and checked for correlation.
     When correlation value is strong, execution is paused for a human observer to asses validity. 
 \end{description}
 
-\subsection{Matlab Code}
-In analysing the feasibility of our novel visual correlation technique, Matlab was used. Scripts can be found in the \textbf{./CorrelationTetsts} subfolder. 
+For analysing the feasibility of the novel visual correlation technique, Matlab was used. 
+Scripts can be found in the \textbf{./CorrelationTetsts} subfolder. 
 As a convention, files starting with a capital letter are a point of interest.
 They represent different tests executed for 2D and 3D surface correlation. 
+
 \end{document}

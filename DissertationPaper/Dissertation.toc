@@ -1,0 +1,47 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\select@language {british}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\normalfont \relax \fontsize {12}{14.5}\selectfont \abovedisplayskip 12\p@ plus3\p@ minus7\p@ \abovedisplayshortskip \z@ plus3\p@ \belowdisplayshortskip 6.5\p@ plus3.5\p@ minus3\p@ \belowdisplayskip \abovedisplayskip \let \leftmargin \leftmargini \parsep 5\p@ plus2.5\p@ minus\p@ \topsep 10\p@ plus4\p@ minus6\p@ \itemsep 5\p@ plus2.5\p@ minus\p@ \leftmargin \leftmargini \parsep 5\p@ plus2.5\p@ minus\p@ \topsep 10\p@ plus4\p@ minus6\p@ \itemsep 5\p@ plus2.5\p@ minus\p@ Abstract}{}{section*.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\normalfont Acknowledgements}{}{section*.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Introduction}{3}{section*.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{The Four Constraints Theory}{3}{section*.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Experimental Setup}{5}{section*.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Physics Engine Evaluation}{7}{section*.10}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Bullet Physics}{8}{section*.11}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Newton Game Dynamics}{10}{section*.14}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Exhaustive Search}{11}{section*.16}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Implementation}{11}{section*.17}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Discussion}{13}{section*.19}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Heuristics Approach}{16}{section*.21}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Geometric Constraints}{16}{section*.22}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Shape Description and Matching Techniques}{17}{section*.23}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Limitations}{19}{section*.26}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Novel Surface Similarity Technique}{20}{section*.27}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{2D Case}{20}{section*.28}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{3D case}{23}{section*.32}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Discussion}{25}{section*.34}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Evaluation}{26}{section*.38}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Appendix A - Compiling}{34}{section*.43}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Appendix B - Software Glossary}{37}{section*.44}
