@@ -42,10 +42,10 @@ The underlying cause, however, is physical damage to the left hemisphere of the 
   \label{fig:4CTArchitecture}
 \end{figure}      
 
-Unlike competing theories, 4CT distinguishes between conceptual and production systems when describing tool use(fig. \ref{fig:4CTArchitecture}).
-Focus is given to the conceptual system which encapsulates cognitive reasoning.
-The production system dictates movement by transforming a person's intent into motor control. 
-From this distinction, 4CT's conceptual system is a suitable candidate for a model concentrated on reasoning.
+Unlike competing theories, 4CT distinguishes between conceptual and production systems when describing tool use (fig. \ref{fig:4CTArchitecture}).
+The production system dictates movement by transforming a person's intent into motor control while the conceptual system encapsulates the cognitive reasoning necessary for tool use.
+The dissertation focused on a computational model for the latter.
+
 
 %-----------
 % More paragraphs needed to explain why 4CT is desired over other theories ?
@@ -105,22 +105,22 @@ Nevertheless, this paper will refer to behaviour observed in these trials even t
   \caption{Pair of novel tool and object models}
 \end{figure}
 
-In the experiment a subject is presented two novel objects composed out of LEGO blocks.
-One object is passive and may not be directly touched (fig. \ref{fig:obj51}).
-The second object is active and must be used to lift the passive object to a new location (fig. \ref{fig:obj52}).
-As a tool use task, the active and passive objects are analogous to tool and target objects respectively.
-Due to the unusual geometries, subjects must reason about the correct spatial fitting of the tool and object.    
+In the experiment a subject is presented two novel objects built with LEGO blocks.
+One item is introduced to participants as "passive object" and may not be directly touched (fig. \ref{fig:obj51}).
+The second item is introduced as an " active object" and must be used to lift the passive object to a new location (fig. \ref{fig:obj52}).
+Note that the active and passive objects are analogous to tool and target objects respectively.
+Due to the unusual geometries, participants must reason about how to complementary match the tool and object shapes.
 
 A computational model mimicking human behaviour, would solve geometric constraints similarly to human subjects.
-Formally solving object-tool fitting requires consideration of force closure - object motion is controlled by tool contact forces.
-A shortcut to computing forces and physical interaction is the use of a physics engine. 
+Formally solving the experimental task requires consideration of force closure - object motion is controlled by tool contact forces.
+To shortcut the computing of forces and physical interaction one can use a physics engine. 
 To some extent, it is believed that the human brain computes approximate Newtonian laws \cite{battaglia2013}. 
-Similarly, physics engines do not compute exact friction, closure or gravitational forces, but provides realistic approximate results. 
-A tool use model can employ physics engines for one of multiple reasons:
+Similarly to humans, a physics engine does not compute exact friction, closure or gravitational forces, but provides realistic approximate results. 
+A tool use model can employ physics engines for  multiple reasons:
 \begin{enumerate}
 \itemsep0em 
 \item The engine can serve as a source of inference over physical laws and objects 
-\item Solutions of tool-object fitting can be verified through simulation
+\item Solutions of tool-object interactions can be verified through simulation
 \item Physical simulation is analogous to mental tool simulation from 4CT
 \end{enumerate}
 
@@ -175,7 +175,7 @@ The passive object is first set on a flat surface.
 The tool is then positioned to slide into the object and lift it.
 Demo code is therefore representative of the experimental setup.  
 
-A multitude of parameters can influence the effects of interaction between the two objects:
+Several parameters can influence the effects of interaction between the two objects:
 \begin{enumerate}
 \item Object collision properties are more commonly represented by classes which approximate the object's shape in order to gain execution speed.
 A more precise approach is to use classes that represent true shape properties(fig. \ref{fig:collision_shape}).   
@@ -236,8 +236,8 @@ A computational model would have to be written in C++.
 Even with the above development concerns, the engine's simulation precision make it a prime candidate for our model.  
 
 \section{Exhaustive Search}
-Demos show how tool-object fitting can be verified through simulation.
-As the model aims to solve fitting problems, one can position items in all possible configurations and select valid ones. 
+Demos show how tool use can be verified through simulation.
+As the model aims to solve geometric constraints, one can position items in all possible configurations and select valid ones. 
 Validity implies that the tool can lift the object, and that models do not penetrate each other's surfaces.
 A single configuration represents a tool's rotation and relative position to the object.
 That is X,Y,Z coordinates and rotations around axes (i.e. yaw, pitch, roll). 
@@ -285,7 +285,7 @@ This feature may occasionally have to be tuned for pairs of tool-object models.
 \subsection{Discussion}
 When search intervals are in the vicinity of possible solutions, the model finds multiple equivalent fitting configurations.
 Equivalent solutions are found on the trajectory on which the tool slides into the object.
-However, on a single multi-core computer exhaustive searching is infeasible. 
+However, on a single multi-core computer exhaustive searching is  not feasible. 
 The tool's position is determined by 6 degrees of freedom amounting to $~10^{12}$ possible configurations. 
 Even for a single tool rotation there are $~10^8$ configurations, requiring approximately an hour of execution. 
 
@@ -298,9 +298,9 @@ Engine features, such as penetration depth, can be utilised in more ingenious se
 However, solutions based solely on the engine's functionality remain problematically unrealistic representations of physical laws and human ability.
 For example, the tool can be positioned to lift an object even when no physical manner would allow it to be placed in that location.  
 
-There is also a concern for how a human subject may grasp the tool.
+
 In simulations lifting forces are applied to the tool's center of gravity.
-The search may therefore produce fits that do not realistically permit the tool to be held.
+This is a strong simplification of the problem as the search may produce solutions that do not realistically permit the tool to be held.
 
 Computational expense remains the impeding factor to the model's use. 
 Heuristic methods can be used to optimise the search space whilst considering human ability.
