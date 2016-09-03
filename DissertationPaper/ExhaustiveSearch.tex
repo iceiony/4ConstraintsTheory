@@ -18,9 +18,13 @@
 
 \hypersetup{colorlinks,urlcolor=blue}
 \let \shorttitle \textbf
+\let \citeA \textcite
 \begin{document}
 
 \section{Introduction}
+
+\shorttitle{Introduction}
+
 Tool use is one of the abilities that uniquely distinguishes man from other species. 
 We refer to tools as hand held devices employed in making changes to the surrounding environment. 
 Cases of tool use have been reported in other species, but never to the extent engaged by humans \cite{boysen1999,harrington2009,lefebvre2004}. 
@@ -33,16 +37,16 @@ In the following we describe 4CT and its implications to the project.
 4CT defines tool use behaviour of healthy individuals based on empirical investigations of apraxia.
 Apraxia is a neurological disorder impairing a person's ability to plan and execute sequences of movements.
 The term covers a multitude of symptoms and levels of severity such as dyspraxia, ideomotor aparaxia, apraxia of speech.
-The underlying cause, however, is physical damage to the left hemisphere of the brain\cite{osiurak2013}.
+The underlying cause, however, is physical damage to the left hemisphere of the brain \cite{osiurak2013}.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=.9\textwidth]{figures/4CTArchitecture.png}
-  \caption{4CT architecture reprinted from \cite{osiurak2014a}}
+  \caption{4CT architecture reprinted from \citeA{osiurak2014a}}
   \label{fig:4CTArchitecture}
 \end{figure}      
 
-Unlike competing theories, 4CT distinguishes between conceptual and production systems when describing tool use (fig. \ref{fig:4CTArchitecture}).
+Unlike competing theories, 4CT distinguishes between conceptual and production systems when describing tool use (figure \ref{fig:4CTArchitecture}).
 The production system dictates movement by transforming a person's intent into motor control while the conceptual system encapsulates the cognitive reasoning necessary for tool use.
 The dissertation focused on a computational model for the latter.
 
@@ -53,7 +57,7 @@ The dissertation focused on a computational model for the latter.
 
 4CT characterises tool use situations as problem solving tasks requiring strong cognitive abilities. 
 The four constraints of mechanics, space, time, and effort are dimensions within which problems are defined.
-Aiding problem solving are four cognitive processes: technical reasoning, semantic reasoning, working memory, and simulation based decision making (fig. \ref{fig:4CTArchitecture}).  
+Aiding problem solving are four cognitive processes: technical reasoning, semantic reasoning, working memory, and simulation based decision making (figure \ref{fig:4CTArchitecture}).  
 Even a simple scenario like slicing bread is a reasoning task about the knife's length, sharpness, serration and the movements necessary to manifest cutting effects. 
 
 Problem solving becomes more apparent in the absence of familiar tools, when subjects have to repurpose tools or fashion new ones.
@@ -70,7 +74,7 @@ In nature, a simple rule of survival is that actions should require less energy 
 Perceived effort would explain a user's preference for one tool use method over another. 
 Even with multiple tools available, differences in physical properties can lead to differences in effort and dictate choices made. 
 
-The working memory process (fig. \ref{fig:4CTArchitecture}) is required when multiple steps must be fulfilled to achieve a goal. 
+The working memory process (figure \ref{fig:4CTArchitecture}) is required when multiple steps must be fulfilled to achieve a goal. 
 It describes a subject's ability to split activities into sub-goals and hold them in memory. 
 Complex tasks such as fixing a broken radio would involve multiple steps and tool selection, however, such complex objectives are beyond the scope of this project.
 
@@ -106,17 +110,18 @@ Nevertheless, this paper will refer to behaviour observed in these trials even t
 \end{figure}
 
 In the experiment a subject is presented two novel objects built with LEGO blocks.
-One item is introduced to participants as "passive object" and may not be directly touched (fig. \ref{fig:obj51}).
-The second item is introduced as an " active object" and must be used to lift the passive object to a new location (fig. \ref{fig:obj52}).
+One item is introduced to participants as "passive object" and may not be directly touched (figure \ref{fig:obj51}).
+The second item is introduced as an " active object" and must be used to lift the passive object to a new location (figure \ref{fig:obj52}).
 Note that the active and passive objects are analogous to tool and target objects respectively.
-Due to the unusual geometries, participants must reason about how to complementary match the tool and object shapes.
+Due to the unusual geometries, participants must reason about how to complementarily match the tool and object shapes.
 
 A computational model mimicking human behaviour, would solve geometric constraints similarly to human subjects.
 Formally solving the experimental task requires consideration of force closure - object motion is controlled by tool contact forces.
 To shortcut the computing of forces and physical interaction one can use a physics engine. 
 To some extent, it is believed that the human brain computes approximate Newtonian laws \cite{battaglia2013}. 
 Similarly to humans, a physics engine does not compute exact friction, closure or gravitational forces, but provides realistic approximate results. 
-A tool use model can employ physics engines for  multiple reasons:
+
+A tool use model can employ physics engines for multiple reasons:
 \begin{enumerate}
 \itemsep0em 
 \item The engine can serve as a source of inference over physical laws and objects 
@@ -125,6 +130,8 @@ A tool use model can employ physics engines for  multiple reasons:
 \end{enumerate}
 
 \subsection{Physics Engine Evaluation}
+
+\shorttitle{Physics Engine Evaluation}
 
 A suitable physics engine would satisfy the following criteria:
 \begin{enumerate}
@@ -155,12 +162,12 @@ Additionally, performance results are influenced by implementation specifics.
 For example, reviewers can use the engine directly or through an abstraction layer that can affect performance.  
 We therefore select the most likely engines for model use, and evaluate individually. 
 
-Two game engines emerged as candidates: \emph{Bullet Physics v2} and \emph{Newton Game Dynamics v3}.
+Two game engines emerged as candidates: \emph{Bullet Physics} v2 and \emph{Newton Game Dynamics} v3.
 A formerly popular option is Open Dynamics Engine, but should not be considered as it is no longer under active development. 
 
 \subsubsection{Bullet Physics}
-\cite{boeing2007} regards Bullet as having the best overall performance. 
-\cite{hummel2012,roennau2013} also mention Bullet as having the best rigid body collision, but only in the case of large object simulation.
+\citeA{boeing2007} regards Bullet as having the best overall performance. 
+\citeA{hummel2012,roennau2013} also mention Bullet as having the best rigid body collision, but only in the case of large object simulation.
 What defines objects as large is however unclear. 
 
 \begin{figure}[h]
@@ -170,7 +177,7 @@ What defines objects as large is however unclear.
   \label{fig:bullet_demo}
 \end{figure}      
 
-We test Bullet's collision detection in a demo containing simple tool and object models (fig. \ref{fig:bullet_demo}).
+We test Bullet's collision detection in a demo containing simple tool and object models (figure \ref{fig:bullet_demo}).
 The passive object is first set on a flat surface.
 The tool is then positioned to slide into the object and lift it.
 Demo code is therefore representative of the experimental setup.  
@@ -178,7 +185,7 @@ Demo code is therefore representative of the experimental setup.
 Several parameters can influence the effects of interaction between the two objects:
 \begin{enumerate}
 \item Object collision properties are more commonly represented by classes which approximate the object's shape in order to gain execution speed.
-A more precise approach is to use classes that represent true shape properties(fig. \ref{fig:collision_shape}).   
+A more precise approach is to use classes that represent true shape properties (figure \ref{fig:collision_shape}).   
 
 \begin{figure}[h]
 \centering
@@ -199,7 +206,7 @@ From a development perspective, the engine is easy to compile and has detailed d
 MATLAB integration is available from third party developers, but is not well maintained, lacking functionality or failing compilation.
 A model using Bullet Physics would therefore have to be developed in C++. 
 
-Overall \emph{Bullet Physics} suffers from a high degree of shaking when tool and object interact. 
+Overall Bullet Physics suffers from a high degree of shaking when tool and object interact. 
 When the tool is positioned to lift the object, collision points make the object bounce uncontrollably within the tool's grasp. 
 As bounce forces amplify the object eventually bursts out of the tool's fixation.  
 Engine parameters can be tuned to minimise these effects, but would ultimately lead to less representative simulations. 
@@ -217,7 +224,7 @@ The precision gain is achieved by using a deterministic solver instead of numeri
 
 We setup a demo similar to Bullet.
 The object is set on a flat surface. 
-The tool is then slid into the object's fitting and lifted (\ref{fig:newton_demo}). 
+The tool is then slid into the object's fitting and lifted (figure \ref{fig:newton_demo}). 
 
 Compared to Bullet, Newton's default behaviour exhibits realistic behaviour. 
 The simulation shows no shaking or unrealistic dynamics.
@@ -236,6 +243,9 @@ A computational model would have to be written in C++.
 Even with the above development concerns, the engine's simulation precision make it a prime candidate for our model.  
 
 \section{Exhaustive Search}
+
+\shorttitle{Exhaustive Search}
+
 Demos show how tool use can be verified through simulation.
 As the model aims to solve geometric constraints, one can position items in all possible configurations and select valid ones. 
 Validity implies that the tool can lift the object, and that models do not penetrate each other's surfaces.

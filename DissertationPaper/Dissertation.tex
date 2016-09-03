@@ -71,7 +71,7 @@
 
 \usepackage{lipsum} 
 
-\title{SPATIAL REASONING IN HUMAN TOOL USE}
+\title{GEOMETRIC REASONING IN HUMAN TOOL USE}
 \shorttitle{}
 \author{
   \small{by}\\
@@ -92,13 +92,18 @@ September 2016
 }
 \abstract{
 Tool use is a fundamental human ability that distinguishes man from other species.
-This project investigates tool use reasoning in healthy individuals through the use of a computational model.
-The focus is on solving geometric constraints in a novel tool use case.
-Two approaches are considered for a computational model.
-An exhaustive search, that finds configurations of tool-object interactions through searching of all possible alternatives. 
-A heuristic search model, that reduces search space using visual queues of object and tool parts.
-The heuristic model employs a novel surface similarity technique in assessing object parts which have complementary geometric features. 
-Both exhaustive and heuristic models have the potential for simulating human behaviour, although further development is required.
+This project investigates a potential building block for a computational model of tool use reasoning.
+The building block focuses on solving geometric constraints for interactions between tools and recipient objects. 
+
+Two approaches are considered:
+\begin{enumerate}
+\itemsep0em
+\item An exhaustive approach using a physics engine to find compatible configurations of tool-object interaction by searching through of all possible alternatives. 
+\item A heuristic model which reduces the search space by using visual cues of tool and object parts.
+\end{enumerate}
+
+The heuristic method employs a novel surface similarity technique which is able to assess parts having complementary geometries. 
+Both exhaustive and heuristic models have potential for simulating human behaviour, but require further development and comparison with human behaviour.
 }
 
 \begin{document}
@@ -107,9 +112,9 @@ Both exhaustive and heuristic models have the potential for simulating human beh
 \maketitle
 
 \section{\normalfont Acknowledgements}
-I would like to thank Dietmar Heinke, project supervisor, for his guidance and making tool-use a very interesting topic to work on. 
+I would like to thank Dietmar Heinke, project supervisor, for his guidance, support and making tool-use a very interesting topic to work on. 
 Thanks also go to Fran\c{c}ois Osiurak, the author of the four constraints theory, for his availability to clarifying concepts from his work. 
-Last but not least, I would thank Rhiannon Davies for being the first subjected to proof-reading my work and doing a heck of a job at it.
+Last but not least, I would thank Rhiannon Davies for being the first subjected to proof-reading my work and providing constructive criticism.
 \clearpage
 
 \pagenumbering{arabic}
@@ -120,29 +125,31 @@ Last but not least, I would thank Rhiannon Davies for being the first subjected 
 \clearpage
 
 \include*{ExhaustiveSearch}
+\shorttitle{Exhaustive Search}
+\clearpage
 \include*{HeuristicSearch}
+
+\clearpage
 \section{Conclusion}
 \shorttitle{Conclusion}
+This project has developed two approaches for a computational model of geometric reasoning in human tool use.
+The models would solve a task involving a pair of novel objects in which one object is used to lift and place the other at a new location. 
+The task requires solving geometric constraints for tool-object interaction, and is best described as a process of technical reasoning.
 
-This project has investigated two different approaches for a computational model of human tool-use reasoning.
-A novel tool-use experiment was used to assess model performance.
-As the experiment requires solving geometric constraints, the model's theoretical basis is best captured by the technical reasoning process defined in 4CT. 
-
-Physics engines are a potential approach for finding fitting solution, by searching through all possible tool-object configurations.  
-Although exhaustively searching return valid results, the model proves computationally unfeasible and unrealistic of human ability. 
-The model requires long execution times and would find solutions that are not physically possible to reach. 
+In an exhaustive search model, a physics engine was used to find valid tool-object interaction by searching through all possible configurations.  
+Although the search returns valid solutions for the lifting task, the model proves computationally unfeasible and unrealistic of human ability. 
+Apart from long execution times the model would return solutions that are not physically possible to reach. 
 
 Heuristic approaches were considered for a second model based on visual cues of object and tool parts.  
 The underlying hypothesis was that parts which fit would share similar geometries. 
 A novel surface similarity technique was presented to assess object parts from 3D data points.
-Due to time constraints, the approach was not fully implemented into a model demonstrating fitting solutions.
-Only the visual search step of the process was implemented, but requires further verification.
+Due to project time constraints, the approach was not fully implemented into a model demonstrating lifting solutions.
+Only the visual search step of the process was implemented, but requires further investigation as it employs a simplified algorithm which produces false positive matches. Visual search results should also be formally verified against observed human behaviour.
 
-Both the exhaustive and heuristic search models can be improved to provide better results.
+Both the exhaustive search and heuristic models can be improved to provide better results.
 The exhaustive search's simulation time can be reduced by running code on multiple machines and aggregating results.
 The heuristic model can be improved through better analysis of objects geometries, but also by considering forces generated by user actions (i.e. lifting).
-Nevertheless,even with the above improvements, models results require formal comparison to observed human behaviour performing a similar tool-use experiment.  
-
+Nevertheless, even with the above improvements, model results require formal comparison to observed human behaviour performing similar tool-use tasks.  
 \clearpage
 
 \include*{Appendix}

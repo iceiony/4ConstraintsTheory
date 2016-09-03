@@ -24,11 +24,11 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{Discussion}{12}{section*.19}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{Heuristics Search}{13}{section*.20}
+\contentsline {section}{Heuristics Search}{14}{section*.20}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{Geometric Constraints}{14}{section*.21}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{Shape Description and Matching Techniques}{14}{section*.22}
+\contentsline {subsubsection}{Shape Description and Matching Techniques}{15}{section*.22}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Limitations}{17}{section*.25}
 \defcounter {refsection}{0}\relax 
@@ -40,9 +40,9 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{Discussion}{23}{section*.33}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{Evaluation}{24}{section*.36}
+\contentsline {subsection}{Evaluation}{25}{section*.36}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{Conclusion}{28}{section*.41}
+\contentsline {section}{Conclusion}{29}{section*.41}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{Appendix A - Compiling}{30}{section*.42}
 \defcounter {refsection}{0}\relax 
