@@ -21,8 +21,8 @@ lnY = ceil(maxY - minY);
 a_rotated = create_img(a,minX,minY,lnX,lnY);
 b_rotated = create_img(b,minX,minY,lnX,lnY);
 
-a_rotated = imgaussfilt(a_rotated,1.5);
-b_rotated = imgaussfilt(b_rotated,1.5);
+a_rotated = imgaussfilt(a_rotated,2);
+b_rotated = imgaussfilt(b_rotated,2);
 
 full_corr = corr(a_rotated(:),b_rotated(:));
 
